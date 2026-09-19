@@ -14,7 +14,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 
-/** MM-3: placing from an item copies its stats into the block entity, and an unrolled item places rolled at tier I's middle (MOTOR-REQ-003, MOTOR-FAIL-003). */
+/**
+ * MM-3: placing from an item copies its stats into the block entity, and an unrolled item places
+ * rolled at tier I's middle (MOTOR-REQ-003, MOTOR-FAIL-003). MM-9: an item whose stats component
+ * is newer than this build refuses placement outright (MOTOR-REQ-014).
+ */
 public final class PlacementGameTest {
     @GameTest
     public void placingFromAnItemCopiesItsStats(GameTestHelper helper) {
@@ -49,6 +53,26 @@ public final class PlacementGameTest {
         MeteredMotorBlockEntity blockEntity = helper.getBlockEntity(motorPos, MeteredMotorBlockEntity.class);
         Stats expected = Stats.middleOf(Tier.I);
         helper.assertTrue(expected.equals(blockEntity.stats()), "an unrolled item rolls at tier I's middle: " + blockEntity.stats());
+        helper.succeed();
+    }
+
+    @GameTest
+    public void aNewerStatsVersionRefusesPlacement(GameTestHelper helper) {
+        ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        BlockPos support = new BlockPos(1, 1, 1);
+        BlockPos motorPos = support.above();
+        helper.setBlock(support, Blocks.STONE);
+        helper.setBlock(motorPos, Blocks.AIR);
+
+        Stats future = new Stats(Stats.VERSION + 1, Tier.I, 40, 1_280, 1.0);
+        ItemStack stack = new ItemStack(MotorBlocks.ITEM);
+        stack.set(MeteredMotor.STATS, future);
+        helper.assertTrue(future.readOnly(), "set up: a version newer than this build's is read-only");
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        helper.placeAt(player, stack, support, Direction.UP);
+
+        helper.assertTrue(
+            !helper.getBlockState(motorPos).is(MotorBlocks.BLOCK), "a read-only item's placement is refused: " + helper.getBlockState(motorPos));
         helper.succeed();
     }
 }

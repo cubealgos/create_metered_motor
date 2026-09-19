@@ -48,6 +48,11 @@ MM-5: a villager that already offers a metered motor refuses a second, through m
 MM-3: placing from an item copies its stats into the block entity, and an unrolled item places rolled at tier I's middle (MOTOR-REQ-003, MOTOR-FAIL-003).
 - `void placingFromAnItemCopiesItsStats(GameTestHelper helper)`
 - `void anItemWithNoStatsPlacesRolledAtTheMiddleOfTierI(GameTestHelper helper)`
+- `void aNewerStatsVersionRefusesPlacement(GameTestHelper helper)`
+
+### `class RegistrationGameTest` — `src/gametest/java/metered_motor/gametest/RegistrationGameTest.java`
+MM-9: the block and its item resolve at their documented ids and the item is stackable to exactly one, so a rolled item's stats never merge with another's (MOTOR-REQ-001).
+- `void theBlockAndItemResolveAtTheirIdsAndTheItemIsStackableToOne(GameTestHelper helper)`
 
 ### `class RollGameTest` — `src/gametest/java/metered_motor/gametest/RollGameTest.java`
 MM-5: metered_motor:roll, decoded exactly as a trade file would write it and applied through net.minecraft.world.level.storage.loot.functions.LootItemFunction#apply, lands within its tier's bands; a malformed band is rejected in favour of the tier's default (TRADE-REQ-002, TRADE-REQ-004).
@@ -58,6 +63,7 @@ MM-5: metered_motor:roll, decoded exactly as a trade file would write it and app
 MM-6: the motor's five slots accept only emeralds and emerald blocks — on a direct click and on shift-click from the player inventory in both directions (docs/spec/domains/ui.md `UI-REQ-002`, `MOTOR-REQ-008`, `MOTOR-REQ-009`).
 - `void theFiveSlotsAcceptOnlyEmeraldsAndEmeraldBlocks(GameTestHelper helper)`
 - `void quickMoveFromThePlayerInventoryRefusesCobblestoneAndAcceptsEmeralds(GameTestHelper helper)`
+- `void quickMoveFromAMotorSlotMovesEmeraldsIntoThePlayerInventory(GameTestHelper helper)`
 
 ### `class SmokeGameTest` — `src/gametest/java/metered_motor/gametest/SmokeGameTest.java`
 M0: the mod loads beside Create Fly; everything else follows.
