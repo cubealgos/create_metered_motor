@@ -1,0 +1,29 @@
+---
+schema_version: 1
+id: 01M2W33RSSDVZC88QCBMK41258
+key: MM-5
+type: feat
+title: "Trades: three tiers, tag entries, the roll loot function, one motor per villager"
+created_by: kevin
+created_at: 2026-09-19T05:44:32Z
+---
+
+## Scope
+
+The trades (`ARCH-DEC-004`): three villager trade files under `data/metered_motor/villager_trade/toolsmith/<level>/emerald_metered_motor_<tier>.json` (`TRADE-REQ-001`), the tag entries appending each to `data/minecraft/tags/villager_trade/toolsmith/level_<n>.json` with `replace: false` (`TRADE-REQ-003`), the `metered_motor:roll` loot function type reading tier and the three bands (rpm, capacity, efficiency) from the trade file and writing the `metered_motor:stats` component with uniform rolls from the loot context's random source (`TRADE-REQ-002`), the `metered_motor:no_motor_offered` merchant predicate (a loot condition) so a villager's later-level draw skips the trade once it already offers a motor (`TRADE-REQ-006`, `TRADE-DEC-004`), and the tooltip showing rolled stats before purchase (`TRADE-REQ-005`, `UI-REQ-006`).
+
+## Approach
+
+First step: verify whether 26.2's `merchant_predicate` loot condition type sees the villager entity and its current offers when a level's trades are drawn (the spec's open question, `docs/spec/domains/trade.md` §7) — read the loot condition's context parameters and, if it does, write `metered_motor:no_motor_offered` against them directly; if it does not, fall back to a villager-level hook (an entity-level check before the trade set draws) and record which path was taken and why in this ticket. Then the three trade files and tag entries as plain data, and `metered_motor:roll` as a `MapCodec`-registered `LootItemConditionalFunction` (spec `README.md` Verification 6) parameterised by `{tier, rpm: {min,max}, capacity: {min,max}, efficiency: {min,max}}`, rejecting an out-of-range band per `TRADE-REQ-004` and falling back to the tier's default.
+
+## Acceptance criteria
+
+- [ ] The finding on whether `merchant_predicate` sees the villager and its offers is recorded in this ticket's Constraints section before the loot condition is written.
+- [ ] Game test: the three trade files parse through the recipe/loot manager and the tags contain their paths (`TradeFileGameTest`).
+- [ ] Game test: a mock toolsmith offer carries a roll inside its tier's band for rpm, capacity and efficiency (`RollGameTest`).
+- [ ] Game test: a villager already offering a motor does not draw a second at a later level (`NoDuplicateOfferGameTest`), exercising whichever mechanism the first step settled on.
+- [ ] Game test: a band whose minimum exceeds its maximum, or that leaves the tier's documented range by more than a factor of four, is rejected and the tier's default band is used instead, logged once (`TRADE-REQ-004`).
+
+## Constraints and prior findings
+
+`TRADE-REQ-001..006`, `TRADE-DEC-001..004`, `TRADE-FAIL-002`, `ARCH-DEC-004`, `UI-REQ-006`. Verified: 26.2 villager trades are data (`data/<ns>/villager_trade/<path>.json`: `wants`, optional `additional_wants`, `gives`, `given_item_modifiers`, `max_uses`, `reputation_discount`, `xp`); a level's set draws `amount: 2` trades from its tag, which a datapack extends with `replace: false` (spec `README.md` Verification 5). Loot functions register in `BuiltInRegistries.LOOT_FUNCTION_TYPE` as `MapCodec`s; the context carries the random source (Verification 6). `TRADE-FAIL-002`: the trade rebalance experiment replaces vanilla's toolsmith tags but the mod's tag entries still append to the same tag path, so the trade survives it. Not this ticket's to close: Create Fly's largest boiler figure, taken as 18 × 1,024 = 18,432 SU for tier III's ceiling, confirmed against `CStress`/`BoilerData` only if time allows; otherwise carried forward as an open question. Blocked by MM-2 (the stats component and roll arithmetic this ticket's loot function writes).
