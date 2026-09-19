@@ -1,16 +1,16 @@
 {
   "pulls": {
-    "at": 1789803640.270253,
+    "at": 1789804247.992914,
     "payload": [
       {
         "author": "scheeren",
         "base": "development",
-        "ci": "pending",
+        "ci": "success",
         "head": "feature/mm-6-screen",
         "index": "9",
-        "state": "open",
-        "title": "The motor screen on Create Fly's framework (MM-6)",
-        "updated": "2026-09-19T07:40:25Z"
+        "state": "merged",
+        "title": "feat(metered_motor): the motor screen on Create Fly's frame: five emerald slots and the live readout (MM-6)",
+        "updated": "2026-09-19T07:41:07Z"
       },
       {
         "author": "scheeren",
