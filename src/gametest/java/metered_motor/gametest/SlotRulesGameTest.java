@@ -15,7 +15,9 @@ import net.minecraft.world.item.Items;
 /**
  * MM-6: the motor's five slots accept only emeralds and emerald blocks — on a direct click and on
  * shift-click from the player inventory in both directions (docs/spec/domains/ui.md `UI-REQ-002`,
- * `MOTOR-REQ-008`, `MOTOR-REQ-009`).
+ * `MOTOR-REQ-008`, `MOTOR-REQ-009`). MM-9: shift-clicking a motor slot is the positive half of
+ * `UI-REQ-008` — the screen actually is a way to take emeralds out, which {@code ExtractGameTest}
+ * only proves automation cannot do.
  *
  * <p>Simulates through {@link MeteredMotorMenu#getSlot} and {@link MeteredMotorMenu#quickMoveStack}
  * directly rather than through {@code AbstractContainerMenu#clicked}'s full mouse-click
@@ -52,6 +54,29 @@ public final class SlotRulesGameTest {
         menu.getSlot(firstPlayerSlot).set(new ItemStack(Items.EMERALD, 64));
         menu.quickMoveStack(menu.player, firstPlayerSlot);
         helper.assertTrue(motor.getItem(0).is(Items.EMERALD), "emeralds shift-clicked from the player inventory land in slot 0: " + motor.getItem(0));
+        helper.succeed();
+    }
+
+    @GameTest
+    public void quickMoveFromAMotorSlotMovesEmeraldsIntoThePlayerInventory(GameTestHelper helper) {
+        MeteredMotorBlockEntity motor = placeMotor(helper);
+        motor.setItem(0, new ItemStack(Items.EMERALD, 12));
+        MeteredMotorMenu menu = openMenu(helper, motor);
+
+        menu.quickMoveStack(menu.player, 0);
+
+        helper.assertTrue(motor.getItem(0).isEmpty(), "the motor slot empties: " + motor.getItem(0));
+        // moveItemStackTo(reverse=true) may land the stack in any slot of the player's inventory
+        // range, not necessarily the first one; find it rather than assume a position.
+        int found = 0;
+        for (int i = MeteredMotorMenu.SLOTS; i < menu.slots.size(); i++) {
+            ItemStack stack = menu.getSlot(i).getItem();
+            if (!stack.isEmpty()) {
+                helper.assertTrue(stack.is(Items.EMERALD), "the moved stack is emeralds, not " + stack);
+                found += stack.getCount();
+            }
+        }
+        helper.assertTrue(found == 12, "all 12 emeralds land somewhere in the player's inventory, found " + found);
         helper.succeed();
     }
 
