@@ -4,10 +4,10 @@
 
 | Field | Value |
 |---|---|
-| Name | Create Fly: Metered Motor |
+| Name | Create: Metered Motor |
 | Slug | `metered-motor` |
 | Summary | A kinetic source that costs money to run: buy one rolled from a toolsmith and feed it emeralds. |
-| Categories | Utility, Technology (secondary: Equipment) |
+| Categories | Equipment, Technology, Utility (secondary: Adventure, Game-Mechanics, Management, Optimization) |
 | Licence | MIT |
 | Client side | Required |
 | Server side | Required |
@@ -15,7 +15,7 @@
 | Game versions | 26.2 |
 | Dependencies | Create Fly (required), Fabric API (required) |
 | Icon | `icon.png` in this folder: the motor on the round blueprint badge Create add-ons share (`just icon` regenerates it) |
-| Links | Source `https://git.cubealgos.de/cubealgos/create_metered_motor` · Issues `https://github.com/cubealgos/create_metered_motor/issues` · Mirror `https://github.com/cubealgos/create_metered_motor` |
+| Links | Source `https://github.com/cubealgos/create_metered_motor` · Issues `https://github.com/cubealgos/create_metered_motor/issues` · Origin `https://git.cubealgos.de/cubealgos/create_metered_motor` |
 
 ## Version settings
 
@@ -80,5 +80,6 @@ the mod declares exactly that version).
 ### Support
 
 Through the issue tracker only (https://github.com/cubealgos/create_metered_motor/issues), as time
-allows. Source on Forgejo, mirrored to GitHub. Include your Minecraft, Fabric and Create Fly
-versions, the mod version from the jar name, and the steps that show the problem. MIT licensed.
+allows. Source on GitHub, mirrored from the cubealgos Forgejo. Include your Minecraft, Fabric and
+Create Fly versions, the mod version from the jar name, and the steps that show the problem. MIT
+licensed.

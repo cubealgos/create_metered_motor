@@ -1,4 +1,4 @@
-# Create Fly: Metered Motor
+# Create: Metered Motor
 
 A kinetic power source bought from a toolsmith villager: its rpm, stress capacity and efficiency
 are rolled when the villager offers it. Place it against a shaft and it turns like any Create
