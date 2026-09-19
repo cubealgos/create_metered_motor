@@ -15,6 +15,11 @@
       "metered_motor.gametest.PlacementGameTest",
       "metered_motor.gametest.BreakGameTest",
       "metered_motor.gametest.StateGameTest",
+      "metered_motor.gametest.InsertGameTest",
+      "metered_motor.gametest.ExtractGameTest",
+      "metered_motor.gametest.MeterGameTest",
+      "metered_motor.gametest.SplitGameTest",
+      "metered_motor.gametest.EmptyGameTest",
       "metered_motor.gametest.DebugCommandGameTest"
     ]
   },

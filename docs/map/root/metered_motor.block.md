@@ -17,7 +17,7 @@ The metered motor block: a Create directional kinetic source, placed and shafted
 - `BlockEntityType<? extends MeteredMotorBlockEntity> getBlockEntityType()`
 
 ### `class MeteredMotorBlockEntity` — `src/main/java/metered_motor/block/MeteredMotorBlockEntity.java`
-The motor's kinetic source of truth while placed: the rolled Stats, the MotorState state machine and the generated speed and stress capacity Create's network reads while running, zero otherwise (MOTOR-REQ-002, MOTOR-REQ-003, MOTOR-REQ-004, MOTOR-REQ-010, MOTOR-REQ-011, MOTOR-FAIL-003, DATA-REQ-004).
+The motor's kinetic source of truth while placed: the rolled Stats, the MotorState state machine, the five-slot emerald inventory and the once-a-second Meter that burns it in proportion to the network's load, and the generated speed and stress capacity Create's network reads while running, zero otherwise (MOTOR-REQ-002, MOTOR-REQ-003, MOTOR-REQ-004, MOTOR-REQ-006, MOTOR-REQ-007, MOTOR-REQ-008, MOTOR-REQ-009, MOTOR-REQ-010, MOTOR-REQ-011, MOTOR-FAIL-002, MOTOR-FAIL-004, ARCH-DEC-003, DATA-REQ-004).
 - `MeteredMotorBlockEntity(BlockPos pos, BlockState state)`
 - `void initialize()`
 - `void tick()`
@@ -25,8 +25,22 @@ The motor's kinetic source of truth while placed: the rolled Stats, the MotorSta
 - `float calculateAddedStressCapacity()` — The rolled stress capacity while running, zero otherwise (MOTOR-REQ-004).
 - `Stats stats()` — The stats this block entity carries, copied from the placed item and back on breaking (MOTOR-REQ-003).
 - `MotorState state()` — The motor's current state (docs/spec/domains/motor.md §3).
-- `boolean hasFuel()` — Whether the (future) inventory holds fuel; see the field's placeholder note.
-- `void setHasFuel(boolean hasFuel)` — Forces the fuel flag; MM-4 replaces every caller of this with the real inventory check.
+- `int emeraldsInside()` — How many emeralds the inventory holds, an emerald block counting nine, plus any prepaid credit (MOTOR-REQ-006).
+- `double load()` — The load the meter last read: min(1, network stress / network capacity), 0 while idle (MOTOR-DEC-001).
+- `Meter meter()` — The meter advancing toward the next emerald, held at exactly one while stopped empty (MOTOR-REQ-006, MOTOR-REQ-007).
+- `double secondsRemaining()` — Seconds until the inventory runs out at the current load, or -1 while not running or drawing no load (nothing to divide by).
+- `boolean canPlaceItemThroughFace(int slot, ItemStack stack, Direction direction)` — Only emeralds and emerald blocks, from every face and every automation (MOTOR-REQ-008).
+- `boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction)` — Never: only a player in the screen takes emeralds out (MOTOR-REQ-009).
+- `int getContainerSize()`
+- `int getMaxStackSize()`
+- `boolean isEmpty()`
+- `ItemStack getItem(int slot)`
+- `ItemStack removeItem(int slot, int amount)`
+- `ItemStack removeItemNoUpdate(int slot)`
+- `void setItem(int slot, ItemStack stack)`
+- `void clearContent()`
+- `boolean stillValid(Player player)`
+- `boolean canPlaceItem(int slot, ItemStack stack)` — Same rule as face insertion, for the screen ticket's player-facing slots (MOTOR-REQ-008).
 - `void applyImplicitComponents(DataComponentGetter componentGetter)` — Copies the placed item's stats into the block entity (MOTOR-REQ-003, DATA-REQ-004).
 - `void collectImplicitComponents(DataComponentMap.Builder builder)` — Writes the block entity's stats back onto the broken item (MOTOR-REQ-003, DATA-REQ-004).
 - `void write(ValueOutput output, boolean clientPacket)`
