@@ -6,9 +6,10 @@ Every type with its summary and every non-private constructor, method and consta
 signature is the contract; read the source only when the summary is not enough.
 
 ### `class MeteredMotor` — `src/main/java/metered_motor/MeteredMotor.java`
-The mod's server-and-common entrypoint.
+The mod's server-and-common entrypoint: registers the stats component (MOTOR-REQ-001).
 - `String MOD_ID`
 - `Logger LOGGER`
+- `DataComponentType<Stats> STATS` — The rolled stats every motor item and block entity carries (docs/spec/contracts/data-contract.md, ARCH-DEC-005).
 - `Identifier id(String path)`
 - `void onInitialize()`
 

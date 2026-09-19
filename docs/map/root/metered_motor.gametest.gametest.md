@@ -5,6 +5,11 @@
 Every type with its summary and every non-private constructor, method and constant. The
 signature is the contract; read the source only when the summary is not enough.
 
+### `class ComponentGameTest` — `src/gametest/java/metered_motor/gametest/ComponentGameTest.java`
+MM-2: the stats component survives an item stack's save/parse round trip, and a newer version reads back intact and read-only (DATA-REQ-001).
+- `void theComponentRoundTripsThroughAnItemStack(GameTestHelper helper)`
+- `void aNewerVersionReadsBackIntactAndReadOnly(GameTestHelper helper)`
+
 ### `class SmokeGameTest` — `src/gametest/java/metered_motor/gametest/SmokeGameTest.java`
 M0: the mod loads beside Create Fly; everything else follows.
 - `void theModLoadsBesideCreateFly(GameTestHelper helper)`
