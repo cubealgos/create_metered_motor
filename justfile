@@ -40,8 +40,8 @@ spec-sync:
     rsync -a --delete "{{vault_spec}}/" docs/spec/
 
 # Render the Modrinth icon on the blueprint badge Create add-ons share.
-# tools/icon.py is not adapted yet: it renders the compass's needle sprite, which this mod has no
-# equivalent of at bootstrap. A later ticket (once the motor's item texture exists) adapts it.
+# Renders from docs/modrinth/placeholder-motor.png by default: the motor's item texture does not
+# exist yet. MM-7 changes tools/icon.py's default to the real sprite once it does.
 icon:
     python3 tools/icon.py
 
