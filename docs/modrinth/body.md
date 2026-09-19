@@ -14,7 +14,7 @@
 | Loaders | Fabric |
 | Game versions | 26.2 |
 | Dependencies | Create Fly (required), Fabric API (required) |
-| Icon | `icon.png` in this folder: the motor on the round blueprint badge Create add-ons share (`just icon` regenerates it) |
+| Icon | `icon.png` in this folder: the mod's own tier II brass motor block model on the cubealgos navy badge (`just icon` regenerates it) |
 | Links | Source `https://github.com/cubealgos/create_metered_motor` · Issues `https://github.com/cubealgos/create_metered_motor/issues` · Origin `https://git.cubealgos.de/cubealgos/create_metered_motor` |
 
 ## Version settings
