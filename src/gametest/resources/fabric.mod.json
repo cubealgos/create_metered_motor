@@ -23,7 +23,8 @@
       "metered_motor.gametest.EmptyGameTest",
       "metered_motor.gametest.DebugCommandGameTest",
       "metered_motor.gametest.SlotRulesGameTest",
-      "metered_motor.gametest.SyncGameTest"
+      "metered_motor.gametest.SyncGameTest",
+      "metered_motor.gametest.TooltipGameTest"
     ]
   },
   "depends": {
