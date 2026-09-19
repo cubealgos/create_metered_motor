@@ -1,7 +1,17 @@
 {
   "pulls": {
-    "at": 1789805871.390569,
+    "at": 1789833650.372115,
     "payload": [
+      {
+        "author": "scheeren",
+        "base": "development",
+        "ci": "success",
+        "head": "feature/mm-9-test-sweep",
+        "index": "13",
+        "state": "merged",
+        "title": "test(metered_motor): the requirement sweep's missing proofs: stack size, refused placement of a newer component, taking emeralds out through the screen (MM-9)",
+        "updated": "2026-09-19T15:54:44Z"
+      },
       {
         "author": "scheeren",
         "base": "development",

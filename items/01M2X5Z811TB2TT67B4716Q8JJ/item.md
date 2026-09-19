@@ -18,10 +18,10 @@ created_at: 2026-09-19T15:53:44Z
 
 ## Acceptance criteria
 
-- [ ] Unit or game test: an item with a stats component of version `current + 1` renders the tooltip line "Unknown motor (newer version)" and no stat lines; a current-version item is unchanged.
-- [ ] `SourceSurfaceTest` covers the new key.
-- [ ] `docs/spec/` synced from the vault (`UI-REQ-007` reads `Locale.ROOT`).
-- [ ] Merged through a Forgejo pull request into `development`.
+- [x] Unit or game test: an item with a stats component of version `current + 1` renders the tooltip line "Unknown motor (newer version)" and no stat lines; a current-version item is unchanged.
+- [x] `SourceSurfaceTest` covers the new key.
+- [x] `docs/spec/` synced from the vault (`UI-REQ-007` reads `Locale.ROOT`).
+- [x] Merged through a Forgejo pull request into `development`.
 
 ## Constraints and prior findings
 
