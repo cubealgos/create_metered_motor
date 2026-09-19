@@ -44,6 +44,7 @@ M0: the mod loads beside Create Fly; everything else follows.
 ### `class SplitGameTest` — `src/gametest/java/metered_motor/gametest/SplitGameTest.java`
 MM-4: taking an emerald from a slot that only holds an emerald block splits it into nine loose emeralds, leaving eight behind after the one taken (MOTOR-REQ-006).
 - `void takingFromAnEmeraldBlockLeavesEightLooseEmeralds(GameTestHelper helper)`
+- `void aFullInventoryOfBlocksStillBurns(GameTestHelper helper)` — Review 2026-09-19: a full inventory of emerald blocks (five slots, every one holding more than one block, so a split has no loose-emerald slot and no empty slot to land its remainder in) must still burn instead of holding the meter at one forever while the motor keeps running for free.
 
 ### `class StateGameTest` — `src/gametest/java/metered_motor/gametest/StateGameTest.java`
 MM-3/MM-4: the state machine driven from redstone and the inventory (MM-4's fuel gate) turns Create's network on and off (MOTOR-REQ-004, MOTOR-REQ-010, docs/spec/domains/motor.md §3).

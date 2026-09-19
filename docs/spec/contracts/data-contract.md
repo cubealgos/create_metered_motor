@@ -29,7 +29,9 @@ codec-serialised into the world save like any vanilla component.
 
 The five-slot inventory (emeralds and emerald blocks only, `MOTOR-REQ-008`), the meter fraction
 (`0 ≤ m ≤ 1`; exactly one means the meter is held because nothing could be taken, `MOTOR-REQ-007`),
-and `stats` copied in whole from the item at placement (`MOTOR-REQ-003`).
+`stats` copied in whole from the item at placement (`MOTOR-REQ-003`), and a small prepaid credit
+(`0 ≤ prepaid ≤ 8`) carrying the loose emeralds an emerald-block split could not place when every
+slot was already full (`MOTOR-REQ-006`; review `2026-09-19`).
 
 ## Rules
 

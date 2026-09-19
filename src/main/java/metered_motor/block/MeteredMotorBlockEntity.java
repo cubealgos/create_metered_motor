@@ -60,6 +60,14 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
     private Meter meter = new Meter();
     /** The load the meter last read, 0 while idle (docs/spec/domains/motor.md MOTOR-DEC-001). */
     private double load = 0.0;
+    /**
+     * Emeralds already taken from a split emerald block that no slot was free to hold, owed to
+     * whoever asks next instead of being lost or refused (0..8, docs/spec/contracts/data-contract.md
+     * §The block entity's saved state). Review 2026-09-19: a full inventory of emerald blocks —
+     * five slots, none loose, none free — must still burn rather than hold the meter at one and
+     * run for free forever.
+     */
+    private int prepaid = 0;
 
     public MeteredMotorBlockEntity(BlockPos pos, BlockState state) {
         super(MotorBlocks.BLOCK_ENTITY_TYPE, pos, state);
@@ -106,6 +114,8 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
      * at one when none could be taken (MOTOR-REQ-006, MOTOR-REQ-007, MOTOR-FAIL-002, MOTOR-FAIL-004).
      */
     private void burnOneSecond() {
+        double previousLoad = load;
+        double previousFraction = meter.fraction();
         float capacity = networkCapacity();
         load = capacity > 0 ? Math.min(1.0, networkStress() / capacity) : 0.0;
         int due = meter.advance(stats.ratePerMinute(), load);
@@ -116,15 +126,29 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
             }
         }
         setChanged();
-        sendData();
+        // A packet only when something a client would show actually moved (a nit from review
+        // 2026-09-19): every second on every running motor, load 0 and fraction unchanged, is
+        // wasted traffic on an idle network.
+        if (load != previousLoad || meter.fraction() != previousFraction) {
+            sendData();
+        }
     }
 
     /**
-     * Takes one emerald from the inventory, splitting an emerald block into nine loose emeralds
-     * in a free or the same slot when no loose emerald is there first (MOTOR-REQ-006). Returns
-     * {@code false} without changing anything when the inventory holds nothing to take.
+     * Takes one emerald: from {@link #prepaid} first, then a loose emerald, then splitting an
+     * emerald block into nine — in a free or the same slot when no loose emerald is there first
+     * (MOTOR-REQ-006). When a block is split but no slot is free for the eight it leaves behind,
+     * the block is still consumed and the eight are credited to {@link #prepaid} rather than lost
+     * or the take refused (review 2026-09-19: a full inventory of emerald blocks must still burn).
+     * Returns {@code false} without changing anything only when the inventory holds nothing at all
+     * to take.
      */
     private boolean takeOneEmerald() {
+        if (prepaid > 0) {
+            prepaid--;
+            setChanged();
+            return true;
+        }
         int looseSlot = findSlotOf(Items.EMERALD);
         if (looseSlot >= 0) {
             shrinkSlot(looseSlot, 1);
@@ -136,17 +160,16 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
             return false;
         }
         int destSlot = items.get(blockSlot).getCount() == 1 ? blockSlot : findEmptySlot();
-        if (destSlot < 0) {
-            // No room to hold the eight loose emeralds the split would leave behind: leave the
-            // block untouched rather than destroying items nobody asked to lose.
-            return false;
-        }
         shrinkSlot(blockSlot, 1);
-        ItemStack destStack = items.get(destSlot);
-        if (destStack.isEmpty()) {
-            items.set(destSlot, new ItemStack(Items.EMERALD, EMERALDS_PER_BLOCK - 1));
+        if (destSlot >= 0) {
+            ItemStack destStack = items.get(destSlot);
+            if (destStack.isEmpty()) {
+                items.set(destSlot, new ItemStack(Items.EMERALD, EMERALDS_PER_BLOCK - 1));
+            } else {
+                destStack.grow(EMERALDS_PER_BLOCK - 1);
+            }
         } else {
-            destStack.grow(EMERALDS_PER_BLOCK - 1);
+            prepaid += EMERALDS_PER_BLOCK - 1;
         }
         setChanged();
         return true;
@@ -195,8 +218,12 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
         return !stack.isEmpty() && (stack.is(Items.EMERALD) || stack.is(Items.EMERALD_BLOCK));
     }
 
-    /** Whether the inventory holds at least one emerald or emerald block (MOTOR-REQ-006..009). */
+    /** Whether there is still something to burn: a prepaid credit, or an emerald or emerald block
+     * in a slot (MOTOR-REQ-006..009). */
     private boolean hasFuel() {
+        if (prepaid > 0) {
+            return true;
+        }
         for (ItemStack stack : items) {
             if (isAcceptedFuel(stack)) {
                 return true;
@@ -227,9 +254,10 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
         return state;
     }
 
-    /** How many emeralds the inventory holds, an emerald block counting nine (MOTOR-REQ-006). */
+    /** How many emeralds the inventory holds, an emerald block counting nine, plus any prepaid
+     * credit (MOTOR-REQ-006). */
     public int emeraldsInside() {
-        int total = 0;
+        int total = prepaid;
         for (ItemStack stack : items) {
             if (stack.is(Items.EMERALD)) {
                 total += stack.getCount();
@@ -370,6 +398,7 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
         output.store("Stats", StatsCodec.CODEC, stats);
         output.putString("State", state.name());
         output.putDouble("Meter", meter.fraction());
+        output.putInt("Prepaid", prepaid);
         ContainerHelper.saveAllItems(output, items);
         if (clientPacket) {
             // Derived, not saved state (docs/spec/contracts/data-contract.md): recomputed every
@@ -386,6 +415,7 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
         state = java.util.Arrays.stream(MotorState.values()).filter(m -> m.name().equals(saved)).findFirst().orElse(MotorState.STOPPED);
         double savedMeter = input.getDoubleOr("Meter", 0.0);
         meter = new Meter(Math.min(1.0, Math.max(0.0, savedMeter)));
+        prepaid = Math.max(0, Math.min(EMERALDS_PER_BLOCK - 1, input.getIntOr("Prepaid", 0)));
         items = NonNullList.withSize(SLOTS, ItemStack.EMPTY);
         ContainerHelper.loadAllItems(input, items);
         if (clientPacket) {

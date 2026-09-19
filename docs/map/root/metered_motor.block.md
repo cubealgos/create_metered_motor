@@ -25,7 +25,7 @@ The motor's kinetic source of truth while placed: the rolled Stats, the MotorSta
 - `float calculateAddedStressCapacity()` — The rolled stress capacity while running, zero otherwise (MOTOR-REQ-004).
 - `Stats stats()` — The stats this block entity carries, copied from the placed item and back on breaking (MOTOR-REQ-003).
 - `MotorState state()` — The motor's current state (docs/spec/domains/motor.md §3).
-- `int emeraldsInside()` — How many emeralds the inventory holds, an emerald block counting nine (MOTOR-REQ-006).
+- `int emeraldsInside()` — How many emeralds the inventory holds, an emerald block counting nine, plus any prepaid credit (MOTOR-REQ-006).
 - `double load()` — The load the meter last read: min(1, network stress / network capacity), 0 while idle (MOTOR-DEC-001).
 - `Meter meter()` — The meter advancing toward the next emerald, held at exactly one while stopped empty (MOTOR-REQ-006, MOTOR-REQ-007).
 - `double secondsRemaining()` — Seconds until the inventory runs out at the current load, or -1 while not running or drawing no load (nothing to divide by).
