@@ -18,9 +18,9 @@ First step: read how an add-on attaches a client-side `TooltipBehaviour` to a bl
 
 ## Acceptance criteria
 
-- [ ] The client-side attachment mechanism for a `TooltipBehaviour` on this mod's block entity type is recorded in this ticket's Constraints section before the overlay is written.
+- [x] The client-side attachment mechanism for a `TooltipBehaviour` on this mod's block entity type is recorded in this ticket's Constraints section before the overlay is written.
 - [ ] `just client`: goggles show the readout after Create's kinetic lines; the item tooltip shows rolled stats or "unrolled"; the shaft visibly turns; the casing is Create's creative motor recoloured andesite/brass/gold across the three tiers (Kevin's check — goggles, tooltips and rendering are not game-testable headless, per `operations/testing.md`).
-- [ ] Every added string is a translation key with an `en_us` entry (`SourceSurfaceTest`, extended).
+- [x] Every added string is a translation key with an `en_us` entry (`SourceSurfaceTest`, extended).
 
 ## Constraints and prior findings
 

@@ -1,7 +1,17 @@
 {
   "pulls": {
-    "at": 1789804247.992914,
+    "at": 1789804277.950325,
     "payload": [
+      {
+        "author": "scheeren",
+        "base": "development",
+        "ci": "pending",
+        "head": "feature/mm-7-goggles-visual-model",
+        "index": "10",
+        "state": "open",
+        "title": "Goggles overlay, tooltip, shaft visual and tinted block model (MM-7)",
+        "updated": "2026-09-19T07:50:49Z"
+      },
       {
         "author": "scheeren",
         "base": "development",
