@@ -1,9 +1,10 @@
 {
+  "block.metered_motor.metered_motor": "Metered Motor",
+  "command.metered_motor.debug.done": "Tier %s motor: %s rpm, %s SU, %s efficiency",
   "tooltip.metered_motor.tier": "Tier %s",
   "tooltip.metered_motor.rpm": "%s rpm",
   "tooltip.metered_motor.capacity": "%s SU capacity",
   "tooltip.metered_motor.efficiency": "%sx efficiency",
   "tooltip.metered_motor.rate": "%s emeralds per minute",
-  "tooltip.metered_motor.unrolled": "Unrolled",
-  "block.metered_motor.metered_motor": "Metered Motor"
+  "tooltip.metered_motor.unrolled": "Unrolled"
 }

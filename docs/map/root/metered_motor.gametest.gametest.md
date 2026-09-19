@@ -14,6 +14,14 @@ MM-2: the stats component survives an item stack's save/parse round trip, and a 
 - `void theComponentRoundTripsThroughAnItemStack(GameTestHelper helper)`
 - `void aNewerVersionReadsBackIntactAndReadOnly(GameTestHelper helper)`
 
+### `class DebugCommandGameTest` — `src/gametest/java/metered_motor/gametest/DebugCommandGameTest.java`
+MM-8: the pure stats builder rolls within bands and honours overrides, and the development-only command runs on the dispatcher and rejects a bad tier.
+- `void theBuilderRollsWithinTierBandsAndHonoursOverrides(GameTestHelper helper)`
+- `void theCommandWritesChosenStatsOntoTheHeldMotorOnADevelopmentServer(GameTestHelper helper)`
+- `void theCommandGivesANewMotorWhenNoneIsHeldOnADevelopmentServer(GameTestHelper helper)`
+- `void theCommandWritesStatsOntoAMotorThePlayerLooksAtOnADevelopmentServer(GameTestHelper helper)`
+- `void anUnknownTierIsRejectedByTheParser(GameTestHelper helper)`
+
 ### `class NoDuplicateOfferGameTest` — `src/gametest/java/metered_motor/gametest/NoDuplicateOfferGameTest.java`
 MM-5: a villager that already offers a metered motor refuses a second, through metered_motor:no_motor_offered reading the villager's live offers off LootContextParams.THIS_ENTITY (TRADE-REQ-006, TRADE-DEC-004).
 - `void aVillagerAlreadyOfferingAMotorRefusesASecond(GameTestHelper helper)`
