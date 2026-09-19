@@ -18,10 +18,12 @@ The development-only `/metered_motor debug <tier> [rpm] [capacity] [efficiency]`
 
 ## Acceptance criteria
 
-- [ ] Game test: the command, invoked with a tier and no other arguments, places or targets a motor with stats rolled inside that tier's bands and a full inventory; given explicit rpm/capacity/efficiency, the block carries exactly those values (`DebugCommandGameTest`).
-- [ ] Game test: the command parses and executes through the server's dispatcher on a development server, proving registration (`DebugCommandGameTest`).
-- [ ] The entrypoint registers the command only behind `FabricLoader.isDevelopmentEnvironment()`, confirmed by code review noted in this ticket.
+- [x] Game test: the command, invoked with a tier and no other arguments, places or targets a motor with stats rolled inside that tier's bands and a full inventory; given explicit rpm/capacity/efficiency, the block carries exactly those values (`DebugCommandGameTest`).
+- [x] Game test: the command parses and executes through the server's dispatcher on a development server, proving registration (`DebugCommandGameTest`).
+- [x] The entrypoint registers the command only behind `FabricLoader.isDevelopmentEnvironment()`, confirmed by code review noted in this ticket.
 
 ## Constraints and prior findings
+
+Review 2026-09-19: 13 game tests on the branch merged with development; reviewer's own `just check` green. The command fills a looked-at motor's inventory once MM-4 makes the block entity a `Container` (checked at runtime, no code change needed). Finding: a mock player's `pick()` reads the previous tick's position, so tests call `setOldPosAndRot()` after moving it.
 
 `operations/testing.md`'s development-tool row. Modelled on `create_brass_compass`'s BC-15 (`/brass_compass debug`): registered only in development, a plain builder method shared by the game test and the command, feedback through a translation key. Blocked by MM-3 (a real block entity for the command to target or place).
