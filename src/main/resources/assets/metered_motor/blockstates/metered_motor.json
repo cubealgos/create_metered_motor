@@ -1,10 +1,22 @@
 {
   "variants": {
-    "facing=down": { "model": "metered_motor:block/metered_motor" },
-    "facing=up": { "model": "metered_motor:block/metered_motor" },
-    "facing=north": { "model": "metered_motor:block/metered_motor" },
-    "facing=south": { "model": "metered_motor:block/metered_motor" },
-    "facing=west": { "model": "metered_motor:block/metered_motor" },
-    "facing=east": { "model": "metered_motor:block/metered_motor" }
+    "facing=down,tier=i": { "model": "metered_motor:block/metered_motor/block_vertical_i", "x": 180 },
+    "facing=down,tier=ii": { "model": "metered_motor:block/metered_motor/block_vertical_ii", "x": 180 },
+    "facing=down,tier=iii": { "model": "metered_motor:block/metered_motor/block_vertical_iii", "x": 180 },
+    "facing=up,tier=i": { "model": "metered_motor:block/metered_motor/block_vertical_i" },
+    "facing=up,tier=ii": { "model": "metered_motor:block/metered_motor/block_vertical_ii" },
+    "facing=up,tier=iii": { "model": "metered_motor:block/metered_motor/block_vertical_iii" },
+    "facing=north,tier=i": { "model": "metered_motor:block/metered_motor/block_i", "y": 180 },
+    "facing=north,tier=ii": { "model": "metered_motor:block/metered_motor/block_ii", "y": 180 },
+    "facing=north,tier=iii": { "model": "metered_motor:block/metered_motor/block_iii", "y": 180 },
+    "facing=south,tier=i": { "model": "metered_motor:block/metered_motor/block_i" },
+    "facing=south,tier=ii": { "model": "metered_motor:block/metered_motor/block_ii" },
+    "facing=south,tier=iii": { "model": "metered_motor:block/metered_motor/block_iii" },
+    "facing=east,tier=i": { "model": "metered_motor:block/metered_motor/block_i", "y": 270 },
+    "facing=east,tier=ii": { "model": "metered_motor:block/metered_motor/block_ii", "y": 270 },
+    "facing=east,tier=iii": { "model": "metered_motor:block/metered_motor/block_iii", "y": 270 },
+    "facing=west,tier=i": { "model": "metered_motor:block/metered_motor/block_i", "y": 90 },
+    "facing=west,tier=ii": { "model": "metered_motor:block/metered_motor/block_ii", "y": 90 },
+    "facing=west,tier=iii": { "model": "metered_motor:block/metered_motor/block_iii", "y": 90 }
   }
 }

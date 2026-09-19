@@ -2,8 +2,13 @@ Create Fly: Metered Motor is MIT-licensed (LICENSE).
 
 It runs on and is built against:
 - Create Fly (ZurrTum/Create-Fly), CC0-1.0, mod id `create`: the kinetic block entities, the stress
-  network, the GUI framework, the creative tab.
-- Create (Creators of Create), MIT: the upstream Create Fly ports.
+  network, the GUI framework, the creative tab. The metered motor's block and item models and its
+  `motor`/`casing` textures are Create Fly's creative motor model and textures
+  (`assets/create/models/block/creative_motor/`, `assets/create/textures/block/creative_motor.png`,
+  `creative_casing.png`), recoloured per tier by `tools/recolour.py` (MOTOR-DEC-004); the axis and
+  flap-display textures the models reference are Create Fly's own, unmodified and not copied.
+- Create (Creators of Create), MIT, Simibubi and contributors: the upstream Create Fly ports,
+  including the creative motor's original design.
 - Fabric Loader and Fabric API (FabricMC), Apache-2.0.
 - Minecraft (Mojang): the mod uses vanilla's emerald and emerald block items directly; no Mojang
   asset (texture, model or sound) is copied.

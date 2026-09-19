@@ -89,6 +89,7 @@ Permanent; a withdrawn item keeps its number.
 | `DEC-006` | One block and one item; tier, rpm, stress capacity and efficiency on a component that travels between item and block | written |
 | `DEC-007` | Metered: emeralds burn in proportion to the stress the network draws | written |
 | `DEC-008` | Edges: empty stops it, a redstone signal pauses it, five slots for emeralds and emerald blocks, automation inserts only | written |
+| `MOTOR-DEC-004` | The model is Create's creative motor, recoloured per tier (in `domains/motor.md`) | written |
 
 ## Open questions gathered
 

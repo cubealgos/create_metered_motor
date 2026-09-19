@@ -6,10 +6,16 @@ Every type with its summary and every non-private constructor, method and consta
 signature is the contract; read the source only when the summary is not enough.
 
 ### `class MeteredMotorClient` — `src/main/java/metered_motor/client/MeteredMotorClient.java`
-The client entrypoint: registers the rolled-stats tooltip (TRADE-REQ-005).
+The client entrypoint: registers the rolled-stats tooltip (TRADE-REQ-005) and the goggles overlay and shaft visual (MOTOR-REQ-012, MOTOR-REQ-013).
 - `void onInitializeClient()`
 
 ### `class MeteredMotorTooltip` — `src/main/java/metered_motor/client/MeteredMotorTooltip.java`
-The rolled-stats tooltip (TRADE-REQ-005, UI-REQ-006): shown on any item stack carrying MeteredMotor#STATS.
+The rolled-stats tooltip (TRADE-REQ-005, UI-REQ-006): shown on any item stack carrying MeteredMotor#STATS, or "unrolled" for a motor item with no roll (MOTOR-FAIL-003).
 - `void register()`
+
+### `class StatsText` — `src/main/java/metered_motor/client/StatsText.java`
+Number formatting shared by the item tooltip and the goggles overlay, so both surfaces read the same numbers the same way (UI-REQ-007).
+- `String decimal(double value)` — Two decimals, e.g.
+- `String percent(double fraction)` — A fraction in [0, 1] as a whole-number percentage.
+- `String duration(double seconds)` — Seconds as m:ss; the caller is responsible for a negative (not running) fallback.
 

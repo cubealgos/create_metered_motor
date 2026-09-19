@@ -39,6 +39,12 @@ client:
 spec-sync:
     rsync -a --delete "{{vault_spec}}/" docs/spec/
 
+# Recolour the creative motor's textures into the three tiers (MOTOR-REQ-013). Pass a Create Fly
+# jar path, e.g. `just recolour ~/.gradle/.../create-fly-26.2-rc-2-6.0.9-1.jar`; without one, reads
+# tools/source/ if the two PNGs were vendored there.
+recolour jar="":
+    python3 tools/recolour.py {{jar}}
+
 # Render the Modrinth icon on the blueprint badge Create add-ons share.
 # Renders from docs/modrinth/placeholder-motor.png by default: the motor's item texture does not
 # exist yet. MM-7 changes tools/icon.py's default to the real sprite once it does.

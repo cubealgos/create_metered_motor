@@ -2,99 +2,13 @@
   "credit": "Made with Blockbench",
   "parent": "block/block",
   "textures": {
-    "5": "metered_motor:block/casing_i",
-    "6": "metered_motor:block/motor_i",
+    "5": "metered_motor:block/casing_iii",
+    "6": "metered_motor:block/motor_iii",
     "7": "create:block/flap_display_front",
-    "particle": "metered_motor:block/casing_i",
-    "1_1": "create:block/axis_top",
+    "particle": "metered_motor:block/casing_iii",
     "1_0": "create:block/axis"
   },
   "elements": [
-    {
-      "name": "Axis",
-      "from": [
-        6,
-        6,
-        6
-      ],
-      "to": [
-        10,
-        10,
-        16
-      ],
-      "neoforge_data": {
-        "calculate_normals": true
-      },
-      "rotation": {
-        "angle": 22.5,
-        "axis": "z",
-        "origin": [
-          8,
-          8,
-          8
-        ]
-      },
-      "faces": {
-        "north": {
-          "uv": [
-            6,
-            6,
-            10,
-            10
-          ],
-          "rotation": 180,
-          "texture": "#1_1"
-        },
-        "east": {
-          "uv": [
-            6,
-            0,
-            10,
-            10
-          ],
-          "rotation": 270,
-          "texture": "#1_0"
-        },
-        "south": {
-          "uv": [
-            6,
-            6,
-            10,
-            10
-          ],
-          "texture": "#1_1"
-        },
-        "west": {
-          "uv": [
-            6,
-            0,
-            10,
-            10
-          ],
-          "rotation": 90,
-          "texture": "#1_0"
-        },
-        "up": {
-          "uv": [
-            6,
-            0,
-            10,
-            10
-          ],
-          "rotation": 180,
-          "texture": "#1_0"
-        },
-        "down": {
-          "uv": [
-            6,
-            0,
-            10,
-            10
-          ],
-          "texture": "#1_0"
-        }
-      }
-    },
     {
       "name": "Back",
       "from": [
@@ -914,21 +828,19 @@
         0.625,
         0.625
       ]
-    },
-    "fixed": {
-      "rotation": [
-        0,
-        -90,
-        0
-      ],
-      "scale": [
-        0.5,
-        0.5,
-        0.5
-      ]
     }
   },
   "groups": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
     {
       "name": "shaft",
       "origin": [
@@ -937,42 +849,9 @@
         8
       ],
       "color": 0,
-      "children": [
-        0
-      ]
+      "children": []
     },
-    {
-      "name": "block",
-      "origin": [
-        8,
-        8,
-        8
-      ],
-      "color": 0,
-      "children": [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        {
-          "name": "shaft",
-          "origin": [
-            8,
-            8,
-            8
-          ],
-          "color": 0,
-          "children": []
-        },
-        11,
-        12
-      ]
-    }
+    10,
+    11
   ]
 }

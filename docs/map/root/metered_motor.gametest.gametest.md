@@ -67,6 +67,12 @@ MM-4: taking an emerald from a slot that only holds an emerald block splits it i
 MM-3/MM-4: the state machine driven from redstone and the inventory (MM-4's fuel gate) turns Create's network on and off (MOTOR-REQ-004, MOTOR-REQ-010, docs/spec/domains/motor.md §3).
 - `void fuelAndRedstoneDriveTheStateMachineAndTheNetwork(GameTestHelper helper)`
 
+### `class TierStateGameTest` — `src/gametest/java/metered_motor/gametest/TierStateGameTest.java`
+MM-7: the tier block state property is set at placement from the item's stats, so the blockstate JSON alone picks the model set (MOTOR-REQ-013, MOTOR-DEC-004).
+- `void placingATierIiiItemYieldsTierIiiState(GameTestHelper helper)`
+- `void anItemWithNoStatsPlacesTierI(GameTestHelper helper)`
+- `void breakingAndReplacingKeepsTheTier(GameTestHelper helper)`
+
 ### `class TradeFileGameTest` — `src/gametest/java/metered_motor/gametest/TradeFileGameTest.java`
 MM-5: the three toolsmith trade files resolve through Registries.VILLAGER_TRADE and each is tagged into its toolsmith level (TRADE-REQ-001, TRADE-REQ-003).
 - `void theThreeTradesResolveAndAreTaggedIntoTheirLevel(GameTestHelper helper)`
