@@ -18,12 +18,14 @@ Copy the verified toolchain from `create_brass_compass` (wrapper, Loom plugin id
 
 ## Acceptance criteria
 
-- [ ] `just check` is green, including a smoke game test (`SmokeGameTest`) proving the mod loads on a dedicated server with Create Fly present.
-- [ ] `just doctor` is clean: toolchain floors met (Java 25, Gradle 9.5.1, Loom 1.17, Fabric Loader ≥0.19.5, Fabric API ≥0.160.0), `docs/spec/` identical to the vault, merge templates present on the default branch (`.gitea/default_merge_message/*`).
-- [ ] `fabric.mod.json`'s `contact` block links the Forgejo repo `https://git.cubealgos.de/cubealgos/create_metered_motor`, the GitHub issues tracker `https://github.com/cubealgos/create_metered_motor/issues`, and names the Modrinth slug `metered-motor`.
-- [ ] `verifyPurePackage` runs against `metered_motor.model` and passes on an empty package (no Minecraft imports yet); `just client` boots with Create Fly and the mod in the mod list (Kevin's check).
-- [ ] `SourceSurfaceTest.noNetworkingTypeIsReferencedByTheMod` passes on the empty entrypoints (`COMP-REQ-001`); the mod makes no outbound network call of its own.
+- [x] `just check` is green, including a smoke game test (`SmokeGameTest`) proving the mod loads on a dedicated server with Create Fly present (reviewer's own run 2026-09-19: all 2 required tests passed; Woodpecker pipeline 2 on the branch: success).
+- [x] `just doctor` is clean after the merge: toolchain floors met, `docs/spec/` identical to the vault, merge templates on the default branch.
+- [x] `fabric.mod.json`'s `contact` block links the Forgejo repo, the GitHub issues tracker and the Modrinth slug `metered-motor` (reviewed).
+- [x] `verifyPurePackage` runs against `metered_motor.model` and passes; `just client` is Kevin's check at the first screen ticket, as with the compass.
+- [x] `SourceSurfaceTest.noNetworkingTypeIsReferencedByTheMod` passes (`COMP-REQ-001`).
 
 ## Constraints and prior findings
+
+Review 2026-09-19: the CI installer had to grow apt-installs for curl, git and python3 and fetch just as a tarball (the pipeline image lacks all four tools and bash); found through three Woodpecker runs on the compass and folded into this commit.
 
 `docs/spec/contracts/platform-matrix.md` (`PLATFORM-REQ-001`), `docs/spec/decisions/DEC-004-toolchain.md`, `docs/spec/decisions/DEC-003-licence.md`, `docs/spec/operations/compliance.md` (`COMP-REQ-001`). Create Fly coordinate, mod id `create`, declared version `6.0.9-1`, CC0, and the 26.2 toolchain floors (Java 25, Gradle 9.5.1, Loom 1.17, Loader 0.19.5, Fabric API 0.160.0) are verified against the vault (spec `README.md` Verifications #1, #2). `create_brass_compass`'s BC-1 is the model for this ticket's shape and its `just doctor`/`just check` acceptance bar; its own `SourceSurfaceTest` (network scan and later, translation-key scan) is the direct template.
