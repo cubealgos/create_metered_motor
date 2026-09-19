@@ -22,10 +22,19 @@ MM-8: the pure stats builder rolls within bands and honours overrides, and the d
 - `void theCommandWritesStatsOntoAMotorThePlayerLooksAtOnADevelopmentServer(GameTestHelper helper)`
 - `void anUnknownTierIsRejectedByTheParser(GameTestHelper helper)`
 
+### `class NoDuplicateOfferGameTest` — `src/gametest/java/metered_motor/gametest/NoDuplicateOfferGameTest.java`
+MM-5: a villager that already offers a metered motor refuses a second, through metered_motor:no_motor_offered reading the villager's live offers off LootContextParams.THIS_ENTITY (TRADE-REQ-006, TRADE-DEC-004).
+- `void aVillagerAlreadyOfferingAMotorRefusesASecond(GameTestHelper helper)`
+
 ### `class PlacementGameTest` — `src/gametest/java/metered_motor/gametest/PlacementGameTest.java`
 MM-3: placing from an item copies its stats into the block entity, and an unrolled item places rolled at tier I's middle (MOTOR-REQ-003, MOTOR-FAIL-003).
 - `void placingFromAnItemCopiesItsStats(GameTestHelper helper)`
 - `void anItemWithNoStatsPlacesRolledAtTheMiddleOfTierI(GameTestHelper helper)`
+
+### `class RollGameTest` — `src/gametest/java/metered_motor/gametest/RollGameTest.java`
+MM-5: metered_motor:roll, decoded exactly as a trade file would write it and applied through net.minecraft.world.level.storage.loot.functions.LootItemFunction#apply, lands within its tier's bands; a malformed band is rejected in favour of the tier's default (TRADE-REQ-002, TRADE-REQ-004).
+- `void aTierIiRollLandsWithinItsBands(GameTestHelper helper)`
+- `void aMalformedBandFallsBackToTheTierDefaultAndLogs(GameTestHelper helper)`
 
 ### `class SmokeGameTest` — `src/gametest/java/metered_motor/gametest/SmokeGameTest.java`
 M0: the mod loads beside Create Fly; everything else follows.
@@ -34,4 +43,8 @@ M0: the mod loads beside Create Fly; everything else follows.
 ### `class StateGameTest` — `src/gametest/java/metered_motor/gametest/StateGameTest.java`
 MM-3: the state machine driven from redstone and the (placeholder) fuel flag turns Create's network on and off (MOTOR-REQ-004, MOTOR-REQ-010, docs/spec/domains/motor.md §3).
 - `void fuelAndRedstoneDriveTheStateMachineAndTheNetwork(GameTestHelper helper)`
+
+### `class TradeFileGameTest` — `src/gametest/java/metered_motor/gametest/TradeFileGameTest.java`
+MM-5: the three toolsmith trade files resolve through Registries.VILLAGER_TRADE and each is tagged into its toolsmith level (TRADE-REQ-001, TRADE-REQ-003).
+- `void theThreeTradesResolveAndAreTaggedIntoTheirLevel(GameTestHelper helper)`
 

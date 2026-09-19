@@ -4,6 +4,7 @@ import metered_motor.block.MotorBlocks;
 import metered_motor.component.StatsCodec;
 import metered_motor.debug.DebugCommand;
 import metered_motor.model.Stats;
+import metered_motor.trade.TradeRegistration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
@@ -33,6 +34,7 @@ public final class MeteredMotor implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        TradeRegistration.register();
         MotorBlocks.register();
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) DebugCommand.register();
         LOGGER.info("Metered Motor ready beside Create Fly");
