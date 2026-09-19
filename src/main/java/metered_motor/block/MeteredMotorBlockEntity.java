@@ -117,7 +117,8 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
     protected void read(ValueInput input, boolean clientPacket) {
         super.read(input, clientPacket);
         stats = input.read("Stats", StatsCodec.CODEC).orElseGet(() -> Stats.middleOf(Tier.I));
-        state = MotorState.valueOf(input.getStringOr("State", MotorState.STOPPED.name()));
+        String saved = input.getStringOr("State", MotorState.STOPPED.name());
+        state = java.util.Arrays.stream(MotorState.values()).filter(m -> m.name().equals(saved)).findFirst().orElse(MotorState.STOPPED);
         hasFuel = input.getBooleanOr("HasFuel", false);
     }
 }
