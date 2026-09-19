@@ -4,5 +4,6 @@
   "tooltip.metered_motor.capacity": "%s SU capacity",
   "tooltip.metered_motor.efficiency": "%sx efficiency",
   "tooltip.metered_motor.rate": "%s emeralds per minute",
-  "tooltip.metered_motor.unrolled": "Unrolled"
+  "tooltip.metered_motor.unrolled": "Unrolled",
+  "block.metered_motor.metered_motor": "Metered Motor"
 }

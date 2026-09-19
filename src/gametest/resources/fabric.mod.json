@@ -11,7 +11,10 @@
       "metered_motor.gametest.ComponentGameTest",
       "metered_motor.gametest.TradeFileGameTest",
       "metered_motor.gametest.RollGameTest",
-      "metered_motor.gametest.NoDuplicateOfferGameTest"
+      "metered_motor.gametest.NoDuplicateOfferGameTest",
+      "metered_motor.gametest.PlacementGameTest",
+      "metered_motor.gametest.BreakGameTest",
+      "metered_motor.gametest.StateGameTest"
     ]
   },
   "depends": {

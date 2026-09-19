@@ -1,5 +1,6 @@
 package metered_motor;
 
+import metered_motor.block.MotorBlocks;
 import metered_motor.component.StatsCodec;
 import metered_motor.model.Stats;
 import metered_motor.trade.TradeRegistration;
@@ -32,6 +33,7 @@ public final class MeteredMotor implements ModInitializer {
     @Override
     public void onInitialize() {
         TradeRegistration.register();
+        MotorBlocks.register();
         LOGGER.info("Metered Motor ready beside Create Fly");
     }
 }

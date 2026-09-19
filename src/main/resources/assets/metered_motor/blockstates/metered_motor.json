@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=down": { "model": "metered_motor:block/metered_motor" },
+    "facing=up": { "model": "metered_motor:block/metered_motor" },
+    "facing=north": { "model": "metered_motor:block/metered_motor" },
+    "facing=south": { "model": "metered_motor:block/metered_motor" },
+    "facing=west": { "model": "metered_motor:block/metered_motor" },
+    "facing=east": { "model": "metered_motor:block/metered_motor" }
+  }
+}
