@@ -16,8 +16,20 @@
   "goggles.metered_motor.emeralds": "%s emeralds inside",
   "goggles.metered_motor.remaining": "%s remaining",
   "goggles.metered_motor.idle": "Idle",
-  "goggles.metered_motor.state": "State: %s",
   "goggles.metered_motor.state.running": "Running",
   "goggles.metered_motor.state.stopped": "Stopped",
-  "goggles.metered_motor.state.paused": "Paused"
+  "goggles.metered_motor.state.paused": "Paused",
+  "screen.metered_motor.title": "The Metered Motor",
+  "screen.metered_motor.tier": "Tier %s",
+  "screen.metered_motor.rpm": "%s rpm",
+  "screen.metered_motor.capacity": "%s SU capacity",
+  "screen.metered_motor.efficiency": "%sx efficiency",
+  "screen.metered_motor.rate": "%s emeralds/min at full load",
+  "screen.metered_motor.load": "Load: %s%%",
+  "screen.metered_motor.emeralds_inside": "%s emeralds inside",
+  "screen.metered_motor.remaining": "%s remaining",
+  "screen.metered_motor.remaining_idle": "Idle",
+  "screen.metered_motor.state.running": "Running",
+  "screen.metered_motor.state.stopped": "Stopped",
+  "screen.metered_motor.state.paused": "Paused"
 }

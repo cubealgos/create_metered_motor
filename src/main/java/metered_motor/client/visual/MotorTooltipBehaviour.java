@@ -2,7 +2,6 @@ package metered_motor.client.visual;
 
 import com.zurrtum.create.client.foundation.blockEntity.behaviour.tooltip.GeneratingKineticTooltipBehaviour;
 import java.util.List;
-import java.util.Locale;
 import metered_motor.block.MeteredMotorBlockEntity;
 import metered_motor.client.StatsText;
 import metered_motor.model.Stats;
@@ -15,6 +14,10 @@ import net.minecraft.network.chat.Component;
  * type through {@code com.zurrtum.create.api.behaviour.BlockEntityBehaviour.addClient}, the same
  * client-side registry Create Fly's own {@code AllBlockEntityBehaviours} populates for its kinetic
  * blocks (docs/spec/README.md Verification 10).
+ *
+ * <p>Every number and enum name goes through {@link StatsText}, the same formatting the item
+ * tooltip and the motor screen (MM-6) use, so the readout reads identically on every surface
+ * (UI-REQ-007).
  */
 public final class MotorTooltipBehaviour extends GeneratingKineticTooltipBehaviour<MeteredMotorBlockEntity> {
     public MotorTooltipBehaviour(MeteredMotorBlockEntity blockEntity) {
@@ -30,22 +33,21 @@ public final class MotorTooltipBehaviour extends GeneratingKineticTooltipBehavio
 
         MeteredMotorBlockEntity motor = blockEntity;
         Stats stats = motor.stats();
-        tooltip.add(Component.translatable("goggles.metered_motor.tier", stats.tier().name()));
+        tooltip.add(Component.translatable("goggles.metered_motor.tier", StatsText.tier(stats.tier())));
         tooltip.add(Component.translatable("goggles.metered_motor.rpm", stats.rpm()));
         tooltip.add(Component.translatable("goggles.metered_motor.capacity", stats.capacity()));
-        tooltip.add(Component.translatable("goggles.metered_motor.efficiency", StatsText.decimal(stats.efficiency())));
-        tooltip.add(Component.translatable("goggles.metered_motor.rate", StatsText.decimal(stats.ratePerMinute())));
-        tooltip.add(Component.translatable("goggles.metered_motor.load", StatsText.percent(motor.load())));
+        tooltip.add(Component.translatable("goggles.metered_motor.efficiency", StatsText.twoDecimals(stats.efficiency())));
+        tooltip.add(Component.translatable("goggles.metered_motor.rate", StatsText.twoDecimals(stats.ratePerMinute())));
+        tooltip.add(Component.translatable("goggles.metered_motor.load", StatsText.wholePercent(motor.load())));
         tooltip.add(Component.translatable("goggles.metered_motor.emeralds", motor.emeraldsInside()));
 
-        double secondsRemaining = motor.secondsRemaining();
-        Component remaining = secondsRemaining < 0
-            ? Component.translatable("goggles.metered_motor.idle")
-            : Component.translatable("goggles.metered_motor.remaining", StatsText.duration(secondsRemaining));
-        tooltip.add(remaining);
+        String remaining = StatsText.remaining(motor.secondsRemaining());
+        tooltip.add(
+            remaining == null
+                ? Component.translatable("goggles.metered_motor.idle")
+                : Component.translatable("goggles.metered_motor.remaining", remaining));
 
-        String stateKey = "goggles.metered_motor.state." + motor.state().name().toLowerCase(Locale.ROOT);
-        tooltip.add(Component.translatable("goggles.metered_motor.state", Component.translatable(stateKey)));
+        tooltip.add(Component.translatable("goggles.metered_motor.state." + StatsText.state(motor.state())));
         return true;
     }
 }
