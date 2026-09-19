@@ -45,9 +45,10 @@ spec-sync:
 recolour jar="":
     python3 tools/recolour.py {{jar}}
 
-# Render the Modrinth icon on the blueprint badge Create add-ons share.
-# Renders from docs/modrinth/placeholder-motor.png by default: the motor's item texture does not
-# exist yet. MM-7 changes tools/icon.py's default to the real sprite once it does.
+# Render the Modrinth icon (MM-12): a real 3D projection of the mod's own tier II motor item
+# model, at the gui rotation Kevin picked ([30, 315, -45]), on the cubealgos navy badge. Reads
+# create: textures from a local Create Fly jar found by globbing the Gradle cache; pass
+# --jar PATH via tools/icon.py directly to override.
 icon:
     python3 tools/icon.py
 
