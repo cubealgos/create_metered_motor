@@ -18,12 +18,12 @@ The inventory and the meter (`ARCH-DEC-003`): `WorldlyContainer` with five slots
 
 ## Acceptance criteria
 
-- [ ] Game test: a hopper above and a Create funnel both insert emeralds and refuse cobblestone (`InsertGameTest`).
-- [ ] Game test: a hopper below the block extracts nothing (`ExtractGameTest`).
-- [ ] Game test: under a known network load, the meter takes an emerald after the computed time (`rate`, load and the per-second increment fixed in the test) (`MeterGameTest`).
-- [ ] Game test: inserting an emerald block splits it into nine loose emeralds in the inventory (`SplitGameTest`).
-- [ ] Game test: the motor stops when the inventory empties and the meter reaches one, and resumes on the next emerald (`EmptyGameTest`).
-- [ ] Game test: a motor alone on its network (capacity equal to its own) reads zero load and does not advance the meter (`MOTOR-FAIL-002`).
+- [x] Game test: a hopper above and a Create funnel both insert emeralds and refuse cobblestone (`InsertGameTest`). The funnel half drives the `Container` a funnel inserts through (`AllTransfer.getInventory` → `ItemInventory.insert`), the ticket's fallback: a live funnel needs a belt headless.
+- [x] Game test: a hopper below the block extracts nothing (`ExtractGameTest`).
+- [x] Game test: under a known network load, the meter takes an emerald after the computed time (`rate`, load and the per-second increment fixed in the test) (`MeterGameTest`). Asserts the per-second fractional advance against rate/60 × load, the documented fallback; the take itself is covered by `SplitGameTest.aFullInventoryOfBlocksStillBurns` (review fix c37906d).
+- [x] Game test: inserting an emerald block splits it into nine loose emeralds in the inventory (`SplitGameTest`).
+- [x] Game test: the motor stops when the inventory empties and the meter reaches one, and resumes on the next emerald (`EmptyGameTest`).
+- [x] Game test: a motor alone on its network (capacity equal to its own) reads zero load and does not advance the meter (`MOTOR-FAIL-002`).
 
 ## Constraints and prior findings
 
