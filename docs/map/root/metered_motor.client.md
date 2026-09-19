@@ -6,6 +6,10 @@ Every type with its summary and every non-private constructor, method and consta
 signature is the contract; read the source only when the summary is not enough.
 
 ### `class MeteredMotorClient` — `src/main/java/metered_motor/client/MeteredMotorClient.java`
-The client entrypoint.
+The client entrypoint: registers the rolled-stats tooltip (TRADE-REQ-005).
 - `void onInitializeClient()`
+
+### `class MeteredMotorTooltip` — `src/main/java/metered_motor/client/MeteredMotorTooltip.java`
+The rolled-stats tooltip (TRADE-REQ-005, UI-REQ-006): shown on any item stack carrying MeteredMotor#STATS.
+- `void register()`
 

@@ -1,0 +1,33 @@
+{
+  "wants": {
+    "id": "minecraft:emerald",
+    "count": 40
+  },
+  "gives": {
+    "id": "metered_motor:metered_motor"
+  },
+  "given_item_modifiers": [
+    {
+      "function": "metered_motor:roll",
+      "tier": 2,
+      "rpm": {
+        "min": 32.0,
+        "max": 128.0
+      },
+      "capacity": {
+        "min": 2048.0,
+        "max": 8192.0
+      },
+      "efficiency": {
+        "min": 0.75,
+        "max": 1.25
+      }
+    }
+  ],
+  "merchant_predicate": {
+    "condition": "metered_motor:no_motor_offered"
+  },
+  "max_uses": 2,
+  "reputation_discount": 0.2,
+  "xp": 15
+}

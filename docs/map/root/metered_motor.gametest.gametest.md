@@ -10,7 +10,20 @@ MM-2: the stats component survives an item stack's save/parse round trip, and a 
 - `void theComponentRoundTripsThroughAnItemStack(GameTestHelper helper)`
 - `void aNewerVersionReadsBackIntactAndReadOnly(GameTestHelper helper)`
 
+### `class NoDuplicateOfferGameTest` — `src/gametest/java/metered_motor/gametest/NoDuplicateOfferGameTest.java`
+MM-5: a villager that already offers a metered motor refuses a second, through metered_motor:no_motor_offered reading the villager's live offers off LootContextParams.THIS_ENTITY (TRADE-REQ-006, TRADE-DEC-004).
+- `void aVillagerAlreadyOfferingAMotorRefusesASecond(GameTestHelper helper)`
+
+### `class RollGameTest` — `src/gametest/java/metered_motor/gametest/RollGameTest.java`
+MM-5: metered_motor:roll, decoded exactly as a trade file would write it and applied through net.minecraft.world.level.storage.loot.functions.LootItemFunction#apply, lands within its tier's bands; a malformed band is rejected in favour of the tier's default (TRADE-REQ-002, TRADE-REQ-004).
+- `void aTierIiRollLandsWithinItsBands(GameTestHelper helper)`
+- `void aMalformedBandFallsBackToTheTierDefaultAndLogs(GameTestHelper helper)`
+
 ### `class SmokeGameTest` — `src/gametest/java/metered_motor/gametest/SmokeGameTest.java`
 M0: the mod loads beside Create Fly; everything else follows.
 - `void theModLoadsBesideCreateFly(GameTestHelper helper)`
+
+### `class TradeFileGameTest` — `src/gametest/java/metered_motor/gametest/TradeFileGameTest.java`
+MM-5: the three toolsmith trade files resolve through Registries.VILLAGER_TRADE and each is tagged into its toolsmith level (TRADE-REQ-001, TRADE-REQ-003).
+- `void theThreeTradesResolveAndAreTaggedIntoTheirLevel(GameTestHelper helper)`
 

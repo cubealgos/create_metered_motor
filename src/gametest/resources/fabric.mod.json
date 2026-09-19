@@ -8,7 +8,10 @@
   "entrypoints": {
     "fabric-gametest": [
       "metered_motor.gametest.SmokeGameTest",
-      "metered_motor.gametest.ComponentGameTest"
+      "metered_motor.gametest.ComponentGameTest",
+      "metered_motor.gametest.TradeFileGameTest",
+      "metered_motor.gametest.RollGameTest",
+      "metered_motor.gametest.NoDuplicateOfferGameTest"
     ]
   },
   "depends": {

@@ -2,6 +2,7 @@ package metered_motor;
 
 import metered_motor.component.StatsCodec;
 import metered_motor.model.Stats;
+import metered_motor.trade.TradeRegistration;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -30,6 +31,7 @@ public final class MeteredMotor implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        TradeRegistration.register();
         LOGGER.info("Metered Motor ready beside Create Fly");
     }
 }
