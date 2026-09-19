@@ -1,16 +1,16 @@
 {
   "pulls": {
-    "at": 1789804277.950325,
+    "at": 1789804557.110749,
     "payload": [
       {
         "author": "scheeren",
         "base": "development",
-        "ci": "pending",
+        "ci": "success",
         "head": "feature/mm-7-goggles-visual-model",
         "index": "10",
-        "state": "open",
-        "title": "Goggles overlay, tooltip, shaft visual and tinted block model (MM-7)",
-        "updated": "2026-09-19T07:50:49Z"
+        "state": "merged",
+        "title": "feat(metered_motor): goggles readout, shaft visual and the creative motor's model recoloured per tier (MM-7)",
+        "updated": "2026-09-19T07:51:29Z"
       },
       {
         "author": "scheeren",
