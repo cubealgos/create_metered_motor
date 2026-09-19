@@ -18,10 +18,10 @@ The renderer prototyped in the session scratchpad (`render_motor.py`: element pr
 
 ## Acceptance criteria
 
-- [ ] `just icon` regenerates `docs/modrinth/icon.png` (512 × 512, under 256 KiB) from the mod's own tier II model and textures at the chosen rotation.
-- [ ] `docs/modrinth/placeholder-motor.png` is gone and nothing references it.
-- [ ] `docs/modrinth/body.md` describes the icon as the brass motor on the navy badge.
-- [ ] Merged through a Forgejo pull request into `development`.
+- [x] `just icon` regenerates `docs/modrinth/icon.png` (512 × 512, under 256 KiB) from the mod's own tier II model and textures at the chosen rotation.
+- [x] `docs/modrinth/placeholder-motor.png` is gone and nothing references it.
+- [x] `docs/modrinth/body.md` describes the icon as the brass motor on the navy badge.
+- [x] Merged through a Forgejo pull request into `development`.
 
 ## Constraints and prior findings
 

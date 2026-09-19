@@ -1,7 +1,17 @@
 {
   "pulls": {
-    "at": 1789804557.110749,
+    "at": 1789804740.0888672,
     "payload": [
+      {
+        "author": "scheeren",
+        "base": "development",
+        "ci": "success",
+        "head": "documentation/mm-13-listing-conventions",
+        "index": "11",
+        "state": "merged",
+        "title": "docs(metered_motor): Modrinth body aligned with the live listing conventions: Create: title, category set, GitHub links (MM-13)",
+        "updated": "2026-09-19T07:56:08Z"
+      },
       {
         "author": "scheeren",
         "base": "development",
