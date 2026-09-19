@@ -14,6 +14,14 @@ MM-2: the stats component survives an item stack's save/parse round trip, and a 
 - `void theComponentRoundTripsThroughAnItemStack(GameTestHelper helper)`
 - `void aNewerVersionReadsBackIntactAndReadOnly(GameTestHelper helper)`
 
+### `class DebugCommandGameTest` — `src/gametest/java/metered_motor/gametest/DebugCommandGameTest.java`
+MM-8: the pure stats builder rolls within bands and honours overrides, and the development-only command runs on the dispatcher and rejects a bad tier.
+- `void theBuilderRollsWithinTierBandsAndHonoursOverrides(GameTestHelper helper)`
+- `void theCommandWritesChosenStatsOntoTheHeldMotorOnADevelopmentServer(GameTestHelper helper)`
+- `void theCommandGivesANewMotorWhenNoneIsHeldOnADevelopmentServer(GameTestHelper helper)`
+- `void theCommandWritesStatsOntoAMotorThePlayerLooksAtOnADevelopmentServer(GameTestHelper helper)`
+- `void anUnknownTierIsRejectedByTheParser(GameTestHelper helper)`
+
 ### `class PlacementGameTest` — `src/gametest/java/metered_motor/gametest/PlacementGameTest.java`
 MM-3: placing from an item copies its stats into the block entity, and an unrolled item places rolled at tier I's middle (MOTOR-REQ-003, MOTOR-FAIL-003).
 - `void placingFromAnItemCopiesItsStats(GameTestHelper helper)`

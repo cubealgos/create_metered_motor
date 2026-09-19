@@ -1,3 +1,4 @@
 {
-  "block.metered_motor.metered_motor": "Metered Motor"
+  "block.metered_motor.metered_motor": "Metered Motor",
+  "command.metered_motor.debug.done": "Tier %s motor: %s rpm, %s SU, %s efficiency"
 }
