@@ -18,13 +18,15 @@ First step: verify whether 26.2's `merchant_predicate` loot condition type sees 
 
 ## Acceptance criteria
 
-- [ ] The finding on whether `merchant_predicate` sees the villager and its offers is recorded in this ticket's Constraints section before the loot condition is written.
-- [ ] Game test: the three trade files parse through the recipe/loot manager and the tags contain their paths (`TradeFileGameTest`).
-- [ ] Game test: a mock toolsmith offer carries a roll inside its tier's band for rpm, capacity and efficiency (`RollGameTest`).
-- [ ] Game test: a villager already offering a motor does not draw a second at a later level (`NoDuplicateOfferGameTest`), exercising whichever mechanism the first step settled on.
-- [ ] Game test: a band whose minimum exceeds its maximum, or that leaves the tier's documented range by more than a factor of four, is rejected and the tier's default band is used instead, logged once (`TRADE-REQ-004`).
+- [x] The finding on whether `merchant_predicate` sees the villager and its offers is recorded in this ticket's Constraints section before the loot condition is written.
+- [x] Game test: the three trade files parse through the recipe/loot manager and the tags contain their paths (`TradeFileGameTest`).
+- [x] Game test: a mock toolsmith offer carries a roll inside its tier's band for rpm, capacity and efficiency (`RollGameTest`).
+- [x] Game test: a villager already offering a motor does not draw a second at a later level (`NoDuplicateOfferGameTest`), exercising whichever mechanism the first step settled on.
+- [x] Game test: a band whose minimum exceeds its maximum, or that leaves the tier's documented range by more than a factor of four, is rejected and the tier's default band is used instead, logged once (`TRADE-REQ-004`).
 
 ## Constraints and prior findings
+
+Review 2026-09-19: 12 game tests on the branch merged with development (the trade files need the motor item from MM-3 to load at all: 26.2's registry loader parses `gives.id` strictly and a missing item aborts the whole datapack load). The `.unrolled` tooltip line is reserved but not wired; MM-7 wires the item tooltip. Reviewer's own `just check` green.
 
 `TRADE-REQ-001..006`, `TRADE-DEC-001..004`, `TRADE-FAIL-002`, `ARCH-DEC-004`, `UI-REQ-006`. Verified: 26.2 villager trades are data (`data/<ns>/villager_trade/<path>.json`: `wants`, optional `additional_wants`, `gives`, `given_item_modifiers`, `max_uses`, `reputation_discount`, `xp`); a level's set draws `amount: 2` trades from its tag, which a datapack extends with `replace: false` (spec `README.md` Verification 5). Loot functions register in `BuiltInRegistries.LOOT_FUNCTION_TYPE` as `MapCodec`s; the context carries the random source (Verification 6). `TRADE-FAIL-002`: the trade rebalance experiment replaces vanilla's toolsmith tags but the mod's tag entries still append to the same tag path, so the trade survives it. Not this ticket's to close: Create Fly's largest boiler figure, taken as 18 × 1,024 = 18,432 SU for tier III's ceiling, confirmed against `CStress`/`BoilerData` only if time allows; otherwise carried forward as an open question. Blocked by MM-2 (the stats component and roll arithmetic this ticket's loot function writes).
 
