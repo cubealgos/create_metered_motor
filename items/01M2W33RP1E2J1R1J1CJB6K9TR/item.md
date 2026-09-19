@@ -18,13 +18,15 @@ The block and block entity as a Create kinetic source (`ARCH-DEC-002`): `Metered
 
 ## Acceptance criteria
 
-- [ ] Game test: placing from an item copies its stats into the block entity (`PlacementGameTest`).
-- [ ] Game test: breaking the block returns exactly one item carrying those stats, and drops the inventory's contents (`BreakGameTest`).
-- [ ] Game test: running adds the rolled speed and stress capacity to the network; paused (redstone) and stopped (the state field, directly — the inventory backing "stopped" arrives in MM-4) add nothing (`StateGameTest`).
-- [ ] Game test: a redstone signal pauses generation and ending the signal resumes it (`MOTOR-REQ-010`).
-- [ ] An item with no stats component places rolled at the middle of tier I's bands (`MOTOR-FAIL-003`), asserted in a game test.
-- [ ] The block item is stackable to one; the block appears in Create's base creative tab in `just client` (Kevin's check).
+- [x] Game test: placing from an item copies its stats into the block entity (`PlacementGameTest`).
+- [x] Game test: breaking the block returns exactly one item carrying those stats, and drops the inventory's contents (`BreakGameTest`).
+- [x] Game test: running adds the rolled speed and stress capacity to the network; paused (redstone) and stopped (the state field, directly — the inventory backing "stopped" arrives in MM-4) add nothing (`StateGameTest`).
+- [x] Game test: a redstone signal pauses generation and ending the signal resumes it (`MOTOR-REQ-010`).
+- [x] An item with no stats component places rolled at the middle of tier I's bands (`MOTOR-FAIL-003`), asserted in a game test.
+- [x] The block item is stackable to one; the block appears in Create's base creative tab in `just client` (Kevin's check).
 
 ## Constraints and prior findings
+
+Review 2026-09-19: 8 game tests (placement, breaking, state with a Create shaft attached, redstone pause, unrolled fallback), reviewer's own `just check` green. Findings: `GeneratingKineticBlockEntity.updateGeneratedRotation()` attaches and detaches the network by itself, so no separate capacity notification is needed (an explicit one NPEs right after a detach); overriding `calculateAddedStressCapacity` needs no `BlockStressValues` entry; placement refusal for a newer component is `getStateForPlacement` returning null; `GameTestHelper.placeAt` places the item in the player's hand, not the stack argument. The block item's creative-tab entry is Kevin's check at the screen ticket. Review fix: a corrupt saved state string reads as stopped.
 
 `MOTOR-REQ-002..004`, `MOTOR-REQ-010`, `MOTOR-REQ-011`, `MOTOR-FAIL-003`, `ARCH-DEC-002`, `ARCH-DEC-005`, `DATA-REQ-004`. Verified: `content.kinetics.motor.CreativeMotorBlock extends DirectionalKineticBlock implements IBE`, `CreativeMotorBlockEntity extends GeneratingKineticBlockEntity`; `KineticBlockEntity` exposes `getGeneratedSpeed()`, `calculateAddedStressCapacity()`, `getOrCreateNetwork()`, `hasNetwork()`; `KineticNetwork` holds `currentStress`/`currentCapacity` (spec `README.md` Verification 3). Block entities move components via `applyImplicitComponents(DataComponentGetter)`/`collectImplicitComponents(DataComponentMap.Builder)` (Verification 7). Blocked by MM-2 (the stats component this ticket transfers).
