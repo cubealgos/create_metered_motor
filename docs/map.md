@@ -15,11 +15,12 @@ signature page before calling into a package you did not write.
 |---|---|---|---|
 | `metered_motor` | root | MeteredMotor |  |
 | `metered_motor.block` | root | MeteredMotorBlock, MeteredMotorBlockEntity, MeteredMotorItem, MotorBlocks, MotorState | The motor as a Create kinetic source: the block, its item, its state machine and their registration (docs/spec/04-architecture.md ARCH-DEC-002). |
-| `metered_motor.client` | root | MeteredMotorClient |  |
+| `metered_motor.client` | root | MeteredMotorClient, MeteredMotorTooltip |  |
 | `metered_motor.component` | root | StatsCodec | The stats component's Minecraft-side codecs, registered by metered_motor.MeteredMotor (docs/spec/contracts/data-contract.md). |
 | `metered_motor.model` | root | Band, Meter, Roll, Stats, Tier | The pure part: the motor's rolled stats and the burn arithmetic, with no Minecraft imports (docs/spec/contracts/data-contract.md). |
+| `metered_motor.trade` | root | NoMotorOffered, RollFunction, TradeRegistration | The toolsmith trades: the roll loot function and the one-motor-per-villager predicate (docs/spec/domains/trade.md). |
 | `metered_motor` | root (test) | SourceSurfaceTest |  |
-| `metered_motor.gametest` | root (gametest) | BreakGameTest, ComponentGameTest, PlacementGameTest, SmokeGameTest, StateGameTest |  |
+| `metered_motor.gametest` | root (gametest) | BreakGameTest, ComponentGameTest, NoDuplicateOfferGameTest, PlacementGameTest, RollGameTest, SmokeGameTest, StateGameTest, TradeFileGameTest |  |
 | `metered_motor.model` | root (test) | BandTest, MeterTest, RollTest, StatsTest |  |
 
 | build script | what |
