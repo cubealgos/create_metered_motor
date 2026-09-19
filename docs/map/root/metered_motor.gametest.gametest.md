@@ -14,6 +14,24 @@ MM-2: the stats component survives an item stack's save/parse round trip, and a 
 - `void theComponentRoundTripsThroughAnItemStack(GameTestHelper helper)`
 - `void aNewerVersionReadsBackIntactAndReadOnly(GameTestHelper helper)`
 
+### `class EmptyGameTest` — `src/gametest/java/metered_motor/gametest/EmptyGameTest.java`
+MM-4: taking the last emerald stops the motor, and the next emerald resumes it (MOTOR-FAIL-004, docs/spec/domains/motor.md §3).
+- `void theLastEmeraldStopsTheMotorAndTheNextResumesIt(GameTestHelper helper)`
+
+### `class ExtractGameTest` — `src/gametest/java/metered_motor/gametest/ExtractGameTest.java`
+MM-4: no face extracts from the motor; a hopper below it, which always sucks from the container directly above regardless of its own facing, takes nothing (MOTOR-REQ-009).
+- `void aHopperBelowExtractsNothing(GameTestHelper helper)`
+
+### `class InsertGameTest` — `src/gametest/java/metered_motor/gametest/InsertGameTest.java`
+MM-4: vanilla hoppers and Create's logistics both insert emeralds and emerald blocks, and refuse anything else, through every face (MOTOR-REQ-008, ARCH-DEC-003, docs/spec/README.md Verification 4).
+- `void aHopperAboveInsertsEmeraldsAndRefusesCobblestone(GameTestHelper helper)`
+- `void createsLogisticsInsertThroughTheSameContainerAndRefuseCobblestone(GameTestHelper helper)` — MOTOR-REQ-008, docs/spec/README.md Verification 4: Create's funnels, arms and chutes reach a block's inventory through AllTransfer.getInventory, the same resolution InvManipulationBehaviour.getInventory() uses.
+
+### `class MeterGameTest` — `src/gametest/java/metered_motor/gametest/MeterGameTest.java`
+MM-4: the meter advances once a second in proportion to the network's actual load, read the way Create's stress gauge reads it, and not at all with nothing on the network to draw it (MOTOR-REQ-006, MOTOR-DEC-001, MOTOR-FAIL-002).
+- `void noConsumerReadsZeroLoadAndDoesNotAdvanceTheMeter(GameTestHelper helper)`
+- `void aKnownConsumerAdvancesTheMeterByTheComputedFraction(GameTestHelper helper)`
+
 ### `class PlacementGameTest` — `src/gametest/java/metered_motor/gametest/PlacementGameTest.java`
 MM-3: placing from an item copies its stats into the block entity, and an unrolled item places rolled at tier I's middle (MOTOR-REQ-003, MOTOR-FAIL-003).
 - `void placingFromAnItemCopiesItsStats(GameTestHelper helper)`
@@ -23,7 +41,11 @@ MM-3: placing from an item copies its stats into the block entity, and an unroll
 M0: the mod loads beside Create Fly; everything else follows.
 - `void theModLoadsBesideCreateFly(GameTestHelper helper)`
 
+### `class SplitGameTest` — `src/gametest/java/metered_motor/gametest/SplitGameTest.java`
+MM-4: taking an emerald from a slot that only holds an emerald block splits it into nine loose emeralds, leaving eight behind after the one taken (MOTOR-REQ-006).
+- `void takingFromAnEmeraldBlockLeavesEightLooseEmeralds(GameTestHelper helper)`
+
 ### `class StateGameTest` — `src/gametest/java/metered_motor/gametest/StateGameTest.java`
-MM-3: the state machine driven from redstone and the (placeholder) fuel flag turns Create's network on and off (MOTOR-REQ-004, MOTOR-REQ-010, docs/spec/domains/motor.md §3).
+MM-3/MM-4: the state machine driven from redstone and the inventory (MM-4's fuel gate) turns Create's network on and off (MOTOR-REQ-004, MOTOR-REQ-010, docs/spec/domains/motor.md §3).
 - `void fuelAndRedstoneDriveTheStateMachineAndTheNetwork(GameTestHelper helper)`
 

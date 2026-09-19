@@ -11,11 +11,13 @@ import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
 /**
- * MM-3: the state machine driven from redstone and the (placeholder) fuel flag turns Create's
- * network on and off (MOTOR-REQ-004, MOTOR-REQ-010, docs/spec/domains/motor.md §3).
+ * MM-3/MM-4: the state machine driven from redstone and the inventory (MM-4's fuel gate) turns
+ * Create's network on and off (MOTOR-REQ-004, MOTOR-REQ-010, docs/spec/domains/motor.md §3).
  */
 public final class StateGameTest {
     private static final BlockPos MOTOR_POS = new BlockPos(1, 1, 1);
@@ -28,7 +30,7 @@ public final class StateGameTest {
         helper.setBlock(MOTOR_POS, MotorBlocks.BLOCK.defaultBlockState().setValue(MeteredMotorBlock.FACING, Direction.NORTH));
         helper.setBlock(SHAFT_POS, AllBlocks.SHAFT.defaultBlockState().setValue(RotatedPillarKineticBlock.AXIS, Direction.Axis.Z));
         MeteredMotorBlockEntity motor = helper.getBlockEntity(MOTOR_POS, MeteredMotorBlockEntity.class);
-        motor.setHasFuel(true);
+        motor.setItem(0, new ItemStack(Items.EMERALD, 64));
 
         helper.runAfterDelay(10, () -> {
             assertRunning(helper, motor);
@@ -41,7 +43,7 @@ public final class StateGameTest {
                 helper.runAfterDelay(10, () -> {
                     assertRunning(helper, motor);
 
-                    motor.setHasFuel(false);
+                    motor.clearContent();
                     helper.runAfterDelay(10, () -> {
                         assertPausedOrStopped(helper, motor, MotorState.STOPPED);
                         helper.succeed();
