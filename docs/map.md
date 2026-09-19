@@ -15,9 +15,11 @@ signature page before calling into a package you did not write.
 |---|---|---|---|
 | `metered_motor` | root | MeteredMotor |  |
 | `metered_motor.client` | root | MeteredMotorClient |  |
-| `metered_motor.model` | root |  | The pure part: the motor's rolled stats and the burn arithmetic, with no Minecraft imports (docs/spec/contracts/data-contract.md). |
+| `metered_motor.component` | root | StatsCodec | The stats component's Minecraft-side codecs, registered by metered_motor.MeteredMotor (docs/spec/contracts/data-contract.md). |
+| `metered_motor.model` | root | Band, Meter, Roll, Stats, Tier | The pure part: the motor's rolled stats and the burn arithmetic, with no Minecraft imports (docs/spec/contracts/data-contract.md). |
 | `metered_motor` | root (test) | SourceSurfaceTest |  |
-| `metered_motor.gametest` | root (gametest) | SmokeGameTest |  |
+| `metered_motor.gametest` | root (gametest) | ComponentGameTest, SmokeGameTest |  |
+| `metered_motor.model` | root (test) | BandTest, MeterTest, RollTest, StatsTest |  |
 
 | build script | what |
 |---|---|
