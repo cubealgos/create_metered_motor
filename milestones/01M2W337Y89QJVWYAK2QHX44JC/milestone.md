@@ -3,7 +3,7 @@ schema_version: 1
 id: 01M2W337Y89QJVWYAK2QHX44JC
 key: M2
 title: "The trade: roll, tags, one motor per villager"
-status: todo
+status: done
 created_at: 2026-09-19T05:44:15Z
 ---
 
