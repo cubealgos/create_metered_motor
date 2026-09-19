@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "metered_motor",
+  "version": "${version}",
+  "name": "Create Fly: Metered Motor",
+  "description": "A kinetic power source sold by toolsmith villagers: its rpm, stress capacity and efficiency are rolled per offer, and it burns emeralds in proportion to the stress its network draws.",
+  "authors": [
+    "Cube Algos"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/metered-motor",
+    "sources": "https://git.cubealgos.de/cubealgos/create_metered_motor",
+    "issues": "https://github.com/cubealgos/create_metered_motor/issues"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "metered_motor.MeteredMotor"
+    ],
+    "client": [
+      "metered_motor.client.MeteredMotorClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "~26.2",
+    "java": ">=25",
+    "fabric-api": ">=0.160.0",
+    "create": "6.0.9-1"
+  }
+}

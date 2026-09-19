@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "metered_motor_gametest",
+  "version": "1.0.0",
+  "name": "Metered Motor game tests",
+  "license": "MIT",
+  "environment": "server",
+  "entrypoints": {
+    "fabric-gametest": [
+      "metered_motor.gametest.SmokeGameTest"
+    ]
+  },
+  "depends": {
+    "metered_motor": "*"
+  }
+}
