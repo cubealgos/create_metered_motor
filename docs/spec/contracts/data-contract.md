@@ -28,7 +28,8 @@ codec-serialised into the world save like any vanilla component.
 ## The block entity's saved state
 
 The five-slot inventory (emeralds and emerald blocks only, `MOTOR-REQ-008`), the meter fraction
-(`0 ≤ m < 1`), and `stats` copied in whole from the item at placement (`MOTOR-REQ-003`).
+(`0 ≤ m ≤ 1`; exactly one means the meter is held because nothing could be taken, `MOTOR-REQ-007`),
+and `stats` copied in whole from the item at placement (`MOTOR-REQ-003`).
 
 ## Rules
 
