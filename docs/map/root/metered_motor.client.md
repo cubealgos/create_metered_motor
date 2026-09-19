@@ -6,10 +6,18 @@ Every type with its summary and every non-private constructor, method and consta
 signature is the contract; read the source only when the summary is not enough.
 
 ### `class MeteredMotorClient` — `src/main/java/metered_motor/client/MeteredMotorClient.java`
-The client entrypoint: registers the rolled-stats tooltip (TRADE-REQ-005).
+The client entrypoint: registers the rolled-stats tooltip (TRADE-REQ-005) and the motor screen (MM-6).
 - `void onInitializeClient()`
 
 ### `class MeteredMotorTooltip` — `src/main/java/metered_motor/client/MeteredMotorTooltip.java`
 The rolled-stats tooltip (TRADE-REQ-005, UI-REQ-006): shown on any item stack carrying MeteredMotor#STATS.
 - `void register()`
+
+### `class StatsText` — `src/main/java/metered_motor/client/StatsText.java`
+Number and enum formatting shared by every place the rolled stats or the live readout become text: the item tooltip, the motor screen (`MOTOR-REQ-012`, docs/spec/domains/ui.md `UI-REQ-003`), and later the goggles overlay.
+- `String tier(Tier tier)` — The tier's name as rolled: "I", "II" or "III".
+- `String twoDecimals(double value)` — Two decimal places, e.g.
+- `String wholePercent(double fraction)` — A fraction 0..1 as a whole-number percentage, e.g.
+- `String state(MotorState state)` — The state's lower-case name, matching a screen.metered_motor.state.
+- `String remaining(double secondsRemaining)` — Minutes and seconds until the inventory runs out at the current load, floored to the second; null when secondsRemaining is negative (not running, or drawing no load: metered_motor.block.MeteredMotorBlockEntity#secondsRemaining()), for the caller to show the idle text instead (`MOTOR-DEC-001`).
 

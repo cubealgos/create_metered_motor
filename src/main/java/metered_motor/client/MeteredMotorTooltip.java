@@ -11,6 +11,10 @@ import net.minecraft.network.chat.Component;
  * so this listens on every stack rather than the item's own {@code appendHoverText}; once the item
  * lands, its tooltip may move there and this callback stays a harmless no-op for stacks without the
  * component.
+ *
+ * <p>Efficiency and rate go through {@link StatsText}, the same formatting the motor screen (MM-6)
+ * and, later, the goggles overlay use, so the two decimal places and the {@code Locale.ROOT}
+ * formatting (`UI-REQ-007`) are written once.
  */
 public final class MeteredMotorTooltip {
     private MeteredMotorTooltip() {
@@ -22,11 +26,11 @@ public final class MeteredMotorTooltip {
             if (stats == null) {
                 return;
             }
-            lines.add(Component.translatable("tooltip.metered_motor.tier", stats.tier().name()));
+            lines.add(Component.translatable("tooltip.metered_motor.tier", StatsText.tier(stats.tier())));
             lines.add(Component.translatable("tooltip.metered_motor.rpm", stats.rpm()));
             lines.add(Component.translatable("tooltip.metered_motor.capacity", stats.capacity()));
-            lines.add(Component.translatable("tooltip.metered_motor.efficiency", String.format("%.2f", stats.efficiency())));
-            lines.add(Component.translatable("tooltip.metered_motor.rate", String.format("%.2f", stats.ratePerMinute())));
+            lines.add(Component.translatable("tooltip.metered_motor.efficiency", StatsText.twoDecimals(stats.efficiency())));
+            lines.add(Component.translatable("tooltip.metered_motor.rate", StatsText.twoDecimals(stats.ratePerMinute())));
         });
     }
 }

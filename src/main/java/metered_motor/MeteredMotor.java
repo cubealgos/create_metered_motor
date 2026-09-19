@@ -3,6 +3,7 @@ package metered_motor;
 import metered_motor.block.MotorBlocks;
 import metered_motor.component.StatsCodec;
 import metered_motor.debug.DebugCommand;
+import metered_motor.menu.MotorMenus;
 import metered_motor.model.Stats;
 import metered_motor.trade.TradeRegistration;
 import net.fabricmc.api.ModInitializer;
@@ -36,6 +37,7 @@ public final class MeteredMotor implements ModInitializer {
     public void onInitialize() {
         TradeRegistration.register();
         MotorBlocks.register();
+        MotorMenus.register();
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) DebugCommand.register();
         LOGGER.info("Metered Motor ready beside Create Fly");
     }

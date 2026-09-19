@@ -15,6 +15,7 @@ The metered motor block: a Create directional kinetic source, placed and shafted
 - `Direction.Axis getRotationAxis(BlockState state)`
 - `Class<MeteredMotorBlockEntity> getBlockEntityClass()`
 - `BlockEntityType<? extends MeteredMotorBlockEntity> getBlockEntityType()`
+- `InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit)` — Right-click, not sneaking, opens the motor screen (docs/spec/domains/ui.md `UI-UC-001`); sneaking falls through so a block in hand can still be placed against it.
 
 ### `class MeteredMotorBlockEntity` — `src/main/java/metered_motor/block/MeteredMotorBlockEntity.java`
 The motor's kinetic source of truth while placed: the rolled Stats, the MotorState state machine, the five-slot emerald inventory and the once-a-second Meter that burns it in proportion to the network's load, and the generated speed and stress capacity Create's network reads while running, zero otherwise (MOTOR-REQ-002, MOTOR-REQ-003, MOTOR-REQ-004, MOTOR-REQ-006, MOTOR-REQ-007, MOTOR-REQ-008, MOTOR-REQ-009, MOTOR-REQ-010, MOTOR-REQ-011, MOTOR-FAIL-002, MOTOR-FAIL-004, ARCH-DEC-003, DATA-REQ-004).
