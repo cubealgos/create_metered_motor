@@ -16,13 +16,15 @@ signature page before calling into a package you did not write.
 | `metered_motor` | root | MeteredMotor |  |
 | `metered_motor.block` | root | MeteredMotorBlock, MeteredMotorBlockEntity, MeteredMotorItem, MotorBlocks, MotorState, MotorTier | The motor as a Create kinetic source: the block, its item, its state machine and their registration (docs/spec/04-architecture.md ARCH-DEC-002). |
 | `metered_motor.client` | root | MeteredMotorClient, MeteredMotorTooltip, StatsText |  |
+| `metered_motor.client.screen` | root | MeteredMotorScreen, MotorScreens | The motor screen's client side: registration and the AbstractSimiContainerScreen that draws it (docs/spec/domains/ui.md UI-UC-001, UI-REQ-001). |
 | `metered_motor.client.visual` | root | MeteredMotorRenderer, MotorTooltipBehaviour, MotorVisuals | The motor's client-only rendering and goggles overlay: the shaft's visual, its fallback renderer and the TooltipBehaviour that draws the goggles readout (MOTOR-REQ-012, MOTOR-REQ-013). |
 | `metered_motor.component` | root | StatsCodec | The stats component's Minecraft-side codecs, registered by metered_motor.MeteredMotor (docs/spec/contracts/data-contract.md). |
 | `metered_motor.debug` | root | DebugCommand |  |
+| `metered_motor.menu` | root | MeteredMotorMenu, MotorMenuProvider, MotorMenus, MotorSlot | The motor screen's server side: the MenuType registration, the menu and its slot over the block entity's own container (docs/spec/domains/ui.md UI-UC-001). |
 | `metered_motor.model` | root | Band, Meter, Roll, Stats, Tier | The pure part: the motor's rolled stats and the burn arithmetic, with no Minecraft imports (docs/spec/contracts/data-contract.md). |
 | `metered_motor.trade` | root | NoMotorOffered, RollFunction, TradeRegistration | The toolsmith trades: the roll loot function and the one-motor-per-villager predicate (docs/spec/domains/trade.md). |
 | `metered_motor` | root (test) | ModelAssetsTest, SourceSurfaceTest |  |
-| `metered_motor.gametest` | root (gametest) | BreakGameTest, ComponentGameTest, DebugCommandGameTest, EmptyGameTest, ExtractGameTest, InsertGameTest, MeterGameTest, NoDuplicateOfferGameTest, PlacementGameTest, RollGameTest, SmokeGameTest, SplitGameTest, StateGameTest, TierStateGameTest, TradeFileGameTest |  |
+| `metered_motor.gametest` | root (gametest) | BreakGameTest, ComponentGameTest, DebugCommandGameTest, EmptyGameTest, ExtractGameTest, InsertGameTest, MeterGameTest, NoDuplicateOfferGameTest, PlacementGameTest, RollGameTest, SlotRulesGameTest, SmokeGameTest, SplitGameTest, StateGameTest, SyncGameTest, TierStateGameTest, TradeFileGameTest |  |
 | `metered_motor.model` | root (test) | BandTest, MeterTest, RollTest, StatsTest |  |
 
 | build script | what |
