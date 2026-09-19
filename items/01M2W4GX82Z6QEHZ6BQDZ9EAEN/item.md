@@ -18,7 +18,7 @@ Copy `create_brass_compass/docs/modrinth/body.md`, `gallery.md` and `tools/icon.
 
 ## Acceptance criteria
 
-- [ ] `docs/modrinth/body.md`, `docs/modrinth/gallery.md`, `docs/modrinth/icon.png` (512x512, under 256 KiB) and `tools/icon.py` exist; `just icon` regenerates the icon; the body cites no number the spec does not (tiers, prices, burn); merged through a Forgejo pull request.
+- [x] `docs/modrinth/body.md`, `docs/modrinth/gallery.md`, `docs/modrinth/icon.png` (512x512, 78 KiB) and `tools/icon.py` exist; `just icon` regenerates the icon from `docs/modrinth/placeholder-motor.png` until MM-7 supplies the real sprite; the tier table is the spec's (reviewed 2026-09-19); merged through a Forgejo pull request into `development`, verified against `origin/development`.
 
 ## Constraints and prior findings
 
