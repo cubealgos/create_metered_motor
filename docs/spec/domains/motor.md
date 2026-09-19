@@ -65,7 +65,7 @@ advances only in `running`.
 | `MOTOR-REQ-010` | **While** the block receives a redstone signal, the system shall pause it: no generation, no burn. | Must | `UC-005` |
 | `MOTOR-REQ-011` | **When** the block's chunk is not ticking, the system shall neither burn nor count time; the meter resumes where it was. | Must | `ARCH-FAIL-002` |
 | `MOTOR-REQ-012` | The item's tooltip and Create's goggles overlay on the block shall show tier, rpm, stress capacity, efficiency and rate; the overlay adds load, emeralds inside and the remaining time at the current load. | Should | `UC-007` |
-| `MOTOR-REQ-013` | The block shall render its shaft turning with Create's kinetic visuals and show the tier on the model (a tinted band: andesite, brass, gold). | Should | Not-you |
+| `MOTOR-REQ-013` | The block shall use Create's creative motor model geometry and its textures with the creative magenta replaced by the tier's colour (andesite grey for I, brass for II, gold for III), the dark inner parts unchanged, and render its shaft turning with Create's kinetic visuals. | Should | `MOTOR-DEC-004` |
 | `MOTOR-REQ-014` | **Where** a component's version is newer than the build's, the system shall keep it intact, show the item as unknown and refuse placement. | Must | `contracts/data-contract.md` |
 
 ## 6. Failure modes
@@ -97,3 +97,9 @@ advances only in `running`.
   full-boiler roll at the worst efficiency burns 3 emeralds a minute at full load, 60 a day; the
   best tier III roll 0.8 a minute; a water-wheel-class roll one every three to twenty minutes.
   **Cost if wrong:** a number in code; a rebalance is a release, not a datapack (`ARCH-DEC-004`).
+- `MOTOR-DEC-004` — **The model is Create's creative motor, recoloured per tier** (Kevin,
+  2026-09-19): the creative motor's geometry is unused in survival, so a survival motor wearing it
+  reads as Create's own; the only difference is the casing colour, which is the tier. The textures
+  are copied from Create Fly (CC0; upstream Create MIT) into this mod's assets, recoloured by a
+  script under `tools/`, and credited in `NOTICE`. **Cost if wrong:** three texture files and a
+  model copy; a later model of our own replaces them without touching code.

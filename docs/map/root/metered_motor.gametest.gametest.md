@@ -77,6 +77,12 @@ MM-6: the readout the screen would show is exactly the block entity's own synced
 - `void theReadoutFieldsMatchTheBlockEntityAfterABurnCycle(GameTestHelper helper)`
 - `void anIdleMotorFormatsAsIdleNotAsATime(GameTestHelper helper)`
 
+### `class TierStateGameTest` — `src/gametest/java/metered_motor/gametest/TierStateGameTest.java`
+MM-7: the tier block state property is set at placement from the item's stats, so the blockstate JSON alone picks the model set (MOTOR-REQ-013, MOTOR-DEC-004).
+- `void placingATierIiiItemYieldsTierIiiState(GameTestHelper helper)`
+- `void anItemWithNoStatsPlacesTierI(GameTestHelper helper)`
+- `void breakingAndReplacingKeepsTheTier(GameTestHelper helper)`
+
 ### `class TradeFileGameTest` — `src/gametest/java/metered_motor/gametest/TradeFileGameTest.java`
 MM-5: the three toolsmith trade files resolve through Registries.VILLAGER_TRADE and each is tagged into its toolsmith level (TRADE-REQ-001, TRADE-REQ-003).
 - `void theThreeTradesResolveAndAreTaggedIntoTheirLevel(GameTestHelper helper)`

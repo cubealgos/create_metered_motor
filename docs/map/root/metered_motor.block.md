@@ -9,7 +9,9 @@ The motor as a Create kinetic source: the block, its item, its state machine and
 
 ### `class MeteredMotorBlock` — `src/main/java/metered_motor/block/MeteredMotorBlock.java`
 The metered motor block: a Create directional kinetic source, placed and shafted like the creative motor, that refuses placement of a stats component newer than this build can read (MOTOR-REQ-001, MOTOR-REQ-002, MOTOR-REQ-014, ARCH-DEC-002).
+- `EnumProperty<MotorTier> TIER` — The rolled tier, set once at placement, that selects the block's model set (MOTOR-REQ-013, MOTOR-DEC-004).
 - `MeteredMotorBlock(BlockBehaviour.Properties properties)`
+- `void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)`
 - `BlockState getStateForPlacement(BlockPlaceContext context)` — Delegates to DirectionalKineticBlock's placement (the creative motor's own, unchanged) unless the held item's stats are a version newer than this build, in which case placement is refused by returning null: BlockItem.place then fails and keeps the item and its component untouched (MOTOR-REQ-014, DATA-REQ-001).
 - `boolean hasShaftTowards(LevelReader level, BlockPos pos, BlockState state, Direction face)`
 - `Direction.Axis getRotationAxis(BlockState state)`
@@ -62,4 +64,11 @@ Registers the metered motor block, its item and its block entity type, and lists
 
 ### `enum MotorState` — `src/main/java/metered_motor/block/MotorState.java`
 The motor's three states and the edges between them: fed and unsignalled runs, a redstone signal pauses, empty stops (docs/spec/domains/motor.md §3).
+
+### `enum MotorTier` — `src/main/java/metered_motor/block/MotorTier.java`
+Adapts Tier to a block state value: MeteredMotorBlock's tier property selects the block's model set (andesite grey, brass or gold casing) the way facing selects its orientation (MOTOR-REQ-013, MOTOR-DEC-004).
+- `MotorTier(Tier tier)`
+- `Tier tier()` — The domain tier this block state value stands for.
+- `MotorTier of(Tier tier)` — The block state value for a domain tier.
+- `String getSerializedName()`
 

@@ -6,15 +6,15 @@ Every type with its summary and every non-private constructor, method and consta
 signature is the contract; read the source only when the summary is not enough.
 
 ### `class MeteredMotorClient` — `src/main/java/metered_motor/client/MeteredMotorClient.java`
-The client entrypoint: registers the rolled-stats tooltip (TRADE-REQ-005) and the motor screen (MM-6).
+The client entrypoint: registers the rolled-stats tooltip (TRADE-REQ-005), the motor screen (MM-6) and the goggles overlay and shaft visual (MOTOR-REQ-012, MOTOR-REQ-013).
 - `void onInitializeClient()`
 
 ### `class MeteredMotorTooltip` — `src/main/java/metered_motor/client/MeteredMotorTooltip.java`
-The rolled-stats tooltip (TRADE-REQ-005, UI-REQ-006): shown on any item stack carrying MeteredMotor#STATS.
+The rolled-stats tooltip (TRADE-REQ-005, UI-REQ-006): shown on any item stack carrying MeteredMotor#STATS, or "unrolled" for a motor item with no roll (MOTOR-FAIL-003).
 - `void register()`
 
 ### `class StatsText` — `src/main/java/metered_motor/client/StatsText.java`
-Number and enum formatting shared by every place the rolled stats or the live readout become text: the item tooltip, the motor screen (`MOTOR-REQ-012`, docs/spec/domains/ui.md `UI-REQ-003`), and later the goggles overlay.
+Number and enum formatting shared by every place the rolled stats or the live readout become text: the item tooltip, the motor screen (`MOTOR-REQ-012`, docs/spec/domains/ui.md `UI-REQ-003`) and the goggles overlay.
 - `String tier(Tier tier)` — The tier's name as rolled: "I", "II" or "III".
 - `String twoDecimals(double value)` — Two decimal places, e.g.
 - `String wholePercent(double fraction)` — A fraction 0..1 as a whole-number percentage, e.g.

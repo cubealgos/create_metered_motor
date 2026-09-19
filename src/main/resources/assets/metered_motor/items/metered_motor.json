@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "metered_motor:item/metered_motor"
+  }
+}

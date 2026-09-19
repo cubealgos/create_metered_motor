@@ -5,6 +5,12 @@
 Every type with its summary and every non-private constructor, method and constant. The
 signature is the contract; read the source only when the summary is not enough.
 
+### `class ModelAssetsTest` — `src/test/java/metered_motor/ModelAssetsTest.java`
+The metered motor's model assets, checked against the files themselves rather than by loading Minecraft (MOTOR-REQ-013): every model the blockstate JSON names exists, every model's texture references resolve to either a PNG in this mod's namespace or the create: namespace, and the six tier textures tools/recolour.py writes are 16x16.
+- `void everyBlockstateModelExists()`
+- `void everyModelsTextureReferenceResolves()`
+- `void theSixRecolouredTexturesAre16x16()`
+
 ### `class SourceSurfaceTest` — `src/test/java/metered_motor/SourceSurfaceTest.java`
 Two claims about the source tree, checked against the files themselves: the mod opens no socket of its own (COMP-REQ-001: no networking type is referenced outside Minecraft's own packet API), and every translation key the code names has an en_us entry.
 - `void noNetworkingTypeIsReferencedByTheMod()`

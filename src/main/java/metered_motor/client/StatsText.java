@@ -7,7 +7,7 @@ import metered_motor.model.Tier;
 /**
  * Number and enum formatting shared by every place the rolled stats or the live readout become
  * text: the item tooltip, the motor screen (`MOTOR-REQ-012`, docs/spec/domains/ui.md
- * `UI-REQ-003`), and later the goggles overlay. Every number goes through {@link Locale#ROOT}
+ * `UI-REQ-003`) and the goggles overlay. Every number goes through {@link Locale#ROOT}
  * (`UI-REQ-007`) so a client's own locale never turns a decimal point into a comma mid-readout.
  * Pure of Minecraft, Fabric and Create on purpose: the motor screen's own sync game test calls
  * these methods directly against the block entity's real values, and the server-only game-test
@@ -32,7 +32,7 @@ public final class StatsText {
         return String.format(Locale.ROOT, "%.0f", fraction * 100.0);
     }
 
-    /** The state's lower-case name, matching a {@code screen.metered_motor.state.<name>} key's suffix. */
+    /** The state's lower-case name, matching a {@code screen.metered_motor.state.<name>} or {@code goggles.metered_motor.state.<name>} key's suffix. */
     public static String state(MotorState state) {
         return state.name().toLowerCase(Locale.ROOT);
     }
