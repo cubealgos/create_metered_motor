@@ -25,4 +25,4 @@ The renderer prototyped in the session scratchpad (`render_motor.py`: element pr
 
 ## Constraints and prior findings
 
-Blocked by MM-7 (the recoloured model and textures). Rotation: to be filled in from Kevin's pick.
+Blocked by MM-7 (the recoloured model and textures). Rotation (Kevin, 2026-09-19, from three rendered sheets): gui rotation `[30, 315, -45]`, i.e. the classic shaft-end three-quarter view banked 45° anticlockwise, scale 0.625. Tier II brass. The projection renderer is kept in the cubealgos heimathafen layer at `standards/marketing/modrinth/block-model-render.py`.
