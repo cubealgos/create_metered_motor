@@ -54,6 +54,11 @@ MM-5: metered_motor:roll, decoded exactly as a trade file would write it and app
 - `void aTierIiRollLandsWithinItsBands(GameTestHelper helper)`
 - `void aMalformedBandFallsBackToTheTierDefaultAndLogs(GameTestHelper helper)`
 
+### `class SlotRulesGameTest` — `src/gametest/java/metered_motor/gametest/SlotRulesGameTest.java`
+MM-6: the motor's five slots accept only emeralds and emerald blocks — on a direct click and on shift-click from the player inventory in both directions (docs/spec/domains/ui.md `UI-REQ-002`, `MOTOR-REQ-008`, `MOTOR-REQ-009`).
+- `void theFiveSlotsAcceptOnlyEmeraldsAndEmeraldBlocks(GameTestHelper helper)`
+- `void quickMoveFromThePlayerInventoryRefusesCobblestoneAndAcceptsEmeralds(GameTestHelper helper)`
+
 ### `class SmokeGameTest` — `src/gametest/java/metered_motor/gametest/SmokeGameTest.java`
 M0: the mod loads beside Create Fly; everything else follows.
 - `void theModLoadsBesideCreateFly(GameTestHelper helper)`
@@ -66,6 +71,11 @@ MM-4: taking an emerald from a slot that only holds an emerald block splits it i
 ### `class StateGameTest` — `src/gametest/java/metered_motor/gametest/StateGameTest.java`
 MM-3/MM-4: the state machine driven from redstone and the inventory (MM-4's fuel gate) turns Create's network on and off (MOTOR-REQ-004, MOTOR-REQ-010, docs/spec/domains/motor.md §3).
 - `void fuelAndRedstoneDriveTheStateMachineAndTheNetwork(GameTestHelper helper)`
+
+### `class SyncGameTest` — `src/gametest/java/metered_motor/gametest/SyncGameTest.java`
+MM-6: the readout the screen would show is exactly the block entity's own synced fields, read the same way the screen reads them — through StatsText's pure formatting, so no menu or render context is needed on the dedicated server this game test runs on (docs/spec/domains/ui.md `UI-REQ-003`, `UI-DEC-002`).
+- `void theReadoutFieldsMatchTheBlockEntityAfterABurnCycle(GameTestHelper helper)`
+- `void anIdleMotorFormatsAsIdleNotAsATime(GameTestHelper helper)`
 
 ### `class TradeFileGameTest` — `src/gametest/java/metered_motor/gametest/TradeFileGameTest.java`
 MM-5: the three toolsmith trade files resolve through Registries.VILLAGER_TRADE and each is tagged into its toolsmith level (TRADE-REQ-001, TRADE-REQ-003).
