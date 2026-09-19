@@ -5,12 +5,25 @@
 Every type with its summary and every non-private constructor, method and constant. The
 signature is the contract; read the source only when the summary is not enough.
 
+### `class BreakGameTest` — `src/gametest/java/metered_motor/gametest/BreakGameTest.java`
+MM-3: breaking the motor drops exactly one item carrying its stats (MOTOR-REQ-003).
+- `void breakingDropsExactlyOneItemWithTheSameStats(GameTestHelper helper)`
+
 ### `class ComponentGameTest` — `src/gametest/java/metered_motor/gametest/ComponentGameTest.java`
 MM-2: the stats component survives an item stack's save/parse round trip, and a newer version reads back intact and read-only (DATA-REQ-001).
 - `void theComponentRoundTripsThroughAnItemStack(GameTestHelper helper)`
 - `void aNewerVersionReadsBackIntactAndReadOnly(GameTestHelper helper)`
 
+### `class PlacementGameTest` — `src/gametest/java/metered_motor/gametest/PlacementGameTest.java`
+MM-3: placing from an item copies its stats into the block entity, and an unrolled item places rolled at tier I's middle (MOTOR-REQ-003, MOTOR-FAIL-003).
+- `void placingFromAnItemCopiesItsStats(GameTestHelper helper)`
+- `void anItemWithNoStatsPlacesRolledAtTheMiddleOfTierI(GameTestHelper helper)`
+
 ### `class SmokeGameTest` — `src/gametest/java/metered_motor/gametest/SmokeGameTest.java`
 M0: the mod loads beside Create Fly; everything else follows.
 - `void theModLoadsBesideCreateFly(GameTestHelper helper)`
+
+### `class StateGameTest` — `src/gametest/java/metered_motor/gametest/StateGameTest.java`
+MM-3: the state machine driven from redstone and the (placeholder) fuel flag turns Create's network on and off (MOTOR-REQ-004, MOTOR-REQ-010, docs/spec/domains/motor.md §3).
+- `void fuelAndRedstoneDriveTheStateMachineAndTheNetwork(GameTestHelper helper)`
 

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "metered_motor:metered_motor",
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "metered_motor:stats"
+              ],
+              "source": "block_entity"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
