@@ -55,7 +55,7 @@ stress capacity, efficiency and rate at full load; an unrolled item says so.
 | `UI-REQ-004` | Every readout line shall be wrapped or truncated to its panel; no string may run past the frame. | Must | the compass, BC-10 |
 | `UI-REQ-005` | The goggles overlay shall add the readout's lines after Create's kinetic lines. | Should | `UI-UC-002` |
 | `UI-REQ-006` | The item tooltip shall show the rolled stats; an item without a roll shall say "unrolled". | Must | `UI-UC-003` |
-| `UI-REQ-007` | Every string shall be a translation key with an `en_us` entry; numbers are formatted by the client's locale. | Must | Not-you |
+| `UI-REQ-007` | Every string shall be a translation key with an `en_us` entry; numbers are formatted with `Locale.ROOT` (a dot decimal in every client language), so the tooltip, the screen, the goggles and the trade files never disagree (Kevin, 2026-09-19, from the MM-9 sweep; Create's own goggles do the same). | Must | Not-you |
 | `UI-REQ-008` | The screen shall be the only way to take emeralds out. | Must | `MOTOR-REQ-009` |
 
 ## 6. Failure modes

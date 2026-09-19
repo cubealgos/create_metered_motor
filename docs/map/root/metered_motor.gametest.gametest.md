@@ -89,6 +89,12 @@ MM-7: the tier block state property is set at placement from the item's stats, s
 - `void anItemWithNoStatsPlacesTierI(GameTestHelper helper)`
 - `void breakingAndReplacingKeepsTheTier(GameTestHelper helper)`
 
+### `class TooltipGameTest` — `src/gametest/java/metered_motor/gametest/TooltipGameTest.java`
+MM-14: the tooltip shows an unknown motor, not stat numbers, for a component newer than this build; the rolled stats for a current-version component; and "unrolled" for no component at all (MOTOR-REQ-014, UI-REQ-006, DATA-REQ-003).
+- `void aNewerVersionShowsAsUnknownWithNoStatLines(GameTestHelper helper)`
+- `void aCurrentVersionShowsTheStatLines(GameTestHelper helper)`
+- `void noComponentShowsTheUnrolledLine(GameTestHelper helper)`
+
 ### `class TradeFileGameTest` — `src/gametest/java/metered_motor/gametest/TradeFileGameTest.java`
 MM-5: the three toolsmith trade files resolve through Registries.VILLAGER_TRADE and each is tagged into its toolsmith level (TRADE-REQ-001, TRADE-REQ-003).
 - `void theThreeTradesResolveAndAreTaggedIntoTheirLevel(GameTestHelper helper)`

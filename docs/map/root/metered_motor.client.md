@@ -12,6 +12,7 @@ The client entrypoint: registers the rolled-stats tooltip (TRADE-REQ-005), the m
 ### `class MeteredMotorTooltip` — `src/main/java/metered_motor/client/MeteredMotorTooltip.java`
 The rolled-stats tooltip (TRADE-REQ-005, UI-REQ-006): shown on any item stack carrying MeteredMotor#STATS, or "unrolled" for a motor item with no roll (MOTOR-FAIL-003).
 - `void register()`
+- `List<Component> lines(ItemStack stack)` — The tooltip lines for a stack, pure of the Fabric callback so a game test can call it directly without registering the client-only event (`UI-REQ-006`, `MOTOR-REQ-014`, `DATA-REQ-003`): the rolled stats; "Unknown motor (newer version)" and no stat lines for a read-only component; "Unrolled" for a motor item with no component at all (MOTOR-FAIL-003); empty for any other item.
 
 ### `class StatsText` — `src/main/java/metered_motor/client/StatsText.java`
 Number and enum formatting shared by every place the rolled stats or the live readout become text: the item tooltip, the motor screen (`MOTOR-REQ-012`, docs/spec/domains/ui.md `UI-REQ-003`) and the goggles overlay.
