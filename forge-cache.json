@@ -1,7 +1,17 @@
 {
   "pulls": {
-    "at": 1789878952.3079,
+    "at": 1789881460.074134,
     "payload": [
+      {
+        "author": "scheeren",
+        "base": "development",
+        "ci": "success",
+        "head": "bugfix/mm-20-screen-padding",
+        "index": "20",
+        "state": "merged",
+        "title": "fix(metered_motor): the motor screen with an inner margin and no pointer tab under the inventory (MM-20)",
+        "updated": "2026-09-20T04:36:06Z"
+      },
       {
         "author": "scheeren",
         "base": "development",

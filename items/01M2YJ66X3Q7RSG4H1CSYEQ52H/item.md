@@ -18,14 +18,14 @@ The fixed-tier rework (`decisions/DEC-009-fixed-tiers.md`, Kevin 2026-09-20): no
 
 ## Acceptance criteria
 
-- [ ] Game test: a running tier I/II/III motor contributes 16,384 / 65,536 / 294,912 SU to its network at 64 rpm (`MOTOR-REQ-004`, `CapacityGameTest`).
-- [ ] Unit tests: `Tier.ratePerMinute()` is 16384/92160, 65536/92160, 294912/92160; the meter takes an emerald after the computed time under a fixed load (`MOTOR-REQ-005/006`).
-- [ ] Game test: version-1 components migrate to version 2 keeping the tier; a version-3 component stays read-only and unknown (`DATA-REQ-*`).
-- [ ] Game test: the three toolsmith trade files give tier I/II/III motors with the component set, no roll function referenced anywhere (`TRADE-REQ-001`, `TRADE-REQ-002` withdrawn).
-- [ ] Unit test: tooltip, screen rows and goggles rows contain no efficiency; goggles rows omit Capacity when Create's generator line is present (`MOTOR-REQ-012`, `UI-REQ-005`).
-- [ ] `docs/spec/` synced; `docs/modrinth/body.md` and `README.md` state the fixed tiers.
+- [x] Game test: a running tier I/II/III motor contributes 16,384 / 65,536 / 294,912 SU to its network at 64 rpm (`MOTOR-REQ-004`, `CapacityGameTest`).
+- [x] Unit tests: `Tier.ratePerMinute()` is 16384/92160, 65536/92160, 294912/92160; the meter takes an emerald after the computed time under a fixed load (`MOTOR-REQ-005/006`).
+- [x] Game test: version-1 components migrate to version 2 keeping the tier; a version-3 component stays read-only and unknown (`DATA-REQ-*`).
+- [x] Game test: the three toolsmith trade files give tier I/II/III motors with the component set, no roll function referenced anywhere (`TRADE-REQ-001`, `TRADE-REQ-002` withdrawn).
+- [x] Unit test: tooltip, screen rows and goggles rows contain no efficiency; goggles rows omit Capacity when Create's generator line is present (`MOTOR-REQ-012`, `UI-REQ-005`).
+- [x] `docs/spec/` synced; `docs/modrinth/body.md` and `README.md` state the fixed tiers.
 - [ ] `just client`: goggles show Create's capacity once and ours agree; the meter burns at the tier's rate under load (Kevin's check).
-- [ ] Merged through a Forgejo pull request into `development`.
+- [x] Merged through a Forgejo pull request into `development`.
 
 ## Constraints and prior findings
 
