@@ -1,7 +1,17 @@
 {
   "pulls": {
-    "at": 1789868478.415732,
+    "at": 1789868807.0982661,
     "payload": [
+      {
+        "author": "scheeren",
+        "base": "development",
+        "ci": "success",
+        "head": "bugfix/mm-15-tier-item-model",
+        "index": "15",
+        "state": "merged",
+        "title": "fix(metered_motor): the item model follows the rolled tier: andesite, brass, gold in the inventory, in hand and in the trade screen (MM-15)",
+        "updated": "2026-09-20T01:41:30Z"
+      },
       {
         "author": "scheeren",
         "base": "development",
