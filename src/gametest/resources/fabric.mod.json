@@ -26,7 +26,8 @@
       "metered_motor.gametest.SlotRulesGameTest",
       "metered_motor.gametest.SyncGameTest",
       "metered_motor.gametest.TooltipGameTest",
-      "metered_motor.gametest.OcclusionGameTest"
+      "metered_motor.gametest.OcclusionGameTest",
+      "metered_motor.gametest.RegistrationGameTest"
     ]
   },
   "depends": {
