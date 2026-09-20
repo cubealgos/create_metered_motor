@@ -7,12 +7,47 @@ signature is the contract; read the source only when the summary is not enough.
 
 The motor screen's server side: the MenuType registration, the menu and its slot over the block entity's own container (docs/spec/domains/ui.md UI-UC-001).
 
+### `class Layout` — `src/main/java/metered_motor/menu/Layout.java`
+Pure geometry for the motor screen and its menu (docs/spec/domains/ui.md `UI-REQ-001`, `UI-REQ-003`, `UI-REQ-004`), free of every Minecraft, Fabric and Create import so a plain JUnit test can load it directly: MeteredMotorMenu itself extends Create's MenuBase and cannot be class-loaded outside a running client or server.
+- `int SLOTS`
+- `int SLOT_SIZE`
+- `int WIDTH`
+- `int ATLAS_U`
+- `int TITLE_V`
+- `int TITLE_H`
+- `int TITLE_TEXT_Y` — The title text's y within the strip: `create_brass_compass`'s `EditScreen` offset, centred on a 9 px line.
+- `int LINE_COUNT`
+- `int FONT_LINE_HEIGHT`
+- `int LINE_GAP`
+- `int LINE_STRIDE`
+- `int LINE_TOP_PADDING` — Padding between the title strip and the first readout line.
+- `int LINE_START_Y` — The first readout line's y, measured from the window's own top edge.
+- `int SLOT_GAP` — Padding between the ninth readout line and the slot row.
+- `int SLOT_Y` — The slot row's y, measured from the window's own top edge.
+- `int SLOT_X`
+- `int SLOT_BG_U` — `stock_keeper.png`'s own request-slot art: a warm brown-and-tan 18x18 background that reads as Create's, unlike the flat grey `AllGuiTextures.JEI_SLOT` this screen drew before.
+- `int SLOT_BG_V`
+- `int BOTTOM_PADDING`
+- `int PANEL_V`
+- `int PANEL_H`
+- `int BODY_HEIGHT` — Everything the body must hold: top padding, nine lines, the slot gap, the slot row itself, bottom padding.
+- `int PANELS` — As many 20 px strips as the body needs; the static block below guards the division.
+- `int BOTTOM_V`
+- `int BOTTOM_H`
+- `int TOP_HEIGHT` — The panel's total height: the title strip, the tiled body, and the bottom band.
+- `int GAP` — The gap every `AbstractSimiContainerScreen` leaves above the player inventory frame.
+- `int PLAYER_INVENTORY_WIDTH` — `AllGuiTextures.PLAYER_INVENTORY`'s own size (176x108): duplicated here, not read live, so this class stays free of Create imports; keep in sync if Create Fly's own texture resizes.
+- `int PLAYER_INVENTORY_HEIGHT`
+- `int PLAYER_INV_X`
+- `int MAIN_INV_Y`
+- `int WINDOW_HEIGHT` — The whole window's height: the readout panel, the gap, and the player inventory frame.
+
 ### `class MeteredMotorMenu` — `src/main/java/metered_motor/menu/MeteredMotorMenu.java`
 The motor screen's menu (docs/spec/domains/ui.md UI-UC-001, `UI-REQ-001`, `UI-REQ-002`, `UI-REQ-008`): five real MotorSlots wrapping the block entity's own WorldlyContainer directly, so the same canPlaceItem rule a hopper obeys governs every click here too, plus the player's own inventory.
 - `int SLOTS` — The five emerald slots (MOTOR-REQ-008, MOTOR-REQ-009).
 - `int SLOT_SIZE`
-- `int WIDTH` — The screen's total width: `create_brass_compass`'s stock-keeper request atlas slice, reused at its proven 224px (the ticket's Constraints section).
-- `int TOP_HEIGHT` — The readout panel's total height: an 18px header, seven 20px tiled body strips and a 12px bottom band.
+- `int WIDTH` — The screen's total width: `create_brass_compass`'s stock-keeper request atlas slice, narrowed to its opaque 208px span (`Layout`'s class doc, MM-17).
+- `int TOP_HEIGHT` — The readout panel's total height: the title strip, the body tiled to fit the nine readout lines and the slot row, and the bottom band (`Layout`).
 - `int GAP` — The gap between the readout panel and Create's player-inventory frame, as every `AbstractSimiContainerScreen` leaves.
 - `int SLOT_X`
 - `int SLOT_Y`

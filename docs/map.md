@@ -20,11 +20,12 @@ signature page before calling into a package you did not write.
 | `metered_motor.client.visual` | root | MeteredMotorRenderer, MotorTooltipBehaviour, MotorVisuals | The motor's client-only rendering and goggles overlay: the shaft's visual, its fallback renderer and the TooltipBehaviour that draws the goggles readout (MOTOR-REQ-012, MOTOR-REQ-013). |
 | `metered_motor.component` | root | StatsCodec | The stats component's Minecraft-side codecs, registered by metered_motor.MeteredMotor (docs/spec/contracts/data-contract.md). |
 | `metered_motor.debug` | root | DebugCommand |  |
-| `metered_motor.menu` | root | MeteredMotorMenu, MotorMenuProvider, MotorMenus, MotorSlot | The motor screen's server side: the MenuType registration, the menu and its slot over the block entity's own container (docs/spec/domains/ui.md UI-UC-001). |
+| `metered_motor.menu` | root | Layout, MeteredMotorMenu, MotorMenuProvider, MotorMenus, MotorSlot | The motor screen's server side: the MenuType registration, the menu and its slot over the block entity's own container (docs/spec/domains/ui.md UI-UC-001). |
 | `metered_motor.model` | root | Band, Meter, Roll, Stats, Tier | The pure part: the motor's rolled stats and the burn arithmetic, with no Minecraft imports (docs/spec/contracts/data-contract.md). |
 | `metered_motor.trade` | root | NoMotorOffered, RollFunction, TradeRegistration | The toolsmith trades: the roll loot function and the one-motor-per-villager predicate (docs/spec/domains/trade.md). |
 | `metered_motor` | root (test) | ModelAssetsTest, SourceSurfaceTest |  |
 | `metered_motor.gametest` | root (gametest) | BreakGameTest, ComponentGameTest, DebugCommandGameTest, EmptyGameTest, ExtractGameTest, InsertGameTest, MeterGameTest, NoDuplicateOfferGameTest, PlacementGameTest, RegistrationGameTest, RollGameTest, SlotRulesGameTest, SmokeGameTest, SplitGameTest, StateGameTest, SyncGameTest, TierStateGameTest, TooltipGameTest, TradeFileGameTest |  |
+| `metered_motor.menu` | root (test) | LayoutTest |  |
 | `metered_motor.model` | root (test) | BandTest, MeterTest, RollTest, StatsTest |  |
 
 | build script | what |
@@ -39,5 +40,6 @@ signature page before calling into a package you did not write.
 | `tools/map.py` | Generate the repository map from the source: docs/map.md locates every package, docs/map/.md lists every type's summary and non-private signatures. | `scan_java(src)`, `summary_of(javadoc)`, `squeeze(text)`, `strip_annotations(head)`, `parse_java(path)`, `parse_member(head, type_name, doc)`, `package_summary(package_info)`, `parse_kotlin(path)`, `parse_python(path)`, `project_of(rel)`, `walk(root)`, `collect(root)`, `page_of(pkg)`, `render_locator(tree)`, `render_package(pkg)`, `render_all(root)`, `write(root, files)`, `check(root, files)`, `main(argv)` |
 | `tools/recolour.py` | Recolours Create's creative motor textures into this mod's three tiers (MOTOR-REQ-013, MOTOR-DEC-004). | `load_source(name, jar)`, `recolour(image, target_rgb)`, `main()` |
 | `tools/release_notes.py` | Print the release notes for a version: its CHANGELOG.md section plus the jar's SHA-256 (REL-REQ-002). | `section(changelog, version)`, `main()` |
+| `tools/screen_mock.py` | Composes a headless mock of the motor screen (MM-17) from Create Fly's own `stock_keeper.png` and `player_inventory.png` atlases, so the layout and the seam fix can be judged from a PNG without booting a client. | `find_jar(explicit)`, `load_atlas(jar, entry)`, `compose(stock_keeper, player_inventory)`, `main()` |
 | `tools/test_map.py` | The map generator, exercised as the command a person runs (rule 6 of the standard): a fixture tree in a temporary directory, `python3 tools/map.py` to write, `--check` to pass, an edit to the source, `--check` to fail. | `run(root)` |
 | `tools/test_release_notes.py` |  |  |
