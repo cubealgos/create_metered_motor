@@ -18,6 +18,13 @@ The fallback renderer for a Flywheel-less client: draws the shaft turning on the
 The goggles readout, appended after Create's own kinetic lines (speed, stress capacity) that GeneratingKineticTooltipBehaviour already draws for any generating kinetic source (MOTOR-REQ-012, UI-REQ-005, UI-UC-002).
 - `MotorTooltipBehaviour(MeteredMotorBlockEntity blockEntity)`
 - `boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking)`
+- `List<Row> rows(Stats stats, MotorState state, double load, int emeraldsInside, double secondsRemaining)` — The readout's lines in display order, the header first (MM-19, MOTOR-REQ-012, UI-REQ-005, UI-REQ-007).
+
+    - **nested** `record Row(String labelKey, String value, boolean valueIsKey, String unitKey, int indent)`
+    One line of the readout before #addRow turns it into a styled, indented Component: a header carries only labelKey, at indent 0; a body row carries a formatted value — or, when valueIsKey, a second translation key to resolve instead, for the state name and "no load" — and an optional unitKey, always at indent 1 (MM-19).
+    - `Row header(String labelKey)`
+    - `Row value(String labelKey, String value, String unitKey)`
+    - `Row translatedValue(String labelKey, String valueKey)`
 
 ### `class MotorVisuals` — `src/main/java/metered_motor/client/visual/MotorVisuals.java`
 The motor's client-only registrations: the goggles overlay, the shaft's rendering and the item model's tier property, all keyed off MotorBlocks#BLOCK_ENTITY_TYPE or MotorBlocks#ITEM (MOTOR-REQ-012, MOTOR-REQ-013).
