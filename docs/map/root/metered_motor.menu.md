@@ -16,13 +16,22 @@ Pure geometry for the motor screen and its menu (docs/spec/domains/ui.md `UI-REQ
 - `int TITLE_V`
 - `int TITLE_H`
 - `int TITLE_TEXT_Y` — The title text's y within the strip: `create_brass_compass`'s `EditScreen` offset, centred on a 9 px line.
-- `int LINE_COUNT`
 - `int FONT_LINE_HEIGHT`
-- `int LINE_GAP`
+- `int LINE_GAP` — No gap between lines: at the font's own line height, five lines already use the whole budget the window has (see class doc); Minecraft's own multi-line text commonly reads fine spaced by nothing more than the font's line height.
 - `int LINE_STRIDE`
-- `int LINE_TOP_PADDING` — Padding between the title strip and the first readout line.
-- `int LINE_START_Y` — The first readout line's y, measured from the window's own top edge.
-- `int SLOT_GAP` — Padding between the ninth readout line and the slot row.
+- `int LINE_TOP_PADDING` — Padding between the title strip and the header line.
+- `int HEADER_Y` — The header line's ("Tier III · Stopped") y, measured from the window's own top edge.
+- `int TABLE_ROWS` — The table's four rows, directly under the header line.
+- `int TABLE_START_Y`
+- `int TABLE_END_Y`
+- `int TEXT_LEFT`
+- `int COLUMN_GAP`
+- `int COLUMN_WIDTH`
+- `int LEFT_LABEL_X`
+- `int LEFT_VALUE_RIGHT_X`
+- `int RIGHT_LABEL_X`
+- `int RIGHT_VALUE_RIGHT_X`
+- `int SLOT_GAP` — Padding between the table's last row and the slot row.
 - `int SLOT_Y` — The slot row's y, measured from the window's own top edge.
 - `int SLOT_X`
 - `int SLOT_BG_U` — `stock_keeper.png`'s own request-slot art: a warm brown-and-tan 18x18 background that reads as Create's, unlike the flat grey `AllGuiTextures.JEI_SLOT` this screen drew before.
@@ -30,16 +39,19 @@ Pure geometry for the motor screen and its menu (docs/spec/domains/ui.md `UI-REQ
 - `int BOTTOM_PADDING`
 - `int PANEL_V`
 - `int PANEL_H`
-- `int BODY_HEIGHT` — Everything the body must hold: top padding, nine lines, the slot gap, the slot row itself, bottom padding.
-- `int PANELS` — As many 20 px strips as the body needs; the static block below guards the division.
-- `int BOTTOM_V`
+- `int BODY_HEIGHT` — Everything the body must hold: top padding, the header, the table, the slot gap, the slot row itself, bottom padding.
+- `int FULL_PANELS` — As many full 20px strips as fit, plus one final partial strip for the remainder (MM-18: no longer required to divide evenly — the source strip is a fine, low-period dither with no vertical pattern a partial crop would break, confirmed by direct inspection).
+- `int LAST_PANEL_H`
+- `int BOTTOM_V` — MM-18: trimmed from the compass's 12px band to 6px (its own bottom rows: the same solid dark border, just less of the lighter fill above it) to fit the ≤200px budget; see class doc.
 - `int BOTTOM_H`
 - `int TOP_HEIGHT` — The panel's total height: the title strip, the tiled body, and the bottom band.
-- `int GAP` — The gap every `AbstractSimiContainerScreen` leaves above the player inventory frame.
+- `int GAP` — MM-18: touching, not a gap — see class doc (Create's own `ToolboxScreen` overlaps here rather than leaving space).
 - `int PLAYER_INVENTORY_WIDTH` — `AllGuiTextures.PLAYER_INVENTORY`'s own size (176x108): duplicated here, not read live, so this class stays free of Create imports; keep in sync if Create Fly's own texture resizes.
 - `int PLAYER_INVENTORY_HEIGHT`
-- `int PLAYER_INV_X`
-- `int MAIN_INV_Y`
+- `int PLAYER_INV_X` — The player inventory frame's own local x, centred under #WIDTH (MM-18's class doc, Part 1).
+- `int FRAME_Y` — The frame's own local y: directly under the panel.
+- `int MAIN_INV_X` — The first player slot's x: the frame's own corner, plus the texture's built-in 8px inset (MM-18's class doc, Part 1).
+- `int MAIN_INV_Y` — The first player slot's y: the frame's own corner, plus the texture's built-in 18px inset (MM-18's class doc, Part 1).
 - `int WINDOW_HEIGHT` — The whole window's height: the readout panel, the gap, and the player inventory frame.
 
 ### `class MeteredMotorMenu` — `src/main/java/metered_motor/menu/MeteredMotorMenu.java`
@@ -53,6 +65,7 @@ The motor screen's menu (docs/spec/domains/ui.md UI-UC-001, `UI-REQ-001`, `UI-RE
 - `int SLOT_Y`
 - `int PLAYER_INVENTORY_WIDTH` — The standard vanilla player-inventory width, centred under #WIDTH.
 - `int PLAYER_INV_X`
+- `int MAIN_INV_X` — The first player slot's origin: the frame's own corner plus its built-in (8, 18) inset (`Layout`'s class doc, MM-18 Part 1) — not #PLAYER_INV_X itself, which is the frame's corner.
 - `int MAIN_INV_Y`
 - `MeteredMotorMenu(int syncId, Inventory inventory, MeteredMotorBlockEntity motor)`
 - `void initAndReadInventory(MeteredMotorBlockEntity motor)`
