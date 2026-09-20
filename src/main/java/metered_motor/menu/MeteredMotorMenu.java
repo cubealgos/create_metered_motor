@@ -27,6 +27,9 @@ public final class MeteredMotorMenu extends MenuBase<MeteredMotorBlockEntity> {
     public static final int TOP_HEIGHT = Layout.TOP_HEIGHT;
     /** The gap between the readout panel and Create's player-inventory frame, as every `AbstractSimiContainerScreen` leaves. */
     public static final int GAP = Layout.GAP;
+    /** The whole window's height: the readout panel, the gap, and the player inventory frame,
+     *  cropped to stop above its own pointer triangle (`Layout`'s class doc, MM-20). */
+    public static final int WINDOW_HEIGHT = Layout.WINDOW_HEIGHT;
     public static final int SLOT_X = Layout.SLOT_X;
     public static final int SLOT_Y = Layout.SLOT_Y;
     /** The standard vanilla player-inventory width, centred under {@link #WIDTH}. */

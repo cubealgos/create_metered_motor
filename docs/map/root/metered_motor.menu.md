@@ -19,24 +19,24 @@ Pure geometry for the motor screen and its menu (docs/spec/domains/ui.md `UI-REQ
 - `int FONT_LINE_HEIGHT`
 - `int LINE_GAP` — No gap between lines: at the font's own line height, five lines already use the whole budget the window has (see class doc); Minecraft's own multi-line text commonly reads fine spaced by nothing more than the font's line height.
 - `int LINE_STRIDE`
-- `int LINE_TOP_PADDING` — Padding between the title strip and the header line.
+- `int LINE_TOP_PADDING` — Padding between the title strip and the header line (MM-20: 1 &rarr; 3, a visible gap).
 - `int HEADER_Y` — The header line's ("Tier III · Stopped") y, measured from the window's own top edge.
 - `int TABLE_ROWS` — The table's four rows, directly under the header line.
 - `int TABLE_START_Y`
 - `int TABLE_END_Y`
-- `int TEXT_LEFT`
+- `int TEXT_LEFT` — MM-20: 8 &rarr; 12, so the table keeps a clear margin from the panel's own left/right edges.
 - `int COLUMN_GAP`
 - `int COLUMN_WIDTH`
 - `int LEFT_LABEL_X`
 - `int LEFT_VALUE_RIGHT_X`
 - `int RIGHT_LABEL_X`
 - `int RIGHT_VALUE_RIGHT_X`
-- `int SLOT_GAP` — Padding between the table's last row and the slot row.
+- `int SLOT_GAP` — Padding between the table's last row and the slot row: MM-20 made this a full line's gap (exactly #LINE_STRIDE, 2 &rarr; 9), not the near-touching 2px it was.
 - `int SLOT_Y` — The slot row's y, measured from the window's own top edge.
 - `int SLOT_X`
 - `int SLOT_BG_U` — `stock_keeper.png`'s own request-slot art: a warm brown-and-tan 18x18 background that reads as Create's, unlike the flat grey `AllGuiTextures.JEI_SLOT` this screen drew before.
 - `int SLOT_BG_V`
-- `int BOTTOM_PADDING`
+- `int BOTTOM_PADDING` — MM-20: 1 &rarr; 3, so the slot row and the bottom band no longer touch.
 - `int PANEL_V`
 - `int PANEL_H`
 - `int BODY_HEIGHT` — Everything the body must hold: top padding, the header, the table, the slot gap, the slot row itself, bottom padding.
@@ -46,8 +46,9 @@ Pure geometry for the motor screen and its menu (docs/spec/domains/ui.md `UI-REQ
 - `int BOTTOM_H`
 - `int TOP_HEIGHT` — The panel's total height: the title strip, the tiled body, and the bottom band.
 - `int GAP` — MM-18: touching, not a gap — see class doc (Create's own `ToolboxScreen` overlaps here rather than leaving space).
-- `int PLAYER_INVENTORY_WIDTH` — `AllGuiTextures.PLAYER_INVENTORY`'s own size (176x108): duplicated here, not read live, so this class stays free of Create imports; keep in sync if Create Fly's own texture resizes.
-- `int PLAYER_INVENTORY_HEIGHT`
+- `int PLAYER_INVENTORY_WIDTH` — `AllGuiTextures.PLAYER_INVENTORY`'s own width (176): duplicated here, not read live, so this class stays free of Create imports; keep in sync if Create Fly's own texture resizes.
+- `int PLAYER_INVENTORY_TEXTURE_HEIGHT` — The source texture's own declared height (108, `AllGuiTextures.PLAYER_INVENTORY`): reference only (MM-20's class doc) — nothing layout-facing reads this; #PLAYER_INVENTORY_HEIGHT is the height actually blitted.
+- `int PLAYER_INVENTORY_HEIGHT` — MM-20: 108 &rarr; 97, cropped to stop above `player_inventory.png`'s own pointer triangle (rows 100-107) and the rows just above it (97-99) that already carry the triangle's own build-up — see this class's doc.
 - `int PLAYER_INV_X` — The player inventory frame's own local x, centred under #WIDTH (MM-18's class doc, Part 1).
 - `int FRAME_Y` — The frame's own local y: directly under the panel.
 - `int MAIN_INV_X` — The first player slot's x: the frame's own corner, plus the texture's built-in 8px inset (MM-18's class doc, Part 1).
@@ -61,6 +62,7 @@ The motor screen's menu (docs/spec/domains/ui.md UI-UC-001, `UI-REQ-001`, `UI-RE
 - `int WIDTH` — The screen's total width: `create_brass_compass`'s stock-keeper request atlas slice, narrowed to its opaque 208px span (`Layout`'s class doc, MM-17).
 - `int TOP_HEIGHT` — The readout panel's total height: the title strip, the body tiled to fit the nine readout lines and the slot row, and the bottom band (`Layout`).
 - `int GAP` — The gap between the readout panel and Create's player-inventory frame, as every `AbstractSimiContainerScreen` leaves.
+- `int WINDOW_HEIGHT` — The whole window's height: the readout panel, the gap, and the player inventory frame, cropped to stop above its own pointer triangle (`Layout`'s class doc, MM-20).
 - `int SLOT_X`
 - `int SLOT_Y`
 - `int PLAYER_INVENTORY_WIDTH` — The standard vanilla player-inventory width, centred under #WIDTH.

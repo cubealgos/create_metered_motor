@@ -35,6 +35,22 @@ final class LayoutTest {
             "TOP_HEIGHT + GAP + player inventory height must be <= " + WINDOW_BUDGET + " but was " + Layout.WINDOW_HEIGHT);
     }
 
+    /**
+     * MM-20's Part 2 acceptance criterion: the player inventory frame is actually cropped, not
+     * merely documented as such, and the crop still leaves room for every real slot cell (the
+     * hotbar row, the lowest one) — {@link #everyPlayerSlotOriginLiesInsideItsDrawnCell} already
+     * checks the slots themselves against {@link Layout#PLAYER_INVENTORY_HEIGHT}; this test checks
+     * the crop against the source texture's own full height instead, so a regression that quietly
+     * widened the crop back toward 108 (redrawing the triangle) would be caught even if it somehow
+     * still left the slots inside the (now taller) frame.
+     */
+    @Test
+    void thePlayerInventoryFrameIsCroppedAboveItsOwnPointerTriangle() {
+        assertTrue(
+            Layout.PLAYER_INVENTORY_HEIGHT < Layout.PLAYER_INVENTORY_TEXTURE_HEIGHT,
+            "the blitted frame height must be shorter than the source texture's own height, or the pointer triangle is back");
+    }
+
     @Test
     void theTitleTextSitsFullyInsideTheTitleStrip() {
         assertTrue(Layout.TITLE_TEXT_Y >= 0, "the title text's y must not start above the strip");
@@ -105,6 +121,36 @@ final class LayoutTest {
         int slotsWidth = Layout.SLOTS * Layout.SLOT_SIZE;
         assertEquals(Layout.SLOT_X, Layout.WIDTH - Layout.SLOT_X - slotsWidth, "the slot row must be centred in the window");
         assertEquals(Layout.SLOT_GAP, Layout.SLOT_Y - Layout.TABLE_END_Y, "the slot row must sit directly under the table, one declared gap below it");
+    }
+
+    /**
+     * MM-20's own acceptance criterion: an explicit assertion on the four padding insets Kevin's
+     * third client check asked for, each checked against the ticket's own wording rather than
+     * just re-deriving {@link Layout}'s formulas (which would pass trivially even if every
+     * constant regressed back toward MM-18's cramped numbers).
+     */
+    @Test
+    void theFourMM20PaddingInsetsAreAsWide() {
+        assertEquals(12, Layout.TEXT_LEFT, "the side margin must be 12px (MM-20: 8 -> 12)");
+        assertTrue(Layout.LINE_TOP_PADDING >= 3, "the header must sit at least 3px below the title strip's own bottom edge");
+        assertEquals(Layout.LINE_STRIDE, Layout.SLOT_GAP, "the slot row must sit a full line's gap below the table, not a token few pixels");
+        assertTrue(Layout.BOTTOM_PADDING >= 2, "the slot row and the bottom band must keep at least a couple of pixels apart");
+    }
+
+    /**
+     * MM-20's own acceptance criterion: no content element's x lies inside the new left/right
+     * padding — every column's text and the slot row itself must sit at or inside the panel's own
+     * {@link Layout#TEXT_LEFT} margin on both sides.
+     */
+    @Test
+    void noContentXLiesWithinTheNewSideMargins() {
+        int marginRight = Layout.WIDTH - Layout.TEXT_LEFT;
+        assertTrue(Layout.LEFT_LABEL_X >= Layout.TEXT_LEFT, "the left column's label must not start inside the left margin");
+        assertTrue(Layout.RIGHT_VALUE_RIGHT_X <= marginRight, "the right column's value edge must not run past the right margin");
+        assertTrue(Layout.SLOT_X >= Layout.TEXT_LEFT, "the slot row must not start inside the left margin: " + Layout.SLOT_X);
+        assertTrue(
+            Layout.SLOT_X + Layout.SLOTS * Layout.SLOT_SIZE <= marginRight,
+            "the slot row must not run past the right margin: " + (Layout.SLOT_X + Layout.SLOTS * Layout.SLOT_SIZE));
     }
 
     @Test
