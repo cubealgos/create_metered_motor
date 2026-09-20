@@ -1,7 +1,17 @@
 {
   "pulls": {
-    "at": 1789833650.372115,
+    "at": 1789868478.415732,
     "payload": [
+      {
+        "author": "scheeren",
+        "base": "development",
+        "ci": "success",
+        "head": "bugfix/mm-14-unknown-version-tooltip",
+        "index": "14",
+        "state": "merged",
+        "title": "fix(metered_motor): a newer stats component shows as an unknown motor in the tooltip, never as numbers (MM-14)",
+        "updated": "2026-09-19T16:01:03Z"
+      },
       {
         "author": "scheeren",
         "base": "development",
