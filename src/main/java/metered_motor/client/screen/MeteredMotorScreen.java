@@ -189,10 +189,10 @@ public final class MeteredMotorScreen extends AbstractSimiContainerScreen<Metere
     }
 
     /**
-     * The table's four rows (`UI-REQ-003`): Speed/Capacity, Efficiency/Rate, Load/Inside, and
-     * Remaining alone on the last row — read straight off the client's synced block entity
-     * (`UI-DEC-002`), through {@link StatsText}'s formatting so the motor screen's own game test
-     * can check the same numbers server-side.
+     * The table's three rows (`UI-REQ-003`, MM-21: no efficiency row, `decisions/DEC-009-fixed-tiers.md`):
+     * Speed/Capacity, Rate/Load, Inside/Remaining — read straight off the client's synced block
+     * entity (`UI-DEC-002`), through {@link StatsText}'s formatting so the motor screen's own game
+     * test can check the same numbers server-side.
      *
      * <p>MM-17: the remaining-time value no longer reads the bare word "Idle" directly above the
      * header's own "Running"/"Stopped"/"Paused" — a motor can be running while idle (fed,
@@ -208,21 +208,18 @@ public final class MeteredMotorScreen extends AbstractSimiContainerScreen<Metere
                 Component.translatable("screen.metered_motor.label.capacity"), Component.translatable("screen.metered_motor.value.capacity", stats.capacity()))));
         rows.add(new Pair(
             new Pair.Entry(
-                Component.translatable("screen.metered_motor.label.efficiency"),
-                Component.translatable("screen.metered_motor.value.efficiency", StatsText.twoDecimals(stats.efficiency()))),
-            new Pair.Entry(
                 Component.translatable("screen.metered_motor.label.rate"),
-                Component.translatable("screen.metered_motor.value.rate", StatsText.twoDecimals(stats.ratePerMinute())))));
-        rows.add(new Pair(
+                Component.translatable("screen.metered_motor.value.rate", StatsText.twoDecimals(stats.ratePerMinute()))),
             new Pair.Entry(
-                Component.translatable("screen.metered_motor.label.load"), Component.translatable("screen.metered_motor.value.load", StatsText.wholePercent(motor.load()))),
-            new Pair.Entry(
-                Component.translatable("screen.metered_motor.label.inside"), Component.translatable("screen.metered_motor.value.inside", motor.emeraldsInside()))));
+                Component.translatable("screen.metered_motor.label.load"), Component.translatable("screen.metered_motor.value.load", StatsText.wholePercent(motor.load())))));
         String remaining = StatsText.remaining(motor.secondsRemaining());
         Component remainingValue = remaining == null
             ? Component.translatable("screen.metered_motor.value.remaining_none")
             : Component.translatable("screen.metered_motor.value.remaining", remaining);
-        rows.add(new Pair(new Pair.Entry(Component.translatable("screen.metered_motor.label.remaining"), remainingValue), null));
+        rows.add(new Pair(
+            new Pair.Entry(
+                Component.translatable("screen.metered_motor.label.inside"), Component.translatable("screen.metered_motor.value.inside", motor.emeraldsInside())),
+            new Pair.Entry(Component.translatable("screen.metered_motor.label.remaining"), remainingValue)));
         return rows;
     }
 

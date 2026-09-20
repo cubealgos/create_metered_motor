@@ -10,7 +10,6 @@
       "metered_motor.gametest.SmokeGameTest",
       "metered_motor.gametest.ComponentGameTest",
       "metered_motor.gametest.TradeFileGameTest",
-      "metered_motor.gametest.RollGameTest",
       "metered_motor.gametest.NoDuplicateOfferGameTest",
       "metered_motor.gametest.PlacementGameTest",
       "metered_motor.gametest.BreakGameTest",
@@ -27,7 +26,9 @@
       "metered_motor.gametest.SyncGameTest",
       "metered_motor.gametest.TooltipGameTest",
       "metered_motor.gametest.OcclusionGameTest",
-      "metered_motor.gametest.RegistrationGameTest"
+      "metered_motor.gametest.RegistrationGameTest",
+      "metered_motor.gametest.CapacityGameTest",
+      "metered_motor.gametest.MigrationGameTest"
     ]
   },
   "depends": {

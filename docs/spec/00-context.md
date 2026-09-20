@@ -10,16 +10,19 @@ category: "create_metered_motor"
 
 Create's power sources are free once built: a water wheel turns forever, a steam engine burns
 whatever fuel the base already produces. The metered motor is a power source that costs money to
-run. It comes from a villager, not a crafting table; every one the toolsmith offers has its own
-rolled rpm, stress capacity and efficiency, so a player who wants a strong one breeds and levels
-toolsmiths until a good roll appears. Once placed, it turns a shaft as any Create generator does
-and draws emeralds from its own small inventory in proportion to the work its network demands.
+run. It comes from a villager, not a crafting table: three motors matching a small, a mid and a
+full steam set-up, one per toolsmith level, each fixed to a real steam-engine configuration rather
+than rolled (`decisions/DEC-009-fixed-tiers.md`), so a player who wants a stronger one levels a
+toolsmith to Expert or Master rather than hunting for a lucky offer. Once placed, it turns a shaft
+as any Create generator does and draws emeralds from its own small inventory in proportion to the
+work its network demands.
 
 It is the second small add-on on the way to `create_civilization`, whose ENERGY domain assumes a
 metered motor that bills an account. This one bills a hopper-sized inventory, and in building it
 the team learns what the civilization needs next: a kinetic block on Create Fly, a block entity
 with an inventory that hoppers and Create's logistics can feed, data-driven villager trades with
-rolled stats, a component that travels between item and block, and a screen fed from a block.
+fixed per-tier stats, a component that travels between item and block, and a screen fed from a
+block.
 
 ## Who it is for
 
@@ -50,4 +53,5 @@ public issue tracker and nothing more.
 
 Kevin finds a toolsmith offering a motor, buys it, places it against a shaft, drops emeralds in a
 hopper above it, watches Create's stress gauge climb while the emerald count falls at a rate that
-matches the load, breeds a better roll, and the whole thing looks like it belongs to Create.
+matches the load, levels a toolsmith to Master for the next tier, and the whole thing looks like it
+belongs to Create.

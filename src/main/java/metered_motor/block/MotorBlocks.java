@@ -44,7 +44,7 @@ public final class MotorBlocks {
             .requiresCorrectToolForDrops()
             .forceSolidOn()));
 
-    /** The block's item, stackable to one so its rolled stats never merge (MOTOR-REQ-001). */
+    /** The block's item, stackable to one so two different tiers never merge (MOTOR-REQ-001). */
     public static final MeteredMotorItem ITEM = Registry.register(BuiltInRegistries.ITEM, ITEM_KEY,
         new MeteredMotorItem(BLOCK, new Item.Properties()
             .setId(ITEM_KEY)

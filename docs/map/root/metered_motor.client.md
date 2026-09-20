@@ -6,16 +6,16 @@ Every type with its summary and every non-private constructor, method and consta
 signature is the contract; read the source only when the summary is not enough.
 
 ### `class MeteredMotorClient` — `src/main/java/metered_motor/client/MeteredMotorClient.java`
-The client entrypoint: registers the rolled-stats tooltip (TRADE-REQ-005), the motor screen (MM-6) and the goggles overlay and shaft visual (MOTOR-REQ-012, MOTOR-REQ-013).
+The client entrypoint: registers the stats tooltip (TRADE-REQ-005), the motor screen (MM-6) and the goggles overlay and shaft visual (MOTOR-REQ-012, MOTOR-REQ-013).
 - `void onInitializeClient()`
 
 ### `class MeteredMotorTooltip` — `src/main/java/metered_motor/client/MeteredMotorTooltip.java`
-The rolled-stats tooltip (TRADE-REQ-005, UI-REQ-006): shown on any item stack carrying MeteredMotor#STATS, or "unrolled" for a motor item with no roll (MOTOR-FAIL-003).
+The stats tooltip (TRADE-REQ-005, UI-REQ-006): shown on any item stack carrying MeteredMotor#STATS, or "unrolled" for a motor item with no component (MOTOR-FAIL-003).
 - `void register()`
-- `List<Component> lines(ItemStack stack)` — The tooltip lines for a stack, pure of the Fabric callback so a game test can call it directly without registering the client-only event (`UI-REQ-006`, `MOTOR-REQ-014`, `DATA-REQ-003`): the rolled stats; "Unknown motor (newer version)" and no stat lines for a read-only component; "Unrolled" for a motor item with no component at all (MOTOR-FAIL-003); empty for any other item.
+- `List<Component> lines(ItemStack stack)` — The tooltip lines for a stack, pure of the Fabric callback so a game test can call it directly without registering the client-only event (`UI-REQ-006`, `MOTOR-REQ-014`, `DATA-REQ-003`): the tier's fixed stats; "Unknown motor (newer version)" and no stat lines for a read-only component; "Unrolled" for a motor item with no component at all (MOTOR-FAIL-003); empty for any other item.
 
 ### `class StatsText` — `src/main/java/metered_motor/client/StatsText.java`
-Number and enum formatting shared by every place the rolled stats or the live readout become text: the item tooltip, the motor screen (`MOTOR-REQ-012`, docs/spec/domains/ui.md `UI-REQ-003`) and the goggles overlay.
+Number and enum formatting shared by every place the fixed tier stats or the live readout become text: the item tooltip, the motor screen (`MOTOR-REQ-012`, docs/spec/domains/ui.md `UI-REQ-003`) and the goggles overlay.
 - `String tier(Tier tier)` — The tier's name as rolled: "I", "II" or "III".
 - `String twoDecimals(double value)` — Two decimal places, e.g.
 - `String wholePercent(double fraction)` — A fraction 0..1 as a whole-number percentage, e.g.

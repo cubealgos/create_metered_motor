@@ -27,7 +27,7 @@ public final class TierStateGameTest {
         BlockPos motorPos = support.above();
         helper.setBlock(support, Blocks.STONE);
 
-        Stats stats = new Stats(Stats.VERSION, Tier.III, 200, 18_432, 0.75);
+        Stats stats = new Stats(Stats.VERSION, Tier.III);
         ItemStack stack = new ItemStack(MotorBlocks.ITEM);
         stack.set(MeteredMotor.STATS, stats);
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);
@@ -50,7 +50,7 @@ public final class TierStateGameTest {
         helper.placeAt(player, stack, support, Direction.UP);
 
         MotorTier tier = helper.getBlockState(motorPos).getValue(MeteredMotorBlock.TIER);
-        helper.assertTrue(tier == MotorTier.I, "an unrolled item places tier=i: " + tier);
+        helper.assertTrue(tier == MotorTier.I, "an item with no component places tier=i: " + tier);
         helper.succeed();
     }
 
@@ -61,7 +61,7 @@ public final class TierStateGameTest {
         BlockPos motorPos = support.above();
         helper.setBlock(support, Blocks.STONE);
 
-        Stats stats = new Stats(Stats.VERSION, Tier.III, 200, 18_432, 0.75);
+        Stats stats = new Stats(Stats.VERSION, Tier.III);
         ItemStack stack = new ItemStack(MotorBlocks.ITEM);
         stack.set(MeteredMotor.STATS, stats);
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);

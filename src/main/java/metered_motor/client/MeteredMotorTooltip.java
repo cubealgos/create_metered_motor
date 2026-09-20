@@ -12,12 +12,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * The rolled-stats tooltip (TRADE-REQ-005, UI-REQ-006): shown on any item stack carrying
- * {@link MeteredMotor#STATS}, or "unrolled" for a motor item with no roll (MOTOR-FAIL-003). A
+ * The stats tooltip (TRADE-REQ-005, UI-REQ-006): shown on any item stack carrying
+ * {@link MeteredMotor#STATS}, or "unrolled" for a motor item with no component (MOTOR-FAIL-003). A
  * component newer than this build reads back intact and {@link Stats#readOnly()}
  * (MOTOR-REQ-014, DATA-REQ-003); the tooltip then shows "Unknown motor (newer version)" and no
- * stat lines, since printing a read-only component's numbers as if they were rolled by this
- * build would misreport them. {@link MeteredMotorBlock#getStateForPlacement} already refuses to
+ * stat lines, since printing a read-only component's numbers as if this build's fixed tier
+ * ladder produced them would misreport them. {@link MeteredMotorBlock#getStateForPlacement} already refuses to
  * place such an item, so the block, the screen and the goggles overlay never see one — this
  * tooltip is the only place a read-only component is ever shown to a player. The motor item
  * itself does not exist in this ticket's branch (MM-3), so this listens on every stack rather
@@ -39,7 +39,7 @@ public final class MeteredMotorTooltip {
     /**
      * The tooltip lines for a stack, pure of the Fabric callback so a game test can call it
      * directly without registering the client-only event (`UI-REQ-006`, `MOTOR-REQ-014`,
-     * `DATA-REQ-003`): the rolled stats; "Unknown motor (newer version)" and no stat lines for a
+     * `DATA-REQ-003`): the tier's fixed stats; "Unknown motor (newer version)" and no stat lines for a
      * read-only component; "Unrolled" for a motor item with no component at all
      * (MOTOR-FAIL-003); empty for any other item.
      */
@@ -60,7 +60,6 @@ public final class MeteredMotorTooltip {
         result.add(Component.translatable("tooltip.metered_motor.tier", StatsText.tier(stats.tier())));
         result.add(Component.translatable("tooltip.metered_motor.rpm", stats.rpm()));
         result.add(Component.translatable("tooltip.metered_motor.capacity", stats.capacity()));
-        result.add(Component.translatable("tooltip.metered_motor.efficiency", StatsText.twoDecimals(stats.efficiency())));
         result.add(Component.translatable("tooltip.metered_motor.rate", StatsText.twoDecimals(stats.ratePerMinute())));
         return result;
     }

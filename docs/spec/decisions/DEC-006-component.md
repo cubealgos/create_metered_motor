@@ -16,8 +16,13 @@ entity on placement and back on breaking via `applyImplicitComponents`/`collectI
 rolled from; it does not change the block or item id.
 
 Alternative considered: three items and three blocks, one pair per tier. Rejected: it would triple
-the registry entries, the models, the textures and the loot-function wiring for no behavioural
-gain, since every tier already varies continuously within its rolled bands — a tier boundary on
-the id would be a second, redundant tier axis alongside the component's own `tier` field. Cost if
-wrong: three items and blocks would mean three times the assets to draw, model and maintain, for a
-distinction the component already carries.
+the registry entries, the models and the textures for no behavioural gain, since the component's
+own `tier` field already carries that distinction — a tier boundary on the id would be a second,
+redundant tier axis. Cost if wrong: three items and blocks would mean three times the assets to
+draw, model and maintain, for a distinction the component already carries.
+
+**Amended (Kevin, 2026-09-20, `decisions/DEC-009-fixed-tiers.md`):** the component no longer holds
+rpm, capacity or efficiency — those are withdrawn as rolled, per-item fields. `metered_motor:stats`
+version 2 carries only `tier`; rpm (fixed at 64), stress capacity and rate are derived from the
+tier in code (`contracts/data-contract.md`). The one-block-one-item, tier-on-a-component shape this
+decision set is otherwise unchanged.

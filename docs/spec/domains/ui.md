@@ -32,18 +32,22 @@ what the numbers mean (`domains/motor.md`).
 ## 4. Use cases
 
 ### `UI-UC-001` — the motor screen
-Actor: player. 1. Right-clicks the motor. 2. The screen shows five slots in a row, the player's
-inventory below, and a readout: tier, rpm, stress capacity, efficiency, rate at full load, current
-load, emeralds inside, remaining time at the current load, and the state (running, stopped, paused).
-3. The player moves emeralds in or out. 4. Closes.
+Actor: player. 1. Right-clicks the motor. 2. The screen shows a header line, `"Tier <numeral> ·
+<State>"` (e.g. "Tier III · Stopped"), five slots in a row, the player's inventory below, and a
+readout: tier, 64 rpm, stress capacity, rate at full load, current load, emeralds inside,
+remaining time at the current load, and the state (running, stopped, paused). No efficiency row
+(`decisions/DEC-009-fixed-tiers.md`). 3. The player moves emeralds in or out. 4. Closes.
 
 ### `UI-UC-002` — the goggles overlay
 Actor: player wearing Create's goggles, looking at the motor. The overlay lists the same readout
-under Create's usual kinetic lines (speed, stress).
+under Create's usual kinetic lines (speed, stress), except capacity: Create's own "Generator
+Stats" line already shows the block's kinetic capacity at its current speed, so the overlay omits
+this mod's own capacity row rather than show the number twice (`DEC-009`).
 
 ### `UI-UC-003` — the tooltip
-Actor: player hovering the item, in a trade screen or an inventory. The tooltip shows tier, rpm,
-stress capacity, efficiency and rate at full load; an unrolled item says so.
+Actor: player hovering the item, in a trade screen or an inventory. The tooltip shows tier, 64
+rpm, stress capacity and rate at full load; an item without a stats component defaults to tier I
+and shows as a normal tier I motor (`MOTOR-FAIL-003`).
 
 ## 5. Requirements
 
@@ -51,10 +55,10 @@ stress capacity, efficiency and rate at full load; an unrolled item says so.
 |---|---|---|---|
 | `UI-REQ-001` | The screen shall be drawn with Create Fly's `AbstractSimiContainerScreen` over a `MenuBase` with five real slots and the player inventory, on Create's own frame textures, so it looks like Create's. | Must | `ARCH-DEC-002` of the compass, reused |
 | `UI-REQ-002` | The five slots shall accept only emeralds and emerald blocks; shift-click from the player inventory shall respect the same rule. | Must | Unwanted |
-| `UI-REQ-003` | The readout shall show tier, rpm, stress capacity, efficiency, rate at full load, current load as a percentage, emeralds inside (blocks counted as nine), remaining time at the current load, and the state, refreshed at least once a second. | Must | `UC-007` |
+| `UI-REQ-003` | The readout shall show tier, 64 rpm, stress capacity, rate at full load, current load as a percentage, emeralds inside (blocks counted as nine), remaining time at the current load, and the state (no efficiency row, `DEC-009`), refreshed at least once a second; the screen's header line reads `"Tier <numeral> · <State>"` (e.g. "Tier III · Stopped"). | Must | `UC-007` |
 | `UI-REQ-004` | Every readout line shall be wrapped or truncated to its panel; no string may run past the frame. | Must | the compass, BC-10 |
-| `UI-REQ-005` | The goggles overlay shall add the readout's lines after Create's kinetic lines. | Should | `UI-UC-002` |
-| `UI-REQ-006` | The item tooltip shall show the rolled stats; an item without a roll shall say "unrolled". | Must | `UI-UC-003` |
+| `UI-REQ-005` | The goggles overlay shall add the readout's lines after Create's kinetic lines, **except** capacity: **where** Create's own "Generator Stats" line already shows the block's kinetic capacity at its current speed, the overlay shall omit this mod's own capacity row rather than duplicate it. | Should | `UI-UC-002`, `DEC-009` |
+| `UI-REQ-006` | The item tooltip shall show the tier's fixed stats; an item without a stats component shall default to tier I and show as a normal tier I motor. | Must | `UI-UC-003` |
 | `UI-REQ-007` | Every string shall be a translation key with an `en_us` entry; numbers are formatted with `Locale.ROOT` (a dot decimal in every client language), so the tooltip, the screen, the goggles and the trade files never disagree (Kevin, 2026-09-19, from the MM-9 sweep; Create's own goggles do the same). | Must | Not-you |
 | `UI-REQ-008` | The screen shall be the only way to take emeralds out. | Must | `MOTOR-REQ-009` |
 

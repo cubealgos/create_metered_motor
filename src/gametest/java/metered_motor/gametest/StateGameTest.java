@@ -55,8 +55,12 @@ public final class StateGameTest {
 
     private void assertRunning(GameTestHelper helper, MeteredMotorBlockEntity motor) {
         helper.assertTrue(motor.state() == MotorState.RUNNING, "the motor runs: " + motor.state());
-        helper.assertTrue(motor.getGeneratedSpeed() == motor.stats().rpm(), "generated speed is the rolled rpm: " + motor.getGeneratedSpeed());
-        helper.assertTrue(motor.calculateAddedStressCapacity() == motor.stats().capacity(), "added capacity is the rolled capacity: " + motor.calculateAddedStressCapacity());
+        helper.assertTrue(motor.getGeneratedSpeed() == motor.stats().rpm(), "generated speed is the tier's fixed 64 rpm: " + motor.getGeneratedSpeed());
+        // MOTOR-REQ-004, DEC-009: calculateAddedStressCapacity() is per-rpm (capacity / 64), not the
+        // tier's whole capacity — Create's KineticNetwork multiplies it back by getGeneratedSpeed().
+        helper.assertTrue(
+            motor.calculateAddedStressCapacity() == motor.stats().capacity() / (float) motor.stats().rpm(),
+            "added capacity is the tier's fixed capacity divided by 64: " + motor.calculateAddedStressCapacity());
         KineticBlockEntity shaft = helper.getBlockEntity(SHAFT_POS, KineticBlockEntity.class);
         helper.assertTrue(shaft.getSpeed() != 0, "the attached shaft turns: " + shaft.getSpeed());
     }

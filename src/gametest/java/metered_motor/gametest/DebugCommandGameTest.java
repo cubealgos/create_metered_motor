@@ -4,7 +4,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import metered_motor.MeteredMotor;
 import metered_motor.block.MeteredMotorBlockEntity;
 import metered_motor.block.MotorBlocks;
-import metered_motor.debug.DebugCommand;
 import metered_motor.model.Stats;
 import metered_motor.model.Tier;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
@@ -18,46 +17,24 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
-/** MM-8: the pure stats builder rolls within bands and honours overrides, and the development-only command runs on the dispatcher and rejects a bad tier. */
+/**
+ * MM-8: the development-only command runs on the dispatcher and writes a tier's fixed stats onto
+ * the held or looked-at motor. MM-21 (`decisions/DEC-009-fixed-tiers.md`) dropped the
+ * {@code [rpm] [capacity] [efficiency]} override arguments and the numeric {@code <tier>}
+ * argument along with the roll they used to seed: {@code /metered_motor debug <I|II|III>} is the
+ * whole surface now.
+ */
 public final class DebugCommandGameTest {
     @GameTest
-    public void theBuilderRollsWithinTierBandsAndHonoursOverrides(GameTestHelper helper) {
-        for (Tier tier : Tier.values()) {
-            Stats atZero = DebugCommand.stats(tier, null, null, null, () -> 0.0);
-            helper.assertTrue(atZero.rpm() == (int) Math.round(tier.rpmBand().min()),
-                "rolled rpm at random 0.0 is the tier's band minimum for " + tier + ": " + atZero.rpm());
-            helper.assertTrue(atZero.capacity() == (int) Math.round(tier.capacityBand().min()),
-                "rolled capacity at random 0.0 is the tier's band minimum for " + tier + ": " + atZero.capacity());
-            helper.assertTrue(atZero.efficiency() == tier.efficiencyBand().min(),
-                "rolled efficiency at random 0.0 is the tier's band minimum for " + tier + ": " + atZero.efficiency());
-
-            Stats nearOne = DebugCommand.stats(tier, null, null, null, () -> 0.999999);
-            helper.assertTrue(nearOne.rpm() <= tier.rpmBand().max() && nearOne.rpm() >= tier.rpmBand().min(),
-                "rolled rpm stays within the band for " + tier + ": " + nearOne.rpm());
-            helper.assertTrue(nearOne.capacity() <= tier.capacityBand().max() && nearOne.capacity() >= tier.capacityBand().min(),
-                "rolled capacity stays within the band for " + tier + ": " + nearOne.capacity());
-        }
-
-        Stats overridden = DebugCommand.stats(Tier.III, 90, 9_000, 2.0,
-            () -> {
-                throw new AssertionError("random must not be drawn when every stat is given");
-            });
-        helper.assertTrue(overridden.equals(new Stats(Stats.VERSION, Tier.III, 90, 9_000, 2.0)),
-            "every given stat is used as is: " + overridden);
-        helper.succeed();
-    }
-
-    @GameTest
-    public void theCommandWritesChosenStatsOntoTheHeldMotorOnADevelopmentServer(GameTestHelper helper) {
+    public void theCommandWritesTheTiersFixedStatsOntoTheHeldMotorOnADevelopmentServer(GameTestHelper helper) {
         helper.assertTrue(FabricLoader.getInstance().isDevelopmentEnvironment(), "game tests run in the development environment, where the command exists");
         ServerPlayer player = helper.makeMockServerPlayerInLevel();
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(MotorBlocks.ITEM));
 
-        execute(helper, player, "metered_motor debug 2 80 4096 1.5");
+        execute(helper, player, "metered_motor debug II");
 
         Stats held = player.getItemInHand(InteractionHand.MAIN_HAND).get(MeteredMotor.STATS);
-        Stats expected = new Stats(Stats.VERSION, Tier.II, 80, 4_096, 1.5);
-        helper.assertTrue(expected.equals(held), "the held motor carries exactly the given stats: " + held);
+        helper.assertTrue(Stats.of(Tier.II).equals(held), "the held motor carries tier II's fixed stats: " + held);
         helper.succeed();
     }
 
@@ -75,7 +52,7 @@ public final class DebugCommandGameTest {
     }
 
     @GameTest
-    public void theCommandWritesStatsOntoAMotorThePlayerLooksAtOnADevelopmentServer(GameTestHelper helper) {
+    public void theCommandWritesTheTiersFixedStatsOntoAMotorThePlayerLooksAtOnADevelopmentServer(GameTestHelper helper) {
         BlockPos support = new BlockPos(1, 1, 1);
         BlockPos motorPos = support.above();
         helper.setBlock(support, Blocks.STONE);
@@ -91,25 +68,38 @@ public final class DebugCommandGameTest {
         player.setOldPosAndRot();
         player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 
-        execute(helper, player, "metered_motor debug 3 200 12000 0.8");
+        execute(helper, player, "metered_motor debug III");
 
         MeteredMotorBlockEntity blockEntity = helper.getBlockEntity(motorPos, MeteredMotorBlockEntity.class);
-        Stats expected = new Stats(Stats.VERSION, Tier.III, 200, 12_000, 0.8);
-        helper.assertTrue(expected.equals(blockEntity.stats()), "the looked-at motor carries the given stats: " + blockEntity.stats());
+        helper.assertTrue(Stats.of(Tier.III).equals(blockEntity.stats()), "the looked-at motor carries tier III's fixed stats: " + blockEntity.stats());
         helper.succeed();
     }
 
     @GameTest
-    public void anUnknownTierIsRejectedByTheParser(GameTestHelper helper) {
+    public void anUnknownTierLiteralIsRejectedByTheParser(GameTestHelper helper) {
         ServerPlayer player = helper.makeMockServerPlayerInLevel();
         boolean rejected;
         try {
-            execute(helper, player, "metered_motor debug 4");
+            execute(helper, player, "metered_motor debug IV");
             rejected = false;
         } catch (AssertionError e) {
             rejected = true;
         }
-        helper.assertTrue(rejected, "tier 4 is outside the integer(1, 3) argument and is rejected");
+        helper.assertTrue(rejected, "\"IV\" is not one of the three literal branches and is rejected");
+        helper.succeed();
+    }
+
+    @GameTest
+    public void aNumericTierIsNoLongerAcceptedByTheParser(GameTestHelper helper) {
+        ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        boolean rejected;
+        try {
+            execute(helper, player, "metered_motor debug 2");
+            rejected = false;
+        } catch (AssertionError e) {
+            rejected = true;
+        }
+        helper.assertTrue(rejected, "MM-21 dropped the numeric <tier> argument: only I, II and III are registered");
         helper.succeed();
     }
 

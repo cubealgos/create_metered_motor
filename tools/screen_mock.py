@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Composes a headless mock of the motor screen (MM-17, MM-18, MM-20) from Create Fly's own
+"""Composes a headless mock of the motor screen (MM-17, MM-18, MM-20, MM-21) from Create Fly's own
 `stock_keeper.png` and `player_inventory.png` atlases, so the layout and the alignment fix can be
 judged from a PNG without booting a client.
 
@@ -26,6 +26,11 @@ texture, so the pointer triangle Kevin's third client check found no longer appe
 either. The "Inventory" label is drawn in Create's own measured label colour (`0xFF404040`,
 `javap`'d off `AbstractSimiContainerScreen.renderPlayerInventory`), replacing the earlier guessed
 grey.
+
+MM-21 (`decisions/DEC-009-fixed-tiers.md`): the efficiency row dropped (nothing is rolled any
+more), so the table shrank from four rows to three, regrouped with no leftover single-column row —
+Speed/Capacity, Rate/Load, Inside/Remaining — and `TABLE_ROWS` 4 -> 3 frees one `LINE_STRIDE` of
+window height.
 
 The geometry constants below are a Python copy of `src/main/java/metered_motor/menu/Layout.java`
 (that class has no Minecraft imports for the same reason: so a plain JUnit test and this script
@@ -62,7 +67,7 @@ LINE_GAP = 0
 LINE_STRIDE = FONT_LINE_HEIGHT + LINE_GAP
 LINE_TOP_PADDING = 3  # MM-20: 1 -> 3, a visible gap below the title strip
 HEADER_Y = TITLE_H + LINE_TOP_PADDING
-TABLE_ROWS = 4
+TABLE_ROWS = 3  # MM-21: 4 -> 3, the efficiency row dropped (decisions/DEC-009-fixed-tiers.md)
 TABLE_START_Y = HEADER_Y + LINE_STRIDE
 TABLE_END_Y = TABLE_START_Y + TABLE_ROWS * LINE_STRIDE
 TEXT_LEFT = 12  # MM-20: 8 -> 12
@@ -114,11 +119,11 @@ OUTLINE_MOTOR_SLOT = (255, 60, 60)
 OUTLINE_PLAYER_SLOT = (60, 200, 255)
 
 SAMPLE_HEADER = "Tier III · Stopped"
+# MM-21: fixed-tier numbers (decisions/DEC-009-fixed-tiers.md), tier III's own ladder point.
 SAMPLE_ROWS = [
-    ("Speed", "145 rpm", "Capacity", "11071 SU"),
-    ("Efficiency", "0.81x", "Rate", "1.66 em/min"),
-    ("Load", "0%", "Inside", "0 emeralds"),
-    ("Remaining", "4m 12s", None, None),
+    ("Speed", "64 rpm", "Capacity", "294912 SU"),
+    ("Rate", "3.20 em/min", "Load", "0%"),
+    ("Inside", "0 emeralds", "Remaining", "4m 12s"),
 ]
 
 

@@ -24,20 +24,13 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 /**
  * MM-5: a villager that already offers a metered motor refuses a second, through
  * {@code metered_motor:no_motor_offered} reading the villager's live offers off
- * {@code LootContextParams.THIS_ENTITY} (TRADE-REQ-006, TRADE-DEC-004). {@code metered_motor:metered_motor}
- * does not exist in this branch (MM-3 registers it); leniently skipped, logged, until it does — the
- * mechanism under test does not change once the item lands.
+ * {@code LootContextParams.THIS_ENTITY} (TRADE-REQ-006, TRADE-DEC-004).
  */
 public final class NoDuplicateOfferGameTest {
     @GameTest
     public void aVillagerAlreadyOfferingAMotorRefusesASecond(GameTestHelper helper) {
         Item motor = BuiltInRegistries.ITEM.getOptional(MeteredMotor.id("metered_motor")).orElse(null);
-        if (motor == null) {
-            MeteredMotor.LOGGER.warn(
-                "NoDuplicateOfferGameTest: metered_motor:metered_motor is not registered yet (MM-3 not merged into this branch); skipping");
-            helper.succeed();
-            return;
-        }
+        helper.assertTrue(motor != null, "set up: metered_motor:metered_motor is registered");
 
         Villager villager = helper.spawn(EntityTypes.VILLAGER, new BlockPos(1, 2, 1));
         villager.setVillagerData(villager.getVillagerData()

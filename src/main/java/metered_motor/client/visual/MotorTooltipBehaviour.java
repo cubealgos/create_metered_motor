@@ -57,12 +57,17 @@ public final class MotorTooltipBehaviour extends GeneratingKineticTooltipBehavio
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         // Create's own lines first (speed, stress capacity added by the superclass); this motor's
         // readout is always shown regardless of whether stress impact is enabled, so the boolean
-        // super() returns is not the gate here.
-        super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+        // super() returns is not the gate for showing the readout at all — only for whether this
+        // row set repeats the capacity Create's own "Generator Stats" line just showed
+        // (GeneratingKineticTooltipBehaviour.addToGoggleTooltip returns true exactly when it drew
+        // that line, confirmed by full bytecode disassembly: it returns early without drawing when
+        // stress impact is disabled or the block's own added capacity is zero, MOTOR-REQ-012,
+        // UI-REQ-005, `DEC-009`).
+        boolean createShowedCapacity = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
         MeteredMotorBlockEntity motor = blockEntity;
         Stats stats = motor.stats();
-        for (Row row : rows(stats, motor.state(), motor.load(), motor.emeraldsInside(), motor.secondsRemaining())) {
+        for (Row row : rows(stats, motor.state(), motor.load(), motor.emeraldsInside(), motor.secondsRemaining(), createShowedCapacity)) {
             addRow(tooltip, row);
         }
         return true;
@@ -91,22 +96,22 @@ public final class MotorTooltipBehaviour extends GeneratingKineticTooltipBehavio
 
     /**
      * The readout's lines in display order, the header first (MM-19, MOTOR-REQ-012, UI-REQ-005,
-     * UI-REQ-007). Every label and unit key named here has an {@code en_us} entry
-     * ({@code SourceSurfaceTest}); every value goes through {@link StatsText}, the same
+     * UI-REQ-007). No efficiency row (`DEC-009`: nothing is rolled, so it never existed as a
+     * per-motor stat again); the capacity row is skipped entirely when {@code omitCapacity} is
+     * {@code true} — Create's own "Generator Stats" line already showed the same number
+     * (`MOTOR-REQ-012`, `UI-REQ-005`). Every label and unit key named here has an {@code en_us}
+     * entry ({@code SourceSurfaceTest}); every value goes through {@link StatsText}, the same
      * formatting the item tooltip and the motor screen use. Pure of Create and Minecraft's
      * client classes on purpose: a unit test calls this directly.
      */
-    static List<Row> rows(Stats stats, MotorState state, double load, int emeraldsInside, double secondsRemaining) {
+    static List<Row> rows(Stats stats, MotorState state, double load, int emeraldsInside, double secondsRemaining, boolean omitCapacity) {
         List<Row> rows = new ArrayList<>();
         rows.add(Row.header("goggles.metered_motor.title"));
         rows.add(Row.value("goggles.metered_motor.row.tier", StatsText.tier(stats.tier()), null));
         rows.add(Row.value("goggles.metered_motor.row.speed", String.valueOf(stats.rpm()), "goggles.metered_motor.unit.rpm"));
-        rows.add(Row.value("goggles.metered_motor.row.capacity", String.valueOf(stats.capacity()), "goggles.metered_motor.unit.su"));
-        rows.add(
-            Row.value(
-                "goggles.metered_motor.row.efficiency",
-                StatsText.twoDecimals(stats.efficiency()),
-                "goggles.metered_motor.unit.efficiency"));
+        if (!omitCapacity) {
+            rows.add(Row.value("goggles.metered_motor.row.capacity", String.valueOf(stats.capacity()), "goggles.metered_motor.unit.su"));
+        }
         rows.add(
             Row.value(
                 "goggles.metered_motor.row.rate", StatsText.twoDecimals(stats.ratePerMinute()), "goggles.metered_motor.unit.rate"));

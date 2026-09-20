@@ -14,14 +14,15 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * MM-14: the tooltip shows an unknown motor, not stat numbers, for a component newer than this
- * build; the rolled stats for a current-version component; and "unrolled" for no component at
- * all (MOTOR-REQ-014, UI-REQ-006, DATA-REQ-003). {@link MeteredMotorTooltip#lines(ItemStack)} is
- * pure of the client-only Fabric callback, so this dedicated-server game test calls it directly.
+ * build; the tier's fixed stats for a current-version component; and "unrolled" for no component
+ * at all (MOTOR-REQ-014, UI-REQ-006, DATA-REQ-003). MM-21 dropped the efficiency line
+ * (`decisions/DEC-009-fixed-tiers.md`). {@link MeteredMotorTooltip#lines(ItemStack)} is pure of
+ * the client-only Fabric callback, so this dedicated-server game test calls it directly.
  */
 public final class TooltipGameTest {
     @GameTest
     public void aNewerVersionShowsAsUnknownWithNoStatLines(GameTestHelper helper) {
-        Stats future = new Stats(Stats.VERSION + 1, Tier.I, 40, 1_280, 1.0);
+        Stats future = new Stats(Stats.VERSION + 1, Tier.I);
         ItemStack stack = new ItemStack(MotorBlocks.ITEM);
         stack.set(MeteredMotor.STATS, future);
 
@@ -33,14 +34,14 @@ public final class TooltipGameTest {
 
     @GameTest
     public void aCurrentVersionShowsTheStatLines(GameTestHelper helper) {
-        Stats stats = new Stats(Stats.VERSION, Tier.II, 100, 4_096, 1.0);
+        Stats stats = new Stats(Stats.VERSION, Tier.II);
         ItemStack stack = new ItemStack(MotorBlocks.ITEM);
         stack.set(MeteredMotor.STATS, stats);
 
         List<Component> lines = MeteredMotorTooltip.lines(stack);
-        helper.assertTrue(lines.size() == 5, "tier, rpm, capacity, efficiency and rate: " + lines);
+        helper.assertTrue(lines.size() == 4, "tier, rpm, capacity and rate, no efficiency: " + lines);
         helper.assertTrue(key(lines.get(0)).equals("tooltip.metered_motor.tier"), "the tier line: " + lines);
-        helper.assertTrue(key(lines.get(4)).equals("tooltip.metered_motor.rate"), "the rate line: " + lines);
+        helper.assertTrue(key(lines.get(3)).equals("tooltip.metered_motor.rate"), "the rate line: " + lines);
         helper.succeed();
     }
 

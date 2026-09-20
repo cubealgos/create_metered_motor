@@ -17,11 +17,11 @@ Pure geometry for the motor screen and its menu (docs/spec/domains/ui.md `UI-REQ
 - `int TITLE_H`
 - `int TITLE_TEXT_Y` — The title text's y within the strip: `create_brass_compass`'s `EditScreen` offset, centred on a 9 px line.
 - `int FONT_LINE_HEIGHT`
-- `int LINE_GAP` — No gap between lines: at the font's own line height, five lines already use the whole budget the window has (see class doc); Minecraft's own multi-line text commonly reads fine spaced by nothing more than the font's line height.
+- `int LINE_GAP` — No gap between lines: at the font's own line height, five lines already used the whole budget the window had when MM-18 set this (see class doc; MM-21 later freed a line's worth of headroom by dropping the efficiency row, but the choice of zero extra gap still reads fine and was never revisited); Minecraft's own multi-line text commonly reads fine spaced by nothing more than the font's line height.
 - `int LINE_STRIDE`
 - `int LINE_TOP_PADDING` — Padding between the title strip and the header line (MM-20: 1 &rarr; 3, a visible gap).
 - `int HEADER_Y` — The header line's ("Tier III · Stopped") y, measured from the window's own top edge.
-- `int TABLE_ROWS` — The table's four rows, directly under the header line.
+- `int TABLE_ROWS` — The table's three rows, directly under the header line: Speed/Capacity, Rate/Load, Inside/Remaining (MM-21: 4 &rarr; 3, the efficiency row dropped, `decisions/DEC-009-fixed-tiers.md`).
 - `int TABLE_START_Y`
 - `int TABLE_END_Y`
 - `int TEXT_LEFT` — MM-20: 8 &rarr; 12, so the table keeps a clear margin from the panel's own left/right edges.

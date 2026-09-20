@@ -1,9 +1,10 @@
 # Create: Metered Motor
 
-A kinetic power source bought from a toolsmith villager: its rpm, stress capacity and efficiency
-are rolled when the villager offers it. Place it against a shaft and it turns like any Create
-generator, drawing emeralds from its own small inventory in proportion to the stress its network
-actually demands.
+A kinetic power source bought from a toolsmith villager: three fixed tiers, each pinned to a real
+Create Fly steam-engine set-up — I matches a small one-engine set-up, II a mid four-engine set-up,
+III a full boiler — all at the engine's own 64 rpm, nothing rolled. Place it against a shaft and it
+turns like any Create generator, drawing emeralds from its own small inventory in proportion to the
+stress its network actually demands.
 
 Requires Minecraft 26.2, Fabric Loader, Fabric API and Create Fly. MIT (LICENSE); credits in NOTICE.
 Releases carry the jar and its SHA-256 in the notes; see CHANGELOG.md for what each version holds.

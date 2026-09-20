@@ -20,7 +20,7 @@ public final class MeteredMotor implements ModInitializer {
     public static final String MOD_ID = "metered_motor";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    /** The rolled stats every motor item and block entity carries (docs/spec/contracts/data-contract.md, ARCH-DEC-005). */
+    /** The fixed tier stats every motor item and block entity carries (docs/spec/contracts/data-contract.md, ARCH-DEC-005, `decisions/DEC-009-fixed-tiers.md`). */
     public static final DataComponentType<Stats> STATS = Registry.register(
         BuiltInRegistries.DATA_COMPONENT_TYPE,
         id("stats"),

@@ -78,8 +78,10 @@ final class LayoutTest {
     }
 
     @Test
-    void theTableIsFourRowsDirectlyUnderTheHeaderLine() {
-        assertEquals(4, Layout.TABLE_ROWS);
+    void theTableIsThreeRowsDirectlyUnderTheHeaderLine() {
+        // MM-21: 4 -> 3, the efficiency row dropped (decisions/DEC-009-fixed-tiers.md); the three
+        // rows regroup with no leftover single-column row: Speed/Capacity, Rate/Load, Inside/Remaining.
+        assertEquals(3, Layout.TABLE_ROWS);
         assertEquals(Layout.HEADER_Y + Layout.LINE_STRIDE, Layout.TABLE_START_Y, "the table starts one line below the header, with no extra gap");
         assertEquals(Layout.TABLE_START_Y + Layout.TABLE_ROWS * Layout.LINE_STRIDE, Layout.TABLE_END_Y);
     }

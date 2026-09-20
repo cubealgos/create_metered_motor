@@ -32,7 +32,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * (MOTOR-REQ-001, MOTOR-REQ-002, MOTOR-REQ-014, ARCH-DEC-002).
  */
 public final class MeteredMotorBlock extends DirectionalKineticBlock implements IBE<MeteredMotorBlockEntity> {
-    /** The rolled tier, set once at placement, that selects the block's model set (MOTOR-REQ-013, MOTOR-DEC-004). */
+    /** The tier, set once at placement, that selects the block's model set (MOTOR-REQ-013, MOTOR-DEC-004). */
     public static final EnumProperty<MotorTier> TIER = EnumProperty.create("tier", MotorTier.class);
 
     public MeteredMotorBlock(BlockBehaviour.Properties properties) {

@@ -15,7 +15,7 @@ category: "create_metered_motor"
 | Java | 25 | `just doctor` |
 | Gradle / Loom | 9.5.1 wrapper / 1.17 | wrapper properties |
 | Operating systems | macOS, Linux, Windows: the JVM's | not tested separately; nothing native |
-| Client and server | Both; the screen and goggles overlay client-side, the roll, the meter and the network state server-side | game tests (server), `just client` (client) |
+| Client and server | Both; the screen and goggles overlay client-side, offer creation, the meter and the network state server-side | game tests (server), `just client` (client) |
 | Villager trades | 26.2's data-driven trade registry: `data/minecraft/villager_trade/`, `data/minecraft/trade_set/`, tags under `data/minecraft/tags/villager_trade/` | game test |
 
 `PLATFORM-REQ-001`: **If** any row moves, **then** `just doctor` fails naming the row.

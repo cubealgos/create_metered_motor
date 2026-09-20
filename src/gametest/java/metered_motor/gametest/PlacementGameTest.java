@@ -15,9 +15,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 
 /**
- * MM-3: placing from an item copies its stats into the block entity, and an unrolled item places
- * rolled at tier I's middle (MOTOR-REQ-003, MOTOR-FAIL-003). MM-9: an item whose stats component
- * is newer than this build refuses placement outright (MOTOR-REQ-014).
+ * MM-3: placing from an item copies its stats into the block entity, and an item with no
+ * component places as a plain tier I motor (MOTOR-REQ-003, MOTOR-FAIL-003). MM-9: an item whose
+ * stats component is newer than this build refuses placement outright (MOTOR-REQ-014).
  */
 public final class PlacementGameTest {
     @GameTest
@@ -27,7 +27,7 @@ public final class PlacementGameTest {
         BlockPos motorPos = support.above();
         helper.setBlock(support, Blocks.STONE);
 
-        Stats stats = new Stats(Stats.VERSION, Tier.II, 100, 4_096, 1.0);
+        Stats stats = new Stats(Stats.VERSION, Tier.II);
         ItemStack stack = new ItemStack(MotorBlocks.ITEM);
         stack.set(MeteredMotor.STATS, stats);
         // helper.placeAt places whatever the player holds, not its own stack argument.
@@ -40,7 +40,7 @@ public final class PlacementGameTest {
     }
 
     @GameTest
-    public void anItemWithNoStatsPlacesRolledAtTheMiddleOfTierI(GameTestHelper helper) {
+    public void anItemWithNoStatsPlacesAsTierI(GameTestHelper helper) {
         ServerPlayer player = helper.makeMockServerPlayerInLevel();
         BlockPos support = new BlockPos(1, 1, 1);
         BlockPos motorPos = support.above();
@@ -51,8 +51,8 @@ public final class PlacementGameTest {
         helper.placeAt(player, stack, support, Direction.UP);
 
         MeteredMotorBlockEntity blockEntity = helper.getBlockEntity(motorPos, MeteredMotorBlockEntity.class);
-        Stats expected = Stats.middleOf(Tier.I);
-        helper.assertTrue(expected.equals(blockEntity.stats()), "an unrolled item rolls at tier I's middle: " + blockEntity.stats());
+        Stats expected = Stats.of(Tier.I);
+        helper.assertTrue(expected.equals(blockEntity.stats()), "an item with no component places as a plain tier I motor: " + blockEntity.stats());
         helper.succeed();
     }
 
@@ -64,7 +64,7 @@ public final class PlacementGameTest {
         helper.setBlock(support, Blocks.STONE);
         helper.setBlock(motorPos, Blocks.AIR);
 
-        Stats future = new Stats(Stats.VERSION + 1, Tier.I, 40, 1_280, 1.0);
+        Stats future = new Stats(Stats.VERSION + 1, Tier.I);
         ItemStack stack = new ItemStack(MotorBlocks.ITEM);
         stack.set(MeteredMotor.STATS, future);
         helper.assertTrue(future.readOnly(), "set up: a version newer than this build's is read-only");

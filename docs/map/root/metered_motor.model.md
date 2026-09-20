@@ -5,12 +5,7 @@
 Every type with its summary and every non-private constructor, method and constant. The
 signature is the contract; read the source only when the summary is not enough.
 
-The pure part: the motor's rolled stats and the burn arithmetic, with no Minecraft imports (docs/spec/contracts/data-contract.md).
-
-### `record Band(double min, double max)` — `src/main/java/metered_motor/model/Band.java`
-A uniform band a value is rolled within, min to max inclusive (docs/spec/domains/trade.md §3).
-- `double middle()` — The band's midpoint, used for the unrolled fallback (MOTOR-FAIL-003).
-- `double roll(DoubleSupplier random)` — A uniform draw within the band from a random source in [0, 1) (docs/spec/domains/trade.md §3).
+The pure part: the motor's fixed tier stats and the burn arithmetic, with no Minecraft imports (docs/spec/contracts/data-contract.md).
 
 ### `class Meter` — `src/main/java/metered_motor/model/Meter.java`
 The fractional emerald counter a motor's block entity advances once a second while running (docs/spec/contracts/data-contract.md, MOTOR-REQ-006, MOTOR-REQ-007).
@@ -21,25 +16,23 @@ The fractional emerald counter a motor's block entity advances once a second whi
 - `boolean isDue()` — Whether an emerald is currently owed and waiting to be taken.
 - `void holdAtOne()` — When the meter reached one but the inventory held no emerald to take, leaves it at exactly one so the next emerald that arrives is taken immediately (MOTOR-REQ-007).
 
-### `class Roll` — `src/main/java/metered_motor/model/Roll.java`
-The villager offer's roll: three independent uniform draws (rpm, capacity, efficiency) from candidate bands, with a malformed candidate rejected in favour of the tier's default band (docs/spec/domains/trade.md §3, TRADE-REQ-002, TRADE-REQ-004).
-- `Stats roll(Tier tier, double rpmMin, double rpmMax, double capacityMin, double capacityMax, double efficiencyMin, double efficiencyMax, DoubleSupplier random, Consumer<String> report)` — Rolls a tier's stats from candidate rpm, capacity and efficiency bands (each a min and a max) and a random source drawing in [0, 1).
-
-### `record Stats(int version, Tier tier, int rpm, int capacity, double efficiency)` — `src/main/java/metered_motor/model/Stats.java`
-A motor's rolled stats, fixed for its life once rolled and carried by the metered_motor:stats component (docs/spec/contracts/data-contract.md, MOTOR-REQ-001).
-- `int VERSION` — The schema this build writes.
+### `record Stats(int version, Tier tier)` — `src/main/java/metered_motor/model/Stats.java`
+A motor's stats: fixed for its life, carried by the metered_motor:stats component (docs/spec/contracts/data-contract.md, MOTOR-REQ-001).
+- `int VERSION` — The schema this build writes (`contracts/data-contract.md` version 2).
 - `boolean readOnly()` — True when written by a newer build than this one: kept intact, shown as unknown, never edited or placed (MOTOR-REQ-014).
-- `double ratePerMinute()` — The rate at full load: capacity divided by the fixed burn divisor and by efficiency (MOTOR-REQ-005, MOTOR-DEC-003).
-- `Stats middleOf(Tier tier)` — The unrolled fallback: the middle of a tier's bands, for a missing or malformed component (MOTOR-FAIL-003, DATA-REQ-003).
+- `int rpm()` — The tier's fixed generated speed while running: 64 rpm for every tier (`DEC-009`).
+- `int capacity()` — The tier's fixed stress capacity in SU (`DEC-009` §The ladder).
+- `double ratePerMinute()` — The tier's fixed rate at full load: capacity divided by the uniform burn divisor (MOTOR-REQ-005, `DEC-009`).
+- `Stats of(Tier tier)` — The current-version stats for a tier: the fallback for a missing or malformed component (MOTOR-FAIL-003, DATA-REQ-003), and every motor a trade file or the debug command gives, since nothing is rolled any more (`DEC-009`).
 
 ### `enum Tier` — `src/main/java/metered_motor/model/Tier.java`
-The three motor tiers, each with the toolsmith level and price that sells it and the default rpm, stress capacity and efficiency bands its roll draws from (docs/spec/domains/trade.md §3).
-- `Tier(int toolsmithLevel, int price, Band rpmBand, Band capacityBand, Band efficiencyBand)`
+The three fixed motor tiers, each pinned to a real Create Fly steam-engine set-up (docs/spec/decisions/DEC-009-fixed-tiers.md, `MOTOR-DEC-005`): tier I is one engine on a level-1 boiler, tier II is four engines on a level-4 boiler, tier III is the full level-18 boiler with 18 engines.
+- `Tier(int toolsmithLevel, int price, int capacity)`
 - `int toolsmithLevel()` — The toolsmith level (villager trade level, 3 to 5) that offers this tier.
 - `int price()` — The trade's price in emeralds.
-- `Band rpmBand()`
-- `Band capacityBand()`
-- `Band efficiencyBand()`
+- `int rpm()` — Every tier's fixed generated speed while running: 64 rpm, the steam engine's own active speed (`DEC-009`).
+- `int capacity()` — The tier's fixed stress capacity in SU, the real steam-engine set-up's own total (`DEC-009` §The ladder).
+- `double ratePerMinute()` — The tier's fixed rate at full load: capacity divided by the uniform burn divisor (`MOTOR-REQ-005`, `DEC-009`).
 - `int number()` — The tier's 1-based number as the data contract writes it (docs/spec/contracts/data-contract.md).
 - `Tier ofNumber(int number)` — The tier for its 1-based number; throws for anything but 1, 2 or 3.
 

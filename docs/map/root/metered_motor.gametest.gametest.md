@@ -9,18 +9,25 @@ signature is the contract; read the source only when the summary is not enough.
 MM-3: breaking the motor drops exactly one item carrying its stats (MOTOR-REQ-003).
 - `void breakingDropsExactlyOneItemWithTheSameStats(GameTestHelper helper)`
 
+### `class CapacityGameTest` — `src/gametest/java/metered_motor/gametest/CapacityGameTest.java`
+MM-21: the bug `decisions/DEC-009-fixed-tiers.md` fixes.
+- `void aRunningTierIMotorContributesItsFixedCapacityAt64Rpm(GameTestHelper helper)`
+- `void aRunningTierIiMotorContributesItsFixedCapacityAt64Rpm(GameTestHelper helper)`
+- `void aRunningTierIiiMotorContributesItsFixedCapacityAt64Rpm(GameTestHelper helper)`
+- `void aTierIiMotorUnderAMillstoneLoadReadsTheExpectedFraction(GameTestHelper helper)`
+
 ### `class ComponentGameTest` — `src/gametest/java/metered_motor/gametest/ComponentGameTest.java`
 MM-2: the stats component survives an item stack's save/parse round trip, and a newer version reads back intact and read-only (DATA-REQ-001).
 - `void theComponentRoundTripsThroughAnItemStack(GameTestHelper helper)`
 - `void aNewerVersionReadsBackIntactAndReadOnly(GameTestHelper helper)`
 
 ### `class DebugCommandGameTest` — `src/gametest/java/metered_motor/gametest/DebugCommandGameTest.java`
-MM-8: the pure stats builder rolls within bands and honours overrides, and the development-only command runs on the dispatcher and rejects a bad tier.
-- `void theBuilderRollsWithinTierBandsAndHonoursOverrides(GameTestHelper helper)`
-- `void theCommandWritesChosenStatsOntoTheHeldMotorOnADevelopmentServer(GameTestHelper helper)`
+MM-8: the development-only command runs on the dispatcher and writes a tier's fixed stats onto the held or looked-at motor.
+- `void theCommandWritesTheTiersFixedStatsOntoTheHeldMotorOnADevelopmentServer(GameTestHelper helper)`
 - `void theCommandGivesANewMotorWhenNoneIsHeldOnADevelopmentServer(GameTestHelper helper)`
-- `void theCommandWritesStatsOntoAMotorThePlayerLooksAtOnADevelopmentServer(GameTestHelper helper)`
-- `void anUnknownTierIsRejectedByTheParser(GameTestHelper helper)`
+- `void theCommandWritesTheTiersFixedStatsOntoAMotorThePlayerLooksAtOnADevelopmentServer(GameTestHelper helper)`
+- `void anUnknownTierLiteralIsRejectedByTheParser(GameTestHelper helper)`
+- `void aNumericTierIsNoLongerAcceptedByTheParser(GameTestHelper helper)`
 
 ### `class EmptyGameTest` — `src/gametest/java/metered_motor/gametest/EmptyGameTest.java`
 MM-4: taking the last emerald stops the motor, and the next emerald resumes it (MOTOR-FAIL-004, docs/spec/domains/motor.md §3).
@@ -40,6 +47,12 @@ MM-4: the meter advances once a second in proportion to the network's actual loa
 - `void noConsumerReadsZeroLoadAndDoesNotAdvanceTheMeter(GameTestHelper helper)`
 - `void aKnownConsumerAdvancesTheMeterByTheComputedFraction(GameTestHelper helper)`
 
+### `class MigrationGameTest` — `src/gametest/java/metered_motor/gametest/MigrationGameTest.java`
+MM-21 (`docs/spec/contracts/data-contract.md`, `DATA-REQ-002`): a saved version-1 component ({version:1, tier, rpm, capacity, efficiency}, the shape metered_motor:roll used to write) migrates forward to version 2 the moment it is read, keeping the tier and dropping the withdrawn rpm, capacity and efficiency fields it can no longer carry; a version this build cannot read (newer than Stats#VERSION) is kept exactly as saved, at its own version number, and stays read-only (`MOTOR-REQ-014`).
+- `void aVersionOneComponentMigratesToVersionTwoKeepingTheTier(GameTestHelper helper)`
+- `void aVersionThreeComponentStaysReadOnlyAndUnknown(GameTestHelper helper)`
+- `void anUnversionedComponentDefaultsToTheCurrentVersion(GameTestHelper helper)`
+
 ### `class NoDuplicateOfferGameTest` — `src/gametest/java/metered_motor/gametest/NoDuplicateOfferGameTest.java`
 MM-5: a villager that already offers a metered motor refuses a second, through metered_motor:no_motor_offered reading the villager's live offers off LootContextParams.THIS_ENTITY (TRADE-REQ-006, TRADE-DEC-004).
 - `void aVillagerAlreadyOfferingAMotorRefusesASecond(GameTestHelper helper)`
@@ -50,19 +63,14 @@ MM-16: neighbours of a placed motor were wrongly culling their touching face —
 - `void theCasingShapeAndOcclusionMatchTheCreativeMotorVertically(GameTestHelper helper)`
 
 ### `class PlacementGameTest` — `src/gametest/java/metered_motor/gametest/PlacementGameTest.java`
-MM-3: placing from an item copies its stats into the block entity, and an unrolled item places rolled at tier I's middle (MOTOR-REQ-003, MOTOR-FAIL-003).
+MM-3: placing from an item copies its stats into the block entity, and an item with no component places as a plain tier I motor (MOTOR-REQ-003, MOTOR-FAIL-003).
 - `void placingFromAnItemCopiesItsStats(GameTestHelper helper)`
-- `void anItemWithNoStatsPlacesRolledAtTheMiddleOfTierI(GameTestHelper helper)`
+- `void anItemWithNoStatsPlacesAsTierI(GameTestHelper helper)`
 - `void aNewerStatsVersionRefusesPlacement(GameTestHelper helper)`
 
 ### `class RegistrationGameTest` — `src/gametest/java/metered_motor/gametest/RegistrationGameTest.java`
 MM-9: the block and its item resolve at their documented ids and the item is stackable to exactly one, so a rolled item's stats never merge with another's (MOTOR-REQ-001).
 - `void theBlockAndItemResolveAtTheirIdsAndTheItemIsStackableToOne(GameTestHelper helper)`
-
-### `class RollGameTest` — `src/gametest/java/metered_motor/gametest/RollGameTest.java`
-MM-5: metered_motor:roll, decoded exactly as a trade file would write it and applied through net.minecraft.world.level.storage.loot.functions.LootItemFunction#apply, lands within its tier's bands; a malformed band is rejected in favour of the tier's default (TRADE-REQ-002, TRADE-REQ-004).
-- `void aTierIiRollLandsWithinItsBands(GameTestHelper helper)`
-- `void aMalformedBandFallsBackToTheTierDefaultAndLogs(GameTestHelper helper)`
 
 ### `class SlotRulesGameTest` — `src/gametest/java/metered_motor/gametest/SlotRulesGameTest.java`
 MM-6: the motor's five slots accept only emeralds and emerald blocks — on a direct click and on shift-click from the player inventory in both directions (docs/spec/domains/ui.md `UI-REQ-002`, `MOTOR-REQ-008`, `MOTOR-REQ-009`).
@@ -90,8 +98,8 @@ MM-6: the readout the screen would show is exactly the block entity's own synced
 
 ### `class TierPropertyGameTest` — `src/gametest/java/metered_motor/gametest/TierPropertyGameTest.java`
 MotorTier#of(ItemStack) is the mapping metered_motor.client.visual.TierProperty (a client-only select item model property, not game-testable directly) delegates to for the item model's tier case (MOTOR-REQ-013, MOTOR-DEC-004, TRADE-REQ-005): exercised headlessly here against the same server-safe method, since src/test cannot construct an ItemStack without the game's registries bootstrapped (docs/spec/operations/testing.md).
-- `void eachRolledTierMapsToItsOwnModelCase(GameTestHelper helper)`
-- `void anUnrolledStackMapsToTierI(GameTestHelper helper)`
+- `void eachTierMapsToItsOwnModelCase(GameTestHelper helper)`
+- `void aStackWithNoComponentMapsToTierI(GameTestHelper helper)`
 - `void aReadOnlyNewerComponentMapsToTierI(GameTestHelper helper)`
 
 ### `class TierStateGameTest` — `src/gametest/java/metered_motor/gametest/TierStateGameTest.java`
@@ -101,7 +109,7 @@ MM-7: the tier block state property is set at placement from the item's stats, s
 - `void breakingAndReplacingKeepsTheTier(GameTestHelper helper)`
 
 ### `class TooltipGameTest` — `src/gametest/java/metered_motor/gametest/TooltipGameTest.java`
-MM-14: the tooltip shows an unknown motor, not stat numbers, for a component newer than this build; the rolled stats for a current-version component; and "unrolled" for no component at all (MOTOR-REQ-014, UI-REQ-006, DATA-REQ-003).
+MM-14: the tooltip shows an unknown motor, not stat numbers, for a component newer than this build; the tier's fixed stats for a current-version component; and "unrolled" for no component at all (MOTOR-REQ-014, UI-REQ-006, DATA-REQ-003).
 - `void aNewerVersionShowsAsUnknownWithNoStatLines(GameTestHelper helper)`
 - `void aCurrentVersionShowsTheStatLines(GameTestHelper helper)`
 - `void noComponentShowsTheUnrolledLine(GameTestHelper helper)`
@@ -109,4 +117,6 @@ MM-14: the tooltip shows an unknown motor, not stat numbers, for a component new
 ### `class TradeFileGameTest` — `src/gametest/java/metered_motor/gametest/TradeFileGameTest.java`
 MM-5: the three toolsmith trade files resolve through Registries.VILLAGER_TRADE and each is tagged into its toolsmith level (TRADE-REQ-001, TRADE-REQ-003).
 - `void theThreeTradesResolveAndAreTaggedIntoTheirLevel(GameTestHelper helper)`
+- `void eachTradeGivesItsFixedTierWithNoItemModifiers(GameTestHelper helper)` — TRADE-REQ-002 (withdrawn), TRADE-DEC-003: each trade's gives template alone determines the result — VillagerTrade.getOffer builds it with gives.create() then applies every given_item_modifiers entry in order (full bytecode disassembly); none of our trade files list any, so two offers created from two different, independently random LootContexts must be identical: proof nothing is rolled at offer creation.
+- `void theRollLootFunctionTypeIsNoLongerRegistered(GameTestHelper helper)`
 

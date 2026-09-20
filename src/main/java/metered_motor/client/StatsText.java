@@ -5,7 +5,7 @@ import metered_motor.block.MotorState;
 import metered_motor.model.Tier;
 
 /**
- * Number and enum formatting shared by every place the rolled stats or the live readout become
+ * Number and enum formatting shared by every place the fixed tier stats or the live readout become
  * text: the item tooltip, the motor screen (`MOTOR-REQ-012`, docs/spec/domains/ui.md
  * `UI-REQ-003`) and the goggles overlay. Every number goes through {@link Locale#ROOT}
  * (`UI-REQ-007`) so a client's own locale never turns a decimal point into a comma mid-readout.
@@ -22,7 +22,7 @@ public final class StatsText {
         return tier.name();
     }
 
-    /** Two decimal places, e.g. efficiency or the rate at full load. */
+    /** Two decimal places, e.g. the rate at full load. */
     public static String twoDecimals(double value) {
         return String.format(Locale.ROOT, "%.2f", value);
     }

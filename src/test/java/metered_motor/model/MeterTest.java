@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 class MeterTest {
     @Test
     void takesExactlyOneEmeraldAfterTheComputedNumberOfSecondsUnderAFixedLoad() {
-        // tier III worst-case rate is 3.0 a minute (0.05 a second) at full load: 20 seconds to one emerald.
+        // An arbitrary round rate (0.05 a second at full load) chosen for a clean 20-second
+        // computation; a fixed tier's own real rate is checked in aTiersFixedRateTakesOneEmeraldAtTheComputedSecond.
         double ratePerMinute = 3.0;
         Meter meter = new Meter();
         int totalDue = 0;
@@ -23,6 +24,26 @@ class MeterTest {
         }
         assertEquals(1, totalDue, "exactly one emerald across the twenty seconds");
         assertEquals(0.0, meter.fraction(), 1e-9, "the fraction is consumed, not overpaid");
+    }
+
+    @Test
+    void aTiersFixedRateTakesOneEmeraldAtTheComputedSecond() {
+        // MOTOR-REQ-005/006: each tier's own fixed rate (decisions/DEC-009-fixed-tiers.md), at
+        // full load, must take exactly one emerald at the second the rate's own arithmetic predicts.
+        for (Tier tier : Tier.values()) {
+            double ratePerMinute = tier.ratePerMinute();
+            long dueAtSecond = (long) Math.ceil(60.0 / ratePerMinute);
+            Meter meter = new Meter();
+            int totalDue = 0;
+            for (long second = 1; second <= dueAtSecond; second++) {
+                int due = meter.advance(ratePerMinute, 1.0);
+                totalDue += due;
+                if (second < dueAtSecond) {
+                    assertEquals(0, due, tier + ": no emerald before second " + dueAtSecond + ", was due at " + second);
+                }
+            }
+            assertEquals(1, totalDue, tier + ": exactly one emerald by second " + dueAtSecond);
+        }
     }
 
     @Test
