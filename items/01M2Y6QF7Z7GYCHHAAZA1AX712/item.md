@@ -18,16 +18,96 @@ Compare byte for byte with Create Fly: `javap -p -c` on `CreativeMotorRenderer` 
 
 ## Acceptance criteria
 
-- [ ] `MeteredMotorRenderer` and `MotorVisuals` orient the shaft half the way Create's creative motor does for all six facings; the difference to Create's code is only the block entity type.
-- [ ] A unit test on the orientation helper (the pure part: facing → rotation) if one can be separated; otherwise the ticket records why not.
+- [x] (the shaft was never wrong; the bug was occlusion: `getShape` and `forceSolidOn` now mirror the creative motor, `OcclusionGameTest`) `MeteredMotorRenderer` and `MotorVisuals` orient the shaft half the way Create's creative motor does for all six facings; the difference to Create's code is only the block entity type.
+- [x] (not applicable: no orientation code of our own; the occlusion game test covers the real bug) A unit test on the orientation helper (the pure part: facing → rotation) if one can be separated; otherwise the ticket records why not.
 - [ ] `just client`: the shaft sits on the facing axis and turns while running, for a horizontal and a vertical facing (Kevin's check).
-- [ ] Merged through a Forgejo pull request into `development`.
+- [x] Merged through a Forgejo pull request into `development`.
 
 ## Constraints and prior findings
 
 MM-7's Findings on `OrientedRotatingVisual` and `AllBlockEntityRenders.register()`; the block model itself contains no shaft geometry.
 
 ## Findings
+
+**Correction (Kevin, 2026-09-20, re-reading the screenshot): the shaft was never the bug.** Look
+again at `mm16-crooked-shaft.png` — the dirt block *behind* the placed motor shows sky and grass
+through it. That's face culling: the motor counts as a full opaque cube for occlusion purposes
+(the block had no `getShape` override, so it fell back to `Block`'s full-cube default), so the
+neighbours' faces against it were culled, while the casing's actual rendered model (a smaller,
+strutted box, exactly Create's own `block.json`) leaves gaps — hence "seeing through" to whatever
+is beyond the neighbour. The grey diagonal shape the original title's "crooked shaft" described is
+just the correctly-angled shaft half, foreshortened by the screenshot's viewing angle; the shaft
+rotation investigation below is retained as-is (it's still correct — the shaft genuinely never
+diverged from the creative motor's) but was answering the wrong question. See "Occlusion / face
+culling (the actual bug, fixed)" below for the real fix.
+
+### Occlusion / face culling (the actual bug, fixed)
+
+**Root cause**: `MeteredMotorBlock` had no `getShape` override, unlike `CreativeMotorBlock`.
+Read via `javap -p -v` on `com.zurrtum.create.AllBlocks`'s static initializer (the `CREATIVE_MOTOR`
+construction) and `CreativeMotorBlock.class`:
+
+- **`AllBlocks.CREATIVE_MOTOR`'s properties chain** (disassembled from the static initializer, not
+  guessed): `BlockBehaviour.Properties.ofFullCopy(Blocks.ANDESITE).mapColor(MapColor.COLOR_PURPLE)
+  .forceSolidOn()` — **no `noOcclusion()`, no `isRedstoneConductor`/`isViewBlocking`
+  /`isSuffocating`/`dynamicShape` overrides at all.** This rules out the coordinator's first
+  hypothesis (`noOcclusion()`): the creative motor does *not* call it, and calling it on our own
+  properties would have been a real divergence from "byte-identical to the creative motor," not a
+  fix.
+- **`CreativeMotorBlock` itself** (full disassembly, every method): only `getShape`,
+  `getStateForPlacement`, `hasShaftTowards`, `getRotationAxis`, `hideStressImpact`,
+  `isPathfindable`, `getBlockEntityClass`, `getBlockEntityType` are overridden — no
+  `useShapeForLightOcclusion`, `getRenderShape`, `propagatesSkylightDown`, `getShadeBrightness`,
+  or `isCollisionShapeFullBlock` (the ticket's other named suspects: absent, so vanilla's
+  defaults apply to the creative motor too, and those defaults derive from `getShape`).
+  `getShape(state, level, pos, context)` returns `AllShapes.MOTOR_BLOCK.get(state.getValue(FACING))`.
+  `AllShapes.MOTOR_BLOCK` (disassembled from `AllShapes`'s static initializer) is
+  `shape(3, 0, 3, 13, 14, 13).forDirectional()` — a box from `(3,0,3)` to `(13,14,13)`, well short
+  of the full `0..16` cube on every axis, rotated per facing.
+- **`MeteredMotorBlock`** never overrode `getShape` at all, so it inherited `Block`'s absolute
+  default: a full `Shapes.block()` cube. Minecraft precomputes a block's per-state *occlusion*
+  shape from `getShape` (no `dynamicShape()` was set, so this is safe/correct to do once per
+  enumerated state) unless told otherwise — with a full-cube shape and occlusion not disabled
+  (`canOcclude()` true on both blocks, since neither calls `noOcclusion()`), a neighbour touching
+  any face of our motor believed that face was fully covered and skipped rendering its own face
+  there. The casing actually rendered (Create's own `block.json`, copied byte-for-byte per MM-7)
+  never filled that face — corner struts and a narrower box, not a solid 16×16×16 — so the
+  neighbour's now-missing face showed whatever lay beyond it (sky, grass, in the screenshot).
+- **Client render-layer registration**: grepped `com.zurrtum.create.client` for `CREATIVE_MOTOR` —
+  no hits outside tooltips/ponder data. No `BlockRenderLayerMap`/`RenderType` registration exists
+  for the creative motor, so none is needed for ours either; `MotorBlocks` already registers none,
+  consistent with Create's own approach.
+
+**Fix**: mirrored exactly, block-entity-type substitution aside.
+- `MeteredMotorBlock.getShape` now overrides to `AllShapes.MOTOR_BLOCK.get(state.getValue(FACING))`
+  — confirmed via `javap -p -c` on the *compiled* class that the bytecode is identical to
+  `CreativeMotorBlock.getShape`'s, down to the constant pool references.
+- `MotorBlocks.BLOCK`'s properties gained `.forceSolidOn()`, matching `CREATIVE_MOTOR`'s chain
+  (unrelated to the culling bug itself — `forceSolidOn` affects solidity checks like redstone/
+  comparators/spawning, not occlusion — but a genuine, verified divergence from the creative
+  motor's properties worth mirroring while touching this code, per the ticket's "the difference to
+  Create's code is only the block entity type"). `mapColor`, `strength`, `sound` and
+  `requiresCorrectToolForDrops` were left as MM-7's own deliberate choices (brass/gold motor
+  flavour), not blindly overwritten with `ofFullCopy(Blocks.ANDESITE)`.
+- Added `src/gametest/java/metered_motor/gametest/OcclusionGameTest.java`: for a horizontal
+  (`NORTH`) and a vertical (`UP`) facing, asserts `ours.canOcclude() == creative.canOcclude()` and
+  that `ours.getShape(level, pos, ctx) == creative.getShape(level, pos, ctx)` (the same cached
+  `VoxelShape` instance, since both now call the identical `AllShapes.MOTOR_BLOCK.get(facing)`)
+  and that it isn't a full cube. Had to also add `metered_motor.gametest.OcclusionGameTest` to
+  `src/gametest/resources/fabric.mod.json`'s `fabric-gametest` entrypoints list — discovered along
+  the way that `RegistrationGameTest` (MM-9) is missing from that list too and so never actually
+  runs under `runGameTest`; left unfixed as out of scope for MM-16, worth its own ticket.
+
+**Check**: `./gradlew compileJava --offline` clean; `just check` green — lint clean, `just map`
+regenerated `docs/map.md`/`docs/map/root/metered_motor.block.md`/`...gametest.gametest.md` (new
+public `getShape` override, new `OcclusionGameTest` class) with no further staleness, and
+**"All 39 required tests passed :)"** (37 prior + the 2 new `OcclusionGameTest` cases, confirmed
+running by the count going 37→39 only after the `fabric.mod.json` entrypoint was added — before
+that it silently stayed at 37, the same trap `RegistrationGameTest` fell into).
+
+---
+
+### Shaft rotation (ruled out; not the bug — retained for the record)
 
 **No code divergence found, after an exhaustive byte-for-byte comparison; no source change was made.**
 Both suspects the Approach names are ruled out, and every other layer between a placed block's
