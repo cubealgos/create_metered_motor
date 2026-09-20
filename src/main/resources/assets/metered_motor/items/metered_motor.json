@@ -1,6 +1,33 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "metered_motor:item/metered_motor"
+    "type": "minecraft:select",
+    "property": "metered_motor:tier",
+    "cases": [
+      {
+        "when": "i",
+        "model": {
+          "type": "create:model/normal",
+          "model": "metered_motor:block/metered_motor/item_i"
+        }
+      },
+      {
+        "when": "ii",
+        "model": {
+          "type": "create:model/normal",
+          "model": "metered_motor:block/metered_motor/item_ii"
+        }
+      },
+      {
+        "when": "iii",
+        "model": {
+          "type": "create:model/normal",
+          "model": "metered_motor:block/metered_motor/item_iii"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "create:model/normal",
+      "model": "metered_motor:block/metered_motor/item_i"
+    }
   }
 }

@@ -14,6 +14,9 @@
   },
   "license": "MIT",
   "environment": "*",
+  "mixins": [
+    "metered_motor.mixins.json"
+  ],
   "entrypoints": {
     "main": [
       "metered_motor.MeteredMotor"
