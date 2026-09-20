@@ -15,6 +15,7 @@
       "metered_motor.gametest.PlacementGameTest",
       "metered_motor.gametest.BreakGameTest",
       "metered_motor.gametest.TierStateGameTest",
+      "metered_motor.gametest.TierPropertyGameTest",
       "metered_motor.gametest.StateGameTest",
       "metered_motor.gametest.InsertGameTest",
       "metered_motor.gametest.ExtractGameTest",

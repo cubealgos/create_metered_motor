@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "metered_motor.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "client.SelectItemModelPropertiesAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

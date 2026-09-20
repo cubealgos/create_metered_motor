@@ -20,6 +20,14 @@ The goggles readout, appended after Create's own kinetic lines (speed, stress ca
 - `boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking)`
 
 ### `class MotorVisuals` — `src/main/java/metered_motor/client/visual/MotorVisuals.java`
-The motor's client-only registrations: the goggles overlay and the shaft's rendering, both keyed off MotorBlocks#BLOCK_ENTITY_TYPE (MOTOR-REQ-012, MOTOR-REQ-013).
+The motor's client-only registrations: the goggles overlay, the shaft's rendering and the item model's tier property, all keyed off MotorBlocks#BLOCK_ENTITY_TYPE or MotorBlocks#ITEM (MOTOR-REQ-012, MOTOR-REQ-013).
 - `void register()`
+
+### `class TierProperty` — `src/main/java/metered_motor/client/visual/TierProperty.java`
+The metered_motor:tier select item model property: picks the item model's tier case (MOTOR-REQ-013, MOTOR-DEC-004) so the item shows its rolled tier's casing colour in the inventory, in hand and in the trade screen (TRADE-REQ-005), not just on the placed block.
+- `Codec<MotorTier> VALUE_CODEC`
+- `SelectItemModelProperty.Type<TierProperty, MotorTier> TYPE`
+- `MotorTier get(ItemStack stack, ClientLevel level, LivingEntity entity, int seed, ItemDisplayContext displayContext)`
+- `Codec<MotorTier> valueCodec()`
+- `SelectItemModelProperty.Type<TierProperty, MotorTier> type()`
 

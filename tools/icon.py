@@ -2,21 +2,22 @@
 """Render docs/modrinth/icon.png: the mod's own tier II motor block model on the cubealgos
 navy badge Create add-ons share (MM-12).
 
-Loads models/item/metered_motor.json (the item model MM-7 retargeted onto this mod's own
-textures) and does a real 3D projection of every element -- including the rotated "Axis" box,
-the flap-display strip and the corner rims -- using the model's own per-element rotation, the
-gui display transform overridden to the rotation Kevin picked from the rendered rotation sheet
-([30, 315, -45], scale 0.625), painter's-order face sorting with backface culling, per-face UV
-affine sampling (handling uv flips and the 0/90/180/270 "rotation" key) and vanilla's flat face
-shading (up 1.0, down 0.5, north/south 0.8, east/west 0.6).
+Loads models/block/metered_motor/item_ii.json (MM-15: one of the three per-tier item models the
+item's `minecraft:select` definition now picks among by rolled tier; already textured brass,
+tier II's own) and does a real 3D projection of every element -- including the rotated "Axis"
+box, the flap-display strip and the corner rims -- using the model's own per-element rotation,
+the gui display transform overridden to the rotation Kevin picked from the rendered rotation
+sheet ([30, 315, -45], scale 0.625), painter's-order face sorting with backface culling,
+per-face UV affine sampling (handling uv flips and the 0/90/180/270 "rotation" key) and
+vanilla's flat face shading (up 1.0, down 0.5, north/south 0.8, east/west 0.6).
 
 Textures: `metered_motor:` ones are read from this repo's own
-`src/main/resources/assets/metered_motor/textures/`, substituting the model's tier I
-references (`motor_i`, `casing_i`) for tier II (`motor_ii`, `casing_ii`) so the icon renders
-brass without editing the model file itself. `create:` ones (the axis and flap-display
-textures, not yet part of this mod) are read straight out of the Create Fly jar -- found by
-globbing the local Gradle cache, or given explicitly with --jar -- and are never vendored into
-this repo.
+`src/main/resources/assets/metered_motor/textures/` exactly as the model names them --
+item_ii.json already points at the tier II (`motor_ii`, `casing_ii`) textures, so no
+substitution is needed (MM-7's single tier-I-only item model, which this replaced, needed one).
+`create:` ones (the axis and flap-display textures, not yet part of this mod) are read straight
+out of the Create Fly jar -- found by globbing the local Gradle cache, or given explicitly with
+--jar -- and are never vendored into this repo.
 
 The projection is then composited onto the navy badge: outer white rim, pale band, dark ring,
 blueprint-blue disc, half-alpha grid, fit box 320 px, LANCZOS "smooth" mode (the projection is
@@ -41,18 +42,10 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
-MODEL_PATH = ROOT / "src/main/resources/assets/metered_motor/models/item/metered_motor.json"
+MODEL_PATH = ROOT / "src/main/resources/assets/metered_motor/models/block/metered_motor/item_ii.json"
 MM_TEX_DIR = ROOT / "src/main/resources/assets/metered_motor/textures"
 OUT = ROOT / "docs/modrinth/icon.png"
 JAR_GLOB = str(Path.home() / ".gradle/caches/modules-2/files-2.1/maven.modrinth/create-fly/*/*/*.jar")
-
-# MM-12: the model's own texture keys point at tier I (andesite); redirect the ones this mod
-# owns to tier II (brass) so the icon matches the "tier II brass" constraint, without touching
-# the model file itself.
-TIER_II_SUBSTITUTIONS = {
-    "block/casing_i": "block/casing_ii",
-    "block/motor_i": "block/motor_ii",
-}
 
 GUI_OVERRIDE = {"rotation": [30, 315, -45], "scale": [0.625, 0.625, 0.625]}  # MM-12 constraint
 
@@ -267,7 +260,6 @@ def find_jar(explicit: Path | None) -> Path:
 def load_texture(location: str, jar: Path | None) -> Image.Image:
     namespace, path = location.split(":", 1)
     if namespace == "metered_motor":
-        path = TIER_II_SUBSTITUTIONS.get(path, path)
         file = MM_TEX_DIR / f"{path}.png"
         if not file.exists():
             raise SystemExit(f"icon: texture {location!r} not found at {file}")
