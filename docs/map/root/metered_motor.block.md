@@ -71,5 +71,6 @@ Adapts Tier to a block state value: MeteredMotorBlock's tier property selects th
 - `MotorTier(Tier tier)`
 - `Tier tier()` — The domain tier this block state value stands for.
 - `MotorTier of(Tier tier)` — The block state value for a domain tier.
+- `MotorTier of(ItemStack stack)` — The tier a stack's item model shall show: tier I for a stack with no MeteredMotor#STATS component (unrolled, MOTOR-FAIL-003) or with one newer than this build can read (Stats#readOnly(), MOTOR-REQ-014), otherwise the rolled tier.
 - `String getSerializedName()`
 

@@ -28,8 +28,8 @@
   "screen.metered_motor.rate": "%s emeralds/min at full load",
   "screen.metered_motor.load": "Load: %s%%",
   "screen.metered_motor.emeralds_inside": "%s emeralds inside",
-  "screen.metered_motor.remaining": "%s remaining",
-  "screen.metered_motor.remaining_idle": "Idle",
+  "screen.metered_motor.remaining": "Remaining: %s",
+  "screen.metered_motor.remaining_none": "Remaining: no load",
   "screen.metered_motor.state.running": "Running",
   "screen.metered_motor.state.stopped": "Stopped",
   "screen.metered_motor.state.paused": "Paused"

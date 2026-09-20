@@ -88,6 +88,12 @@ MM-6: the readout the screen would show is exactly the block entity's own synced
 - `void theReadoutFieldsMatchTheBlockEntityAfterABurnCycle(GameTestHelper helper)`
 - `void anIdleMotorFormatsAsIdleNotAsATime(GameTestHelper helper)`
 
+### `class TierPropertyGameTest` — `src/gametest/java/metered_motor/gametest/TierPropertyGameTest.java`
+MotorTier#of(ItemStack) is the mapping metered_motor.client.visual.TierProperty (a client-only select item model property, not game-testable directly) delegates to for the item model's tier case (MOTOR-REQ-013, MOTOR-DEC-004, TRADE-REQ-005): exercised headlessly here against the same server-safe method, since src/test cannot construct an ItemStack without the game's registries bootstrapped (docs/spec/operations/testing.md).
+- `void eachRolledTierMapsToItsOwnModelCase(GameTestHelper helper)`
+- `void anUnrolledStackMapsToTierI(GameTestHelper helper)`
+- `void aReadOnlyNewerComponentMapsToTierI(GameTestHelper helper)`
+
 ### `class TierStateGameTest` — `src/gametest/java/metered_motor/gametest/TierStateGameTest.java`
 MM-7: the tier block state property is set at placement from the item's stats, so the blockstate JSON alone picks the model set (MOTOR-REQ-013, MOTOR-DEC-004).
 - `void placingATierIiiItemYieldsTierIiiState(GameTestHelper helper)`
