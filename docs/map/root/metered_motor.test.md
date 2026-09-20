@@ -6,8 +6,9 @@ Every type with its summary and every non-private constructor, method and consta
 signature is the contract; read the source only when the summary is not enough.
 
 ### `class ModelAssetsTest` — `src/test/java/metered_motor/ModelAssetsTest.java`
-The metered motor's model assets, checked against the files themselves rather than by loading Minecraft (MOTOR-REQ-013): every model the blockstate JSON names exists, every model's texture references resolve to either a PNG in this mod's namespace or the create: namespace, and the six tier textures tools/recolour.py writes are 16x16.
+The metered motor's model assets, checked against the files themselves rather than by loading Minecraft (MOTOR-REQ-013): every model the blockstate JSON names exists, every model the item definition's minecraft:select cases name exists (MM-15, TRADE-REQ-005), every model's texture references resolve to either a PNG in this mod's namespace or the create: namespace, and the six tier textures tools/recolour.py writes are 16x16.
 - `void everyBlockstateModelExists()`
+- `void everyItemDefinitionModelExists()`
 - `void everyModelsTextureReferenceResolves()`
 - `void theSixRecolouredTexturesAre16x16()`
 
