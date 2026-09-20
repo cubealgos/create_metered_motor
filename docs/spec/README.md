@@ -8,9 +8,10 @@ repo: "create_metered_motor"
 # Create Fly: Metered Motor — specification
 
 A small Create Fly add-on for Minecraft 26.2 on Fabric: a **metered motor**, a kinetic power source
-bought from a toolsmith villager, whose rpm, stress capacity and efficiency are rolled when the
-villager offers it, and which burns emeralds in proportion to the stress its network actually
-draws. One block, one item, three tiers on a component, one screen, no recipe. The second of the
+bought from a toolsmith villager — three motors matching a small, a mid and a full steam set-up,
+fixed rather than rolled (`decisions/DEC-009-fixed-tiers.md`) — which burns emeralds in proportion
+to the stress its network actually draws. One block, one item, three tiers on a component, one
+screen, no recipe. The second of the
 small add-ons built to gain the experience `create_civilization` needs (its ENERGY domain assumes
 exactly such a motor); it is nonetheless a distributed product with real users and is specified as
 one (`decisions/DEC-001-classification.md`).
@@ -67,7 +68,8 @@ Permanent; a withdrawn item keeps its number.
 | 7 | Block entities move components to and from their item through `applyImplicitComponents(DataComponentGetter)` and `collectImplicitComponents(DataComponentMap.Builder)`; `WorldlyContainer` gates faces with `getSlotsForFace` and `canPlaceItemThroughFace` | 2026-09-19 | the 26.2 jar |
 | 8 | Client visuals: `SingleAxisRotatingVisual.of(PartialModel)` and `SimpleBlockEntityVisualizer.builder(type)` from Create Fly's bundled Flywheel; the creative motor uses `CreativeMotorRenderer`; goggles read `client.api.goggles.IHaveGoggleInformation.addToGoggleTooltip` | 2026-09-19 | the Create Fly jar |
 | 9 | Create Fly's screen framework (`MenuType` in `CreateRegistries.MENU_TYPE`, `MenuBase`, `AbstractSimiContainerScreen`, `AllGuiTextures`, tinted glyph blits) | 2026-09-19 | `create_brass_compass`, in production |
-| 10 | Goggles text comes from a client-side `BlockEntityBehaviour`: the overlay reads `client.foundation.blockEntity.behaviour.tooltip.TooltipBehaviour.TYPE` from the hovered block entity (Create's own kinetic block entities implement no client interface); how an add-on attaches one to its block entity type is read at the first ticket. Create Fly's `BlockStressValues.register` sets generator speeds only; capacities are config (`CStress`) and the largest boiler's figure is taken as 18 levels at 1,024 SU until read | 2026-09-19, partly | the Create Fly jar; `MOTOR-REQ-012`, `TRADE-DEC-002` |
+| 10 | Goggles text comes from a client-side `BlockEntityBehaviour`: the overlay reads `client.foundation.blockEntity.behaviour.tooltip.TooltipBehaviour.TYPE` from the hovered block entity (Create's own kinetic block entities implement no client interface); how an add-on attaches one to its block entity type is read at the first ticket. Create Fly's `BlockStressValues.register` sets generator speeds only; capacities are config (`CStress`); the largest boiler's figure, previously taken as an estimate, is now confirmed at 294,912 SU (Verification 11) | 2026-09-19, partly | the Create Fly jar; `MOTOR-REQ-012`, `DEC-009` |
+| 11 | Create Fly's boiler heat-level ladder (`BoilerData.getEngineEfficiency`, `getMaxHeatLevelForBoilerSize`), the steam engine's capacity-per-rpm semantics (`PoweredShaftBlockEntity.calculateAddedStressCapacity()` returns `combinedCapacity / speedModifier`, which cancels against `getGeneratedSpeed()` in `KineticNetwork`'s product, confirmed by full bytecode disassembly), and the reference generator capacities (`CStress`: steam engine 1,024, creative motor 16,384) | 2026-09-20 | `vault/technical/minecraft/create-fly-steam-engines-26-2.md`, `javap` |
 
 ## Divergences from heimathafen standards
 
@@ -85,10 +87,11 @@ Permanent; a withdrawn item keeps its number.
 | `DEC-002` | `create_metered_motor`, mod id `metered_motor`, "Create Fly: Metered Motor" | written |
 | `DEC-003` | MIT; public under the cubealgos organisation from the first commit | written |
 | `DEC-004` | Toolchain as `create_brass_compass`: Java 25, Gradle 9.5.1, Loom 1.17, Kotlin DSL, one project | written |
-| `DEC-005` | No recipe: the toolsmith sells it, three tiers at Journeyman, Expert and Master, stats rolled per offer, never more than one motor offer per villager | written |
-| `DEC-006` | One block and one item; tier, rpm, stress capacity and efficiency on a component that travels between item and block | written |
+| `DEC-005` | No recipe: the toolsmith sells it, three tiers at Journeyman, Expert and Master, never more than one motor offer per villager | written |
+| `DEC-006` | One block and one item; the tier travels between item and block on a component (amended by `DEC-009`: the component now carries only the tier) | written |
 | `DEC-007` | Metered: emeralds burn in proportion to the stress the network draws | written |
 | `DEC-008` | Edges: empty stops it, a redstone signal pauses it, five slots for emeralds and emerald blocks, automation inserts only | written |
+| `DEC-009` | Fixed tiers as real steam-engine set-ups (16,384 / 65,536 / 294,912 SU), all at 64 rpm, divisor 92,160; withdraws rolled rpm/capacity/efficiency | written |
 | `MOTOR-DEC-004` | The model is Create's creative motor, recoloured per tier (in `domains/motor.md`) | written |
 
 ## Open questions gathered
@@ -96,4 +99,7 @@ Permanent; a withdrawn item keeps its number.
 | Question | Where | Blocks |
 |---|---|---|
 | Whether the merchant predicate sees the villager's offers, which the one-motor-per-villager rule needs | `domains/trade.md` §7 | the trade ticket's approach, not the design |
-| The full steam engine's stress figure in Create Fly, to pin tier III's ceiling | `domains/trade.md` §7 | the numbers, not the design |
+| Whether 26.2's villager-trade `gives` item template accepts a `components` block for the fixed tier stats | `domains/trade.md` §7, `TRADE-REQ-002` | the ticket, marked "to verify at the ticket" there |
+
+Closed: the full steam engine's stress figure in Create Fly, to pin tier III's ceiling — resolved
+by Verification 11 and fixed as the ladder in `decisions/DEC-009-fixed-tiers.md`.

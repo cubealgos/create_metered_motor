@@ -9,7 +9,7 @@ signature is the contract; read the source only when the summary is not enough.
 The mod's server-and-common entrypoint: registers the stats component (MOTOR-REQ-001).
 - `String MOD_ID`
 - `Logger LOGGER`
-- `DataComponentType<Stats> STATS` — The rolled stats every motor item and block entity carries (docs/spec/contracts/data-contract.md, ARCH-DEC-005).
+- `DataComponentType<Stats> STATS` — The fixed tier stats every motor item and block entity carries (docs/spec/contracts/data-contract.md, ARCH-DEC-005, `decisions/DEC-009-fixed-tiers.md`).
 - `Identifier id(String path)`
 - `void onInitialize()`
 

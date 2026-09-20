@@ -18,7 +18,7 @@ The fallback renderer for a Flywheel-less client: draws the shaft turning on the
 The goggles readout, appended after Create's own kinetic lines (speed, stress capacity) that GeneratingKineticTooltipBehaviour already draws for any generating kinetic source (MOTOR-REQ-012, UI-REQ-005, UI-UC-002).
 - `MotorTooltipBehaviour(MeteredMotorBlockEntity blockEntity)`
 - `boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking)`
-- `List<Row> rows(Stats stats, MotorState state, double load, int emeraldsInside, double secondsRemaining)` — The readout's lines in display order, the header first (MM-19, MOTOR-REQ-012, UI-REQ-005, UI-REQ-007).
+- `List<Row> rows(Stats stats, MotorState state, double load, int emeraldsInside, double secondsRemaining, boolean omitCapacity)` — The readout's lines in display order, the header first (MM-19, MOTOR-REQ-012, UI-REQ-005, UI-REQ-007).
 
     - **nested** `record Row(String labelKey, String value, boolean valueIsKey, String unitKey, int indent)`
     One line of the readout before #addRow turns it into a styled, indented Component: a header carries only labelKey, at indent 0; a body row carries a formatted value — or, when valueIsKey, a second translation key to resolve instead, for the state name and "no load" — and an optional unitKey, always at indent 1 (MM-19).
@@ -31,7 +31,7 @@ The motor's client-only registrations: the goggles overlay, the shaft's renderin
 - `void register()`
 
 ### `class TierProperty` — `src/main/java/metered_motor/client/visual/TierProperty.java`
-The metered_motor:tier select item model property: picks the item model's tier case (MOTOR-REQ-013, MOTOR-DEC-004) so the item shows its rolled tier's casing colour in the inventory, in hand and in the trade screen (TRADE-REQ-005), not just on the placed block.
+The metered_motor:tier select item model property: picks the item model's tier case (MOTOR-REQ-013, MOTOR-DEC-004) so the item shows its own tier's casing colour in the inventory, in hand and in the trade screen (TRADE-REQ-005), not just on the placed block.
 - `Codec<MotorTier> VALUE_CODEC`
 - `SelectItemModelProperty.Type<TierProperty, MotorTier> TYPE`
 - `MotorTier get(ItemStack stack, ClientLevel level, LivingEntity entity, int seed, ItemDisplayContext displayContext)`

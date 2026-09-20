@@ -6,8 +6,7 @@ Every type with its summary and every non-private constructor, method and consta
 signature is the contract; read the source only when the summary is not enough.
 
 ### `class DebugCommand` — `src/main/java/metered_motor/debug/DebugCommand.java`
-Development-only: /metered_motor debug [rpm] [capacity] [efficiency] writes stats of the given tier — any omitted stat rolled within the tier's bands, any given one used as is — onto the motor in the player's main hand (or a new one, given if none is held), and onto a placed motor within 8 blocks of the player's look, filling its inventory with emerald blocks when it exposes one.
+Development-only: /metered_motor debug writes the chosen tier's fixed stats (`decisions/DEC-009-fixed-tiers.md`: nothing is rolled, every motor of a tier identical) onto the motor in the player's main hand (or a new one, given if none is held), and onto a placed motor within 8 blocks of the player's look, filling its inventory with emerald blocks when it exposes one.
 - `void register()`
-- `int run(CommandSourceStack source, Tier tier, Integer rpm, Integer capacity, Double efficiency)`
-- `Stats stats(Tier tier, Integer rpm, Integer capacity, Double efficiency, DoubleSupplier random)` — Builds a tier's stats: any of rpm, capacity or efficiency left null is rolled within the tier's default band from random (drawing in [0, 1)); a given one is used as is, validated only by Stats's own bounds.
+- `int run(CommandSourceStack source, Tier tier)`
 

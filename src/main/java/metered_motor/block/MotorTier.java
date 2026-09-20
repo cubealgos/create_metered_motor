@@ -40,7 +40,7 @@ public enum MotorTier implements StringRepresentable {
     /**
      * The tier a stack's item model shall show: tier I for a stack with no {@link
      * MeteredMotor#STATS} component (unrolled, MOTOR-FAIL-003) or with one newer than this build
-     * can read ({@link Stats#readOnly()}, MOTOR-REQ-014), otherwise the rolled tier. Server-safe
+     * can read ({@link Stats#readOnly()}, MOTOR-REQ-014), otherwise the stack's own tier. Server-safe
      * and pure of any client class so both {@link MeteredMotorBlock#getStateForPlacement} and the
      * client-only item model property can share one mapping (MOTOR-REQ-013, TRADE-REQ-005).
      */

@@ -23,7 +23,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 /**
- * The motor's kinetic source of truth while placed: the rolled {@link Stats}, the {@link MotorState}
+ * The motor's kinetic source of truth while placed: its fixed-tier {@link Stats}, the {@link MotorState}
  * state machine, the five-slot emerald inventory and the once-a-second {@link Meter} that burns it
  * in proportion to the network's load, and the generated speed and stress capacity Create's network
  * reads while running, zero otherwise (MOTOR-REQ-002, MOTOR-REQ-003, MOTOR-REQ-004, MOTOR-REQ-006,
@@ -54,7 +54,7 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
     /** Once every 20 server ticks, i.e. once a second (MOTOR-REQ-006). */
     private static final int TICKS_PER_METER_ADVANCE = 20;
 
-    private Stats stats = Stats.middleOf(Tier.I);
+    private Stats stats = Stats.of(Tier.I);
     private MotorState state = MotorState.STOPPED;
     private NonNullList<ItemStack> items = NonNullList.withSize(SLOTS, ItemStack.EMPTY);
     private Meter meter = new Meter();
@@ -209,8 +209,9 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
         return stress;
     }
 
-    /** The network's last-pushed capacity, read the way {@code StressGaugeBlockEntity.getNetworkCapacity()} does. */
-    private float networkCapacity() {
+    /** The network's last-pushed capacity, read the way {@code StressGaugeBlockEntity.getNetworkCapacity()} does;
+     *  public so {@code CapacityGameTest} (MM-21) can check it against the tier's fixed capacity directly. */
+    public float networkCapacity() {
         return capacity;
     }
 
@@ -232,16 +233,26 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
         return false;
     }
 
-    /** The rolled rpm while running, zero otherwise (MOTOR-REQ-004). */
+    /** The tier's fixed 64 rpm while running, zero otherwise (MOTOR-REQ-004, `DEC-009`). */
     @Override
     public float getGeneratedSpeed() {
         return state == MotorState.RUNNING ? stats.rpm() : 0;
     }
 
-    /** The rolled stress capacity while running, zero otherwise (MOTOR-REQ-004). */
+    /**
+     * The tier's fixed stress capacity <b>divided by 64</b> while running, zero otherwise
+     * (MOTOR-REQ-004, `DEC-009`). Create's {@code KineticNetwork} sums a source's contribution as
+     * {@code calculateAddedStressCapacity() * abs(getGeneratedSpeed())} (confirmed by full
+     * bytecode disassembly of {@code KineticNetwork.getActualCapacityOf},
+     * `vault/technical/minecraft/create-fly-steam-engines-26-2.md` §B) — stress capacity is
+     * per-rpm, not a total — so returning the tier's whole capacity here while
+     * {@link #getGeneratedSpeed()} returns 64 would hand the network 64x the tier's capacity (the
+     * bug this ticket fixes, `DEC-009` "The bug this rework fixes"); dividing by 64 here makes the
+     * product exactly the tier's capacity.
+     */
     @Override
     public float calculateAddedStressCapacity() {
-        return state == MotorState.RUNNING ? stats.capacity() : 0;
+        return state == MotorState.RUNNING ? stats.capacity() / (float) stats.rpm() : 0;
     }
 
     /** The stats this block entity carries, copied from the placed item and back on breaking (MOTOR-REQ-003). */
@@ -382,7 +393,7 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
     @Override
     protected void applyImplicitComponents(DataComponentGetter componentGetter) {
         super.applyImplicitComponents(componentGetter);
-        stats = componentGetter.getOrDefault(MeteredMotor.STATS, Stats.middleOf(Tier.I));
+        stats = componentGetter.getOrDefault(MeteredMotor.STATS, Stats.of(Tier.I));
     }
 
     /** Writes the block entity's stats back onto the broken item (MOTOR-REQ-003, DATA-REQ-004). */
@@ -410,7 +421,7 @@ public final class MeteredMotorBlockEntity extends GeneratingKineticBlockEntity 
     @Override
     protected void read(ValueInput input, boolean clientPacket) {
         super.read(input, clientPacket);
-        stats = input.read("Stats", StatsCodec.CODEC).orElseGet(() -> Stats.middleOf(Tier.I));
+        stats = input.read("Stats", StatsCodec.CODEC).orElseGet(() -> Stats.of(Tier.I));
         String saved = input.getStringOr("State", MotorState.STOPPED.name());
         state = java.util.Arrays.stream(MotorState.values()).filter(m -> m.name().equals(saved)).findFirst().orElse(MotorState.STOPPED);
         double savedMeter = input.getDoubleOr("Meter", 0.0);

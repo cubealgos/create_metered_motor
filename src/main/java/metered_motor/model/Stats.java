@@ -3,31 +3,21 @@ package metered_motor.model;
 import java.util.Objects;
 
 /**
- * A motor's rolled stats, fixed for its life once rolled and carried by the {@code metered_motor:stats}
- * component (docs/spec/contracts/data-contract.md, MOTOR-REQ-001).
+ * A motor's stats: fixed for its life, carried by the {@code metered_motor:stats} component
+ * (docs/spec/contracts/data-contract.md, MOTOR-REQ-001). Version 2 (`decisions/DEC-009-fixed-tiers.md`)
+ * stores only the tier — rpm, stress capacity and rate are never rolled, so they are derived from
+ * {@link Tier} in code, and every motor of a tier is identical. {@link #rpm()}, {@link #capacity()}
+ * and {@link #ratePerMinute()} delegate to the tier so every existing caller (the tooltip, the
+ * screen, the goggles overlay) reads the same accessors it always has.
  */
-public record Stats(int version, Tier tier, int rpm, int capacity, double efficiency) {
-    /** The schema this build writes. */
-    public static final int VERSION = 1;
-    private static final double MIN_EFFICIENCY = 0.1;
-    private static final double MAX_EFFICIENCY = 10.0;
-    /** SU per emerald-minute at full load, a fixed number in code, not data (MOTOR-DEC-003). */
-    private static final double BURN_DIVISOR = 8_192.0;
+public record Stats(int version, Tier tier) {
+    /** The schema this build writes (`contracts/data-contract.md` version 2). */
+    public static final int VERSION = 2;
 
     public Stats {
         Objects.requireNonNull(tier, "tier");
         if (version < 1) {
             throw new IllegalArgumentException("version must be at least 1, was " + version);
-        }
-        if (rpm <= 0) {
-            throw new IllegalArgumentException("rpm must be positive, was " + rpm);
-        }
-        if (capacity <= 0) {
-            throw new IllegalArgumentException("capacity must be positive, was " + capacity);
-        }
-        if (efficiency < MIN_EFFICIENCY || efficiency > MAX_EFFICIENCY) {
-            throw new IllegalArgumentException(
-                "efficiency must be within [" + MIN_EFFICIENCY + ", " + MAX_EFFICIENCY + "], was " + efficiency);
         }
     }
 
@@ -36,16 +26,25 @@ public record Stats(int version, Tier tier, int rpm, int capacity, double effici
         return version > VERSION;
     }
 
-    /** The rate at full load: capacity divided by the fixed burn divisor and by efficiency (MOTOR-REQ-005, MOTOR-DEC-003). */
-    public double ratePerMinute() {
-        return capacity / BURN_DIVISOR / efficiency;
+    /** The tier's fixed generated speed while running: 64 rpm for every tier (`DEC-009`). */
+    public int rpm() {
+        return tier.rpm();
     }
 
-    /** The unrolled fallback: the middle of a tier's bands, for a missing or malformed component (MOTOR-FAIL-003, DATA-REQ-003). */
-    public static Stats middleOf(Tier tier) {
-        int midRpm = (int) Math.round(tier.rpmBand().middle());
-        int midCapacity = (int) Math.round(tier.capacityBand().middle());
-        double midEfficiency = tier.efficiencyBand().middle();
-        return new Stats(VERSION, tier, midRpm, midCapacity, midEfficiency);
+    /** The tier's fixed stress capacity in SU (`DEC-009` §The ladder). */
+    public int capacity() {
+        return tier.capacity();
+    }
+
+    /** The tier's fixed rate at full load: capacity divided by the uniform burn divisor (MOTOR-REQ-005, `DEC-009`). */
+    public double ratePerMinute() {
+        return tier.ratePerMinute();
+    }
+
+    /** The current-version stats for a tier: the fallback for a missing or malformed component
+     *  (MOTOR-FAIL-003, DATA-REQ-003), and every motor a trade file or the debug command gives,
+     *  since nothing is rolled any more (`DEC-009`). */
+    public static Stats of(Tier tier) {
+        return new Stats(VERSION, tier);
     }
 }

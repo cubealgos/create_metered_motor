@@ -18,10 +18,10 @@ import net.minecraft.world.item.ItemStack;
  */
 public final class TierPropertyGameTest {
     @GameTest
-    public void eachRolledTierMapsToItsOwnModelCase(GameTestHelper helper) {
+    public void eachTierMapsToItsOwnModelCase(GameTestHelper helper) {
         for (Tier tier : Tier.values()) {
             ItemStack stack = new ItemStack(MotorBlocks.ITEM);
-            stack.set(MeteredMotor.STATS, Stats.middleOf(tier));
+            stack.set(MeteredMotor.STATS, Stats.of(tier));
             MotorTier mapped = MotorTier.of(stack);
             helper.assertTrue(mapped == MotorTier.of(tier),
                 "tier " + tier + " maps to its own model case, was " + mapped);
@@ -30,7 +30,7 @@ public final class TierPropertyGameTest {
     }
 
     @GameTest
-    public void anUnrolledStackMapsToTierI(GameTestHelper helper) {
+    public void aStackWithNoComponentMapsToTierI(GameTestHelper helper) {
         ItemStack stack = new ItemStack(MotorBlocks.ITEM);
         MotorTier mapped = MotorTier.of(stack);
         helper.assertTrue(mapped == MotorTier.I, "no component maps to tier I, was " + mapped);
@@ -39,7 +39,7 @@ public final class TierPropertyGameTest {
 
     @GameTest
     public void aReadOnlyNewerComponentMapsToTierI(GameTestHelper helper) {
-        Stats newerVersion = new Stats(Stats.VERSION + 1, Tier.III, 200, 18_432, 0.75);
+        Stats newerVersion = new Stats(Stats.VERSION + 1, Tier.III);
         helper.assertTrue(newerVersion.readOnly(), "set up: a newer version is read-only");
         ItemStack stack = new ItemStack(MotorBlocks.ITEM);
         stack.set(MeteredMotor.STATS, newerVersion);

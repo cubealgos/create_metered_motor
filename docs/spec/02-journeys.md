@@ -15,11 +15,11 @@ Actor: player (`ACTORS-001`) · Goal: obtain a metered motor
 | Step | Actor | Action |
 |---|---|---|
 | 1 | player | Levels a toolsmith to Journeyman, Expert or Master, or finds one. |
-| 2 | server | When the villager's trades for that level are drawn, the metered-motor trade may be among the two picked; its offer item gets rolled stats then (`TRADE-REQ-002`). |
-| 3 | player | Reads the offer's tooltip: tier, rpm, stress capacity, emeralds per minute at full load. |
-| 4 | player | Pays the emeralds; receives the motor item with those stats. |
+| 2 | server | When the villager's trades for that level are drawn, the metered-motor trade may be among the two picked; its offer item carries that tier's fixed stats component, nothing rolled (`decisions/DEC-009-fixed-tiers.md`, `TRADE-REQ-002` withdrawn). |
+| 3 | player | Reads the offer's tooltip: tier, 64 rpm, stress capacity, emeralds per minute at full load. |
+| 4 | player | Pays the emeralds; receives the motor item with that tier's fixed stats. |
 
-Fails when: the level's draw did not pick the trade → the player breeds or levels another toolsmith
+Fails when: the level's draw did not pick the trade → the player levels another toolsmith
 (`TRADE-FAIL-001`, by design).
 
 ### `UC-002` — Place and power a network
@@ -31,7 +31,7 @@ Actor: player · Goal: turn shafts
 | 1 | player | Places the motor with its shaft facing the machine, as with Create's creative motor. |
 | 2 | server | Creates the block entity, copies the stats from the item (`MOTOR-REQ-003`); the motor is stopped: no emeralds. |
 | 3 | player | Right-clicks the motor; the screen opens with five empty slots (`UI-UC-001`); drops emeralds in. |
-| 4 | server | The motor starts: generated speed is its rpm, capacity is its stress capacity; Create's network picks it up (`MOTOR-REQ-004`). |
+| 4 | server | The motor starts: generated speed is 64 rpm, and Create's network sees the tier's fixed capacity (`MOTOR-REQ-004`). |
 | 5 | player | Sees the shaft turn, the stress gauge show the capacity, the goggles show the meter. |
 
 ### `UC-003` — The meter runs
@@ -66,13 +66,13 @@ Actor: player · Goal: stop paying while a machine idles
 
 ### `UC-006` — Move it
 
-Actor: player · Goal: take the motor elsewhere without losing the roll
+Actor: player · Goal: take the motor elsewhere without losing its tier
 
 | Step | Actor | Action |
 |---|---|---|
 | 1 | player | Breaks the motor with any tool. |
 | 2 | server | Drops one motor item carrying the block's stats and drops the emeralds inside as items (`MOTOR-REQ-011`). |
-| 3 | player | Places it again; the stats are the same. |
+| 3 | player | Places it again; the tier is the same. |
 
 ### `UC-007` — Read it
 
@@ -81,4 +81,4 @@ Actor: player · Goal: know what the motor is doing
 | Step | Actor | Action |
 |---|---|---|
 | 1 | player | Looks at the motor wearing Create's goggles, or opens its screen. |
-| 2 | client | Shows tier, rpm, stress capacity, efficiency, burn at full load, current load, emeralds left and the time they last at the current load (`MOTOR-REQ-012`, `UI-REQ-003`). |
+| 2 | client | Shows tier, 64 rpm, stress capacity, burn at full load, current load, emeralds left and the time they last at the current load (`MOTOR-REQ-012`, `UI-REQ-003`). |

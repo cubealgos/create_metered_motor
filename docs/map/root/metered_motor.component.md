@@ -8,7 +8,7 @@ signature is the contract; read the source only when the summary is not enough.
 The stats component's Minecraft-side codecs, registered by metered_motor.MeteredMotor (docs/spec/contracts/data-contract.md).
 
 ### `class StatsCodec` — `src/main/java/metered_motor/component/StatsCodec.java`
-The metered_motor:stats component's codecs: the on-disk shape of docs/spec/contracts/data-contract.md, and the wire shape for sync.
-- `Codec<Stats> CODEC` — Persistent (save) codec: version defaults to 1 so an unversioned save still reads (DATA-REQ-001).
+The metered_motor:stats component's codecs (docs/spec/contracts/data-contract.md): version 2 stores only version and tier.
+- `Codec<Stats> CODEC` — Persistent (save) codec: version defaults to Stats#VERSION so an unversioned save still reads (DATA-REQ-001).
 - `StreamCodec<RegistryFriendlyByteBuf, Stats> STREAM_CODEC`
 

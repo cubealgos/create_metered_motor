@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * The {@code metered_motor:tier} select item model property: picks the item model's tier case
- * (MOTOR-REQ-013, MOTOR-DEC-004) so the item shows its rolled tier's casing colour in the
+ * (MOTOR-REQ-013, MOTOR-DEC-004) so the item shows its own tier's casing colour in the
  * inventory, in hand and in the trade screen (TRADE-REQ-005), not just on the placed block.
  *
  * <p>Stateless, like vanilla's own {@code DisplayContext} property (no JSON fields beyond

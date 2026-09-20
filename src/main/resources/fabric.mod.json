@@ -3,7 +3,7 @@
   "id": "metered_motor",
   "version": "${version}",
   "name": "Create Fly: Metered Motor",
-  "description": "A kinetic power source sold by toolsmith villagers: its rpm, stress capacity and efficiency are rolled per offer, and it burns emeralds in proportion to the stress its network draws.",
+  "description": "A kinetic power source sold by toolsmith villagers in three fixed tiers, each pinned to a real steam-engine set-up, burning emeralds in proportion to the stress its network draws.",
   "authors": [
     "Cube Algos"
   ],

@@ -11,7 +11,7 @@ The motor screen's layout arithmetic, checked without loading any Minecraft, Fab
 - `void thePlayerInventoryFrameIsCroppedAboveItsOwnPointerTriangle()` — MM-20's Part 2 acceptance criterion: the player inventory frame is actually cropped, not merely documented as such, and the crop still leaves room for every real slot cell (the hotbar row, the lowest one) — #everyPlayerSlotOriginLiesInsideItsDrawnCell already checks the slots themselves against Layout#PLAYER_INVENTORY_HEIGHT; this test checks the crop against the source texture's own full height instead, so a regression that quietly widened the crop back toward 108 (redrawing the triangle) would be caught even if it somehow still left the slots inside the (now taller) frame.
 - `void theTitleTextSitsFullyInsideTheTitleStrip()`
 - `void theTiledBodyHoldsExactlyTheReadoutAndTheSlotRow()`
-- `void theTableIsFourRowsDirectlyUnderTheHeaderLine()`
+- `void theTableIsThreeRowsDirectlyUnderTheHeaderLine()`
 - `void theTablesTwoColumnsFitThePanelWithoutOverlapping()`
 - `void bothColumnsRightEdgesSitAtOrInsideThePanelsOwnMargin()` — A reviewer's own acceptance check on the mock (Kevin, 2026-09-20, after `just client`): both columns' right-aligned value edges must sit at the panel's own inner text margin — the same 8px inset Layout#LEFT_LABEL_X uses from the left edge — never past it, so a truncated-or-not value can never run past the panel's own right frame edge.
 - `void theSlotRowIsCentredAndDirectlyUnderTheTable()`

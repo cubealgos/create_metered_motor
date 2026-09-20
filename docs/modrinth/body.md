@@ -6,7 +6,7 @@
 |---|---|
 | Name | Create: Metered Motor |
 | Slug | `metered-motor` |
-| Summary | A kinetic source that costs money to run: buy one rolled from a toolsmith and feed it emeralds. |
+| Summary | A kinetic source that costs money to run: buy a fixed tier from a toolsmith and feed it emeralds. |
 | Categories | Equipment, Technology, Utility (secondary: Adventure, Game-Mechanics, Management, Optimization) |
 | Licence | MIT |
 | Client side | Required |
@@ -34,33 +34,38 @@ a crafting table, and it burns emeralds in proportion to the work its network ac
 
 ### What it does
 
-- **Bought, not crafted.** A toolsmith at Journeyman, Expert or Master offers one, rolled the moment
-  the offer is created: rpm, stress capacity and efficiency, each drawn independently within its
-  tier's band. A toolsmith never offers more than one at a time; a better roll means breeding or
-  levelling another villager.
+- **Bought, not crafted.** A toolsmith at Journeyman, Expert or Master offers a fixed tier: every
+  motor of a tier is identical, pinned to a real steam-engine set-up — tier I matches a small
+  one-engine set-up, tier II a mid four-engine set-up, tier III a full boiler. A toolsmith never
+  offers more than one at a time; a higher tier means levelling another villager.
 - **Placed like Create's motor.** Face the shaft where you want it, right-click to place. It turns
-  the network as any generator does, at its rolled rpm and stress capacity.
-- **Burns emeralds only under load.** The rate is fixed for the block's life and follows the
-  network's stress against its capacity, read the way Create's own gauge reads it: an idle network
-  costs nothing, and a network at half its capacity burns at half the motor's rate.
+  the network as any generator does, at 64 rpm — the steam engine's own active speed — and its
+  tier's fixed stress capacity. Motors stack like engines: several at the same rpm add their
+  capacities together on one shaft.
+- **Burns emeralds only under load.** The rate is fixed per tier and follows the network's stress
+  against its capacity, read the way Create's own gauge reads it: an idle network costs nothing,
+  and a network at half its capacity burns at half the motor's rate.
 - **Hopper-fed, insert-only.** Five slots take emeralds and emerald blocks from any face, from
   hoppers, players and Create's logistics; nothing can be pulled back out except by a player in the
   screen. Empty stops it; a redstone signal pauses it either way.
-- **Read at a glance.** The item's tooltip and Create's goggles overlay both show tier, rpm, stress
-  capacity, efficiency and rate; the overlay adds current load, emeralds inside and the remaining
-  time at that load. The block's tinted band marks its tier on the model.
+- **Read at a glance.** The item's tooltip and Create's goggles overlay both show tier, 64 rpm,
+  stress capacity and rate; the overlay adds current load, emeralds inside and the remaining time
+  at that load, and omits its own capacity row where Create's own "Generator Stats" line already
+  shows the same number. The block's tinted band marks its tier on the model.
 
 ### The tiers
 
-| Tier | Toolsmith level | Price (emeralds) | rpm band | Stress capacity band (SU) | Efficiency band |
-|---|---|---|---|---|---|
-| I | Journeyman (3) | 24 | 16 to 64 | 512 to 2,048 | 0.75 to 1.25 |
-| II | Expert (4) | 40 | 32 to 128 | 2,048 to 8,192 | 0.75 to 1.25 |
-| III | Master (5) | 64 | 64 to 256 | 8,192 to 18,432 | 0.75 to 1.25 |
+Fixed, not rolled: every motor of a tier is identical, all three at the steam engine's own 64 rpm.
 
-Rate at full load follows from capacity and efficiency: tier I burns one emerald every 3 to 20
-minutes, tier II one every 45 seconds to 5 minutes, tier III 0.8 to 3 a minute, at most one stack a
-Minecraft day at the luckiest roll.
+| Tier | Toolsmith level | Price (emeralds) | Stress capacity (SU) | Rate at full load | Real set-up |
+|---|---|---|---|---|---|
+| I | Journeyman (3) | 24 | 16,384 | 0.18/min (11/day) | 1 engine, level-1 boiler |
+| II | Expert (4) | 40 | 65,536 | 0.71/min (43/day) | 4 engines, level-4 boiler |
+| III | Master (5) | 64 | 294,912 | 3.2/min (64/day) | 18 engines, level-18 boiler (full) |
+
+Rate follows directly from capacity — cost per SU is identical across tiers, so a tier only changes
+the up-front price and the toolsmith level needed, not the running cost per unit of power. Tier III
+at full load lands exactly on the one-stack-a-day ceiling.
 
 ### Made for Create
 
@@ -70,7 +75,7 @@ of your workshop. It adds one block, its item, and nothing else: no new mechanic
 ### Privacy
 
 Nothing leaves your machine. No telemetry, no update checks, no network calls of its own. The block
-entity stores its emerald count, its meter and its rolled stats; nothing else.
+entity stores its emerald count, its meter and its tier; nothing else.
 
 ### Requirements
 

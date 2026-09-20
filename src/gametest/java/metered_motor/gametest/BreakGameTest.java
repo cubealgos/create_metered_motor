@@ -26,7 +26,7 @@ public final class BreakGameTest {
         BlockPos motorPos = support.above();
         helper.setBlock(support, Blocks.STONE);
 
-        Stats stats = new Stats(Stats.VERSION, Tier.III, 200, 18_432, 0.75);
+        Stats stats = new Stats(Stats.VERSION, Tier.III);
         ItemStack stack = new ItemStack(MotorBlocks.ITEM);
         stack.set(MeteredMotor.STATS, stats);
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);

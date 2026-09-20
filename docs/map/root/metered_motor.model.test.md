@@ -5,31 +5,30 @@
 Every type with its summary and every non-private constructor, method and constant. The
 signature is the contract; read the source only when the summary is not enough.
 
-### `class BandTest` — `src/test/java/metered_motor/model/BandTest.java`
-A band's own validation and uniform draw (docs/spec/domains/trade.md §3).
-- `void aBandWhoseMinimumExceedsItsMaximumIsRejectedAtConstruction()`
-- `void rollIsLinearBetweenMinAndMax()`
-- `void middleIsTheMidpoint()`
-
 ### `class MeterTest` — `src/test/java/metered_motor/model/MeterTest.java`
 The meter's per-second arithmetic (docs/spec/domains/motor.md, MOTOR-REQ-006, MOTOR-REQ-007).
 - `void takesExactlyOneEmeraldAfterTheComputedNumberOfSecondsUnderAFixedLoad()`
+- `void aTiersFixedRateTakesOneEmeraldAtTheComputedSecond()`
 - `void noEmeraldAccumulatesAtZeroLoad()`
 - `void loadIsClampedToOne()`
 - `void holdAtOneLeavesTheMeterAtOneForTheNextArrival()`
 - `void freshMeterIsNotDue()`
 
-### `class RollTest` — `src/test/java/metered_motor/model/RollTest.java`
-The offer's roll: uniform draws within band, and a malformed band's fallback (TRADE-REQ-002, TRADE-REQ-004).
-- `void aUniformRollLandsInsideItsTiersDefaultBand()`
-- `void aBandWhoseMinimumExceedsItsMaximumFallsBackToTheTiersDefaultAndIsReported()`
-- `void aBandFarOutsideTheTiersDefaultByMoreThanAFactorOfFourFallsBackAndIsReported()`
-- `void aBandWithinFourTimesTheTiersDefaultIsHonoured()`
-
 ### `class StatsTest` — `src/test/java/metered_motor/model/StatsTest.java`
-The burn rate formula and version handling of docs/spec/domains/motor.md (MOTOR-REQ-005, MOTOR-REQ-014, MOTOR-FAIL-003).
-- `void rateFollowsCapacityAndEfficiencyAtTheSpecsBoundExamples()`
-- `void middleOfTierIIsItsBandsMidpoints()`
-- `void validationRejectsNonPositiveOrOutOfRangeValuesRatherThanInventingThem()`
+Version handling and tier delegation of `docs/spec/contracts/data-contract.md` (version 2, `decisions/DEC-009-fixed-tiers.md`): Stats stores only version and tier; #rpm(), #capacity() and #ratePerMinute() delegate to Tier (MOTOR-REQ-005, MOTOR-REQ-014, MOTOR-FAIL-003).
+- `void rpmCapacityAndRateDelegateToTheTier()`
+- `void ofIsTheCurrentVersionStatsForATier()`
+- `void constructionRejectsAVersionBelowOne()`
+- `void constructionRejectsANullTier()`
 - `void aVersionNewerThanThisBuildIsReadOnly()`
+
+### `class TierTest` — `src/test/java/metered_motor/model/TierTest.java`
+The fixed tier ladder (`decisions/DEC-009-fixed-tiers.md` §The ladder, `MOTOR-REQ-004`, `MOTOR-REQ-005`): every tier runs at 64 rpm; capacity is the real steam-engine set-up's own total; the rate at full load is capacity divided by the uniform 92,160 burn divisor.
+- `void everyTierRunsAt64Rpm()`
+- `void theLaddersFixedCapacities()`
+- `void ratePerMinuteIsCapacityOverTheUniform92160Divisor()`
+- `void theSpecsRoundedRatesAtFullLoad()`
+- `void tierIiiAtFullLoadLandsExactlyOnTheOneStackADayCeiling()`
+- `void toolsmithLevelsAndPricesAreUnchangedFromTheRolledDesign()`
+- `void ofNumberRoundTripsWithNumber()`
 

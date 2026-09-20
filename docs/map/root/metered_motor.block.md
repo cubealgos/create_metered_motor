@@ -9,7 +9,7 @@ The motor as a Create kinetic source: the block, its item, its state machine and
 
 ### `class MeteredMotorBlock` — `src/main/java/metered_motor/block/MeteredMotorBlock.java`
 The metered motor block: a Create directional kinetic source, placed and shafted like the creative motor, that refuses placement of a stats component newer than this build can read (MOTOR-REQ-001, MOTOR-REQ-002, MOTOR-REQ-014, ARCH-DEC-002).
-- `EnumProperty<MotorTier> TIER` — The rolled tier, set once at placement, that selects the block's model set (MOTOR-REQ-013, MOTOR-DEC-004).
+- `EnumProperty<MotorTier> TIER` — The tier, set once at placement, that selects the block's model set (MOTOR-REQ-013, MOTOR-DEC-004).
 - `MeteredMotorBlock(BlockBehaviour.Properties properties)`
 - `void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)`
 - `BlockState getStateForPlacement(BlockPlaceContext context)` — Delegates to DirectionalKineticBlock's placement (the creative motor's own, unchanged) unless the held item's stats are a version newer than this build, in which case placement is refused by returning null: BlockItem.place then fails and keeps the item and its component untouched (MOTOR-REQ-014, DATA-REQ-001).
@@ -21,12 +21,13 @@ The metered motor block: a Create directional kinetic source, placed and shafted
 - `InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit)` — Right-click, not sneaking, opens the motor screen (docs/spec/domains/ui.md `UI-UC-001`); sneaking falls through so a block in hand can still be placed against it.
 
 ### `class MeteredMotorBlockEntity` — `src/main/java/metered_motor/block/MeteredMotorBlockEntity.java`
-The motor's kinetic source of truth while placed: the rolled Stats, the MotorState state machine, the five-slot emerald inventory and the once-a-second Meter that burns it in proportion to the network's load, and the generated speed and stress capacity Create's network reads while running, zero otherwise (MOTOR-REQ-002, MOTOR-REQ-003, MOTOR-REQ-004, MOTOR-REQ-006, MOTOR-REQ-007, MOTOR-REQ-008, MOTOR-REQ-009, MOTOR-REQ-010, MOTOR-REQ-011, MOTOR-FAIL-002, MOTOR-FAIL-004, ARCH-DEC-003, DATA-REQ-004).
+The motor's kinetic source of truth while placed: its fixed-tier Stats, the MotorState state machine, the five-slot emerald inventory and the once-a-second Meter that burns it in proportion to the network's load, and the generated speed and stress capacity Create's network reads while running, zero otherwise (MOTOR-REQ-002, MOTOR-REQ-003, MOTOR-REQ-004, MOTOR-REQ-006, MOTOR-REQ-007, MOTOR-REQ-008, MOTOR-REQ-009, MOTOR-REQ-010, MOTOR-REQ-011, MOTOR-FAIL-002, MOTOR-FAIL-004, ARCH-DEC-003, DATA-REQ-004).
 - `MeteredMotorBlockEntity(BlockPos pos, BlockState state)`
 - `void initialize()`
 - `void tick()`
-- `float getGeneratedSpeed()` — The rolled rpm while running, zero otherwise (MOTOR-REQ-004).
-- `float calculateAddedStressCapacity()` — The rolled stress capacity while running, zero otherwise (MOTOR-REQ-004).
+- `float networkCapacity()` — The network's last-pushed capacity, read the way StressGaugeBlockEntity.getNetworkCapacity() does; public so CapacityGameTest (MM-21) can check it against the tier's fixed capacity directly.
+- `float getGeneratedSpeed()` — The tier's fixed 64 rpm while running, zero otherwise (MOTOR-REQ-004, `DEC-009`).
+- `float calculateAddedStressCapacity()` — The tier's fixed stress capacity divided by 64 while running, zero otherwise (MOTOR-REQ-004, `DEC-009`).
 - `Stats stats()` — The stats this block entity carries, copied from the placed item and back on breaking (MOTOR-REQ-003).
 - `MotorState state()` — The motor's current state (docs/spec/domains/motor.md §3).
 - `int emeraldsInside()` — How many emeralds the inventory holds, an emerald block counting nine, plus any prepaid credit (MOTOR-REQ-006).
@@ -51,7 +52,7 @@ The motor's kinetic source of truth while placed: the rolled Stats, the MotorSta
 - `void read(ValueInput input, boolean clientPacket)`
 
 ### `class MeteredMotorItem` — `src/main/java/metered_motor/block/MeteredMotorItem.java`
-The metered motor's block item, stackable to one so its rolled stats never merge (MOTOR-REQ-001).
+The metered motor's block item, stackable to one so two different tiers never merge (MOTOR-REQ-001).
 - `MeteredMotorItem(Block block, Item.Properties properties)`
 
 ### `class MotorBlocks` — `src/main/java/metered_motor/block/MotorBlocks.java`
@@ -59,7 +60,7 @@ Registers the metered motor block, its item and its block entity type, and lists
 - `ResourceKey<Block> BLOCK_KEY`
 - `ResourceKey<Item> ITEM_KEY`
 - `MeteredMotorBlock BLOCK` — The metered motor block: a directional kinetic source (MOTOR-REQ-001, MOTOR-REQ-002, ARCH-DEC-002).
-- `MeteredMotorItem ITEM` — The block's item, stackable to one so its rolled stats never merge (MOTOR-REQ-001).
+- `MeteredMotorItem ITEM` — The block's item, stackable to one so two different tiers never merge (MOTOR-REQ-001).
 - `BlockEntityType<MeteredMotorBlockEntity> BLOCK_ENTITY_TYPE` — The block entity type Create's kinetic network ticks (docs/spec/README.md Verification 7).
 - `void register()` — Forces this class's static registrations to run and lists the item in Create's base creative tab; call once from MeteredMotor#onInitialize().
 
@@ -71,6 +72,6 @@ Adapts Tier to a block state value: MeteredMotorBlock's tier property selects th
 - `MotorTier(Tier tier)`
 - `Tier tier()` — The domain tier this block state value stands for.
 - `MotorTier of(Tier tier)` — The block state value for a domain tier.
-- `MotorTier of(ItemStack stack)` — The tier a stack's item model shall show: tier I for a stack with no MeteredMotor#STATS component (unrolled, MOTOR-FAIL-003) or with one newer than this build can read (Stats#readOnly(), MOTOR-REQ-014), otherwise the rolled tier.
+- `MotorTier of(ItemStack stack)` — The tier a stack's item model shall show: tier I for a stack with no MeteredMotor#STATS component (unrolled, MOTOR-FAIL-003) or with one newer than this build can read (Stats#readOnly(), MOTOR-REQ-014), otherwise the stack's own tier.
 - `String getSerializedName()`
 

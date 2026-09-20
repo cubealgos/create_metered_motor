@@ -16,6 +16,6 @@ retrofitted when a player files an issue.
 
 Alternative considered: treating it as internal tooling and skipping §5–§7 (interface contracts,
 compliance, release engineering) since `create_civilization` is the real goal. Rejected for the
-same reason as the compass: a motor with rolled stats invites bug reports and balance requests
-from people who never touch the civilization mod. Cost if wrong: an evening of spec for a
-one-block, one-screen mod.
+same reason as the compass: a motor with tiered stats and a real balance ladder invites bug
+reports and balance requests from people who never touch the civilization mod. Cost if wrong: an
+evening of spec for a one-block, one-screen mod.

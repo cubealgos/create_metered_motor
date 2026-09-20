@@ -15,7 +15,7 @@ import net.minecraft.world.item.Items;
 public final class ComponentGameTest {
     @GameTest
     public void theComponentRoundTripsThroughAnItemStack(GameTestHelper helper) {
-        Stats stats = new Stats(Stats.VERSION, Tier.III, 200, 18_432, 0.75);
+        Stats stats = new Stats(Stats.VERSION, Tier.III);
         ItemStack stack = new ItemStack(Items.IRON_INGOT);
         stack.set(MeteredMotor.STATS, stats);
         DynamicOps<Tag> ops = helper.getLevel().registryAccess().createSerializationContext(NbtOps.INSTANCE);
@@ -28,7 +28,7 @@ public final class ComponentGameTest {
 
     @GameTest
     public void aNewerVersionReadsBackIntactAndReadOnly(GameTestHelper helper) {
-        Stats future = new Stats(Stats.VERSION + 1, Tier.I, 40, 1_280, 1.0);
+        Stats future = new Stats(Stats.VERSION + 1, Tier.I);
         ItemStack stack = new ItemStack(Items.IRON_INGOT);
         stack.set(MeteredMotor.STATS, future);
         DynamicOps<Tag> ops = helper.getLevel().registryAccess().createSerializationContext(NbtOps.INSTANCE);

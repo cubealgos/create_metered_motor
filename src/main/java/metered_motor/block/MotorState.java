@@ -7,7 +7,7 @@ package metered_motor.block;
 public enum MotorState {
     /** No emeralds to burn: generates nothing, adds nothing to the network. */
     STOPPED,
-    /** Fed and unsignalled: generates the rolled rpm and adds the rolled capacity. */
+    /** Fed and unsignalled: generates 64 rpm and adds the tier's fixed capacity (`DEC-009`). */
     RUNNING,
     /** A redstone signal, fed or not: generates nothing, adds nothing, resumes when the signal ends. */
     PAUSED

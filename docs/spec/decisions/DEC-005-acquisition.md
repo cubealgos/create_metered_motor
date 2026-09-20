@@ -18,8 +18,15 @@ level yields a new roll — the breeding loop `01-actors.md` `FINDING-2` describ
 never holds more than one motor offer (`TRADE-DEC-004`).
 
 Alternative considered: a crafting recipe, either instead of or alongside the trade. Rejected: a
-recipe would let a player mass-produce motors with reliable stats, undercutting the roll and the
-reason to breed and level toolsmiths, which is the point of the design (`00-context.md`, "Why this
-exists"). Cost if wrong: a server without villagers — a villager-free world — has
-no way to get a motor at all; a datapack can add a recipe, since the roll stays data-driven either
-way (`ARCH-DEC-004`).
+recipe would let a player mass-produce motors, undercutting the reason to level toolsmiths to
+Expert and Master, which is the point of the design (`00-context.md`, "Why this exists"). Cost if
+wrong: a server without villagers — a villager-free world — has no way to get a motor at all; a
+datapack can add a recipe, since the trade stays data-driven either way (`ARCH-DEC-004`).
+
+**Amended (Kevin, 2026-09-20, `decisions/DEC-009-fixed-tiers.md`):** rpm, stress capacity and
+efficiency are no longer rolled by a `metered_motor:roll` loot function — that function is
+withdrawn (`TRADE-REQ-002`). Each tier is now a fixed set of stats, embedded directly in the
+trade's `gives` item template. Buying the same offer twice, or a different offer of the same tier,
+always yields twins; the "breeding loop" `01-actors.md` `FINDING-2` describes no longer applies —
+what a player still breeds and levels toolsmiths for is reaching the Expert and Master levels that
+unlock tiers II and III, not for a better roll within a tier.

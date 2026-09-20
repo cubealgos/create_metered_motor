@@ -104,8 +104,15 @@ package metered_motor.menu;
  *       "Inventory" label is pixel-for-pixel what Create itself draws.</li>
  * </ul>
  * Saving 11px on the player inventory frame paid for all four padding increases above: the window
- * still comes in at {@link #WINDOW_HEIGHT} 199, one pixel under the 200px budget MM-18 already fit
- * inside.
+ * came in at 199, one pixel under the 200px budget MM-18 already fit inside.
+ *
+ * <p><b>MM-21 dropped the efficiency row (`decisions/DEC-009-fixed-tiers.md`): nothing is rolled
+ * any more, so the readout's table shrank from four rows to three.</b> The old grouping (Speed/
+ * Capacity, Efficiency/Rate, Load/Inside, Remaining alone) regrouped into three full rows with no
+ * leftover single-column row: Speed/Capacity, Rate/Load, Inside/Remaining. {@link #TABLE_ROWS} 4
+ * &rarr; 3 removes exactly one {@link #LINE_STRIDE} (9px) from {@link #BODY_HEIGHT}, so
+ * {@link #WINDOW_HEIGHT} drops from 199 to 190 — still under the 200px budget, with headroom to
+ * spare rather than the one spare pixel MM-18/MM-20 had.
  */
 public final class Layout {
     private Layout() {
@@ -125,19 +132,22 @@ public final class Layout {
     /** The title text's y within the strip: `create_brass_compass`'s `EditScreen` offset, centred on a 9 px line. */
     public static final int TITLE_TEXT_Y = 4;
 
-    // ---- The readout: one header line ("Tier III · Stopped"), then a four-row table ----
+    // ---- The readout: one header line ("Tier III · Stopped"), then a three-row table (MM-21) ----
     public static final int FONT_LINE_HEIGHT = 9;
-    /** No gap between lines: at the font's own line height, five lines already use the whole
-     *  budget the window has (see class doc); Minecraft's own multi-line text commonly reads fine
-     *  spaced by nothing more than the font's line height. */
+    /** No gap between lines: at the font's own line height, five lines already used the whole
+     *  budget the window had when MM-18 set this (see class doc; MM-21 later freed a line's worth
+     *  of headroom by dropping the efficiency row, but the choice of zero extra gap still reads
+     *  fine and was never revisited); Minecraft's own multi-line text commonly reads fine spaced
+     *  by nothing more than the font's line height. */
     public static final int LINE_GAP = 0;
     public static final int LINE_STRIDE = FONT_LINE_HEIGHT + LINE_GAP;
     /** Padding between the title strip and the header line (MM-20: 1 &rarr; 3, a visible gap). */
     public static final int LINE_TOP_PADDING = 3;
     /** The header line's ("Tier III · Stopped") y, measured from the window's own top edge. */
     public static final int HEADER_Y = TITLE_H + LINE_TOP_PADDING;
-    /** The table's four rows, directly under the header line. */
-    public static final int TABLE_ROWS = 4;
+    /** The table's three rows, directly under the header line: Speed/Capacity, Rate/Load,
+     *  Inside/Remaining (MM-21: 4 &rarr; 3, the efficiency row dropped, `decisions/DEC-009-fixed-tiers.md`). */
+    public static final int TABLE_ROWS = 3;
     public static final int TABLE_START_Y = HEADER_Y + LINE_STRIDE;
     public static final int TABLE_END_Y = TABLE_START_Y + TABLE_ROWS * LINE_STRIDE;
 

@@ -5,7 +5,7 @@
 Every type with its summary and every non-private constructor, method and constant. The
 signature is the contract; read the source only when the summary is not enough.
 
-The toolsmith trades: the roll loot function and the one-motor-per-villager predicate (docs/spec/domains/trade.md).
+The toolsmith trades: the one-motor-per-villager predicate (docs/spec/domains/trade.md); MM-21 withdrew the roll loot function (`decisions/DEC-009-fixed-tiers.md`).
 
 ### `class NoMotorOffered` — `src/main/java/metered_motor/trade/NoMotorOffered.java`
 The metered_motor:no_motor_offered merchant predicate: true unless the merchant that LootContextParams.THIS_ENTITY names already offers a metered motor (TRADE-REQ-006, TRADE-DEC-004).
@@ -14,13 +14,7 @@ The metered_motor:no_motor_offered merchant predicate: true unless the merchant 
 - `Set<ContextKey<?>> getReferencedContextParams()`
 - `boolean test(LootContext context)`
 
-### `class RollFunction` — `src/main/java/metered_motor/trade/RollFunction.java`
-The metered_motor:roll loot function: rolls a motor's stats from a trade file's tier and optional bands, using the loot context's random source, and writes them to MeteredMotor#STATS on the offered item (TRADE-REQ-002, ARCH-DEC-004).
-- `MapCodec<RollFunction> MAP_CODEC` — Registered as metered_motor:roll by TradeRegistration.
-- `MapCodec<RollFunction> codec()`
-- `ItemStack run(ItemStack stack, LootContext context)`
-
 ### `class TradeRegistration` — `src/main/java/metered_motor/trade/TradeRegistration.java`
-Registers the trade path's loot types: metered_motor:roll and metered_motor:no_motor_offered (ARCH-DEC-004, TRADE-REQ-002, TRADE-REQ-006).
+Registers the trade path's loot condition type: metered_motor:no_motor_offered (ARCH-DEC-004, TRADE-REQ-006).
 - `void register()`
 

@@ -11,8 +11,10 @@ category: "create_metered_motor"
 The motor's burn follows Create's network stress over capacity, read once a second as the stress
 gauge reads it, and added to a fractional meter at `rate / 60 × min(1, stress / capacity)`
 (`MOTOR-REQ-006`, `MOTOR-DEC-001`). An idle network — nothing drawing stress — costs nothing
-(`MOTOR-FAIL-002`); a network at full load burns at the motor's full rate, fixed at
-`capacity / 8192 / efficiency` emeralds per minute (`MOTOR-REQ-005`, `MOTOR-DEC-003`).
+(`MOTOR-FAIL-002`); a network at full load burns at the motor's full rate, fixed per tier at
+`capacity / 92,160` emeralds per minute (`MOTOR-REQ-005`, `MOTOR-DEC-003`, amended by
+`decisions/DEC-009-fixed-tiers.md`, 2026-09-20 — the divisor was originally 8,192; no efficiency
+factor any more, since capacity is fixed per tier, not rolled).
 
 Alternative considered: a flat burn whenever the motor is turning, regardless of load, the way
 a blaze burner burns fuel by time. Rejected: it would make an idling network as expensive as a

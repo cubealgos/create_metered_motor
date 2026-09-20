@@ -14,25 +14,27 @@ does not.
 ```
  data                              server                                    client
  ┌─────────────────────┐   offer   ┌─────────────────────────────────┐        ┌───────────────────────┐
- │ villager_trade/*.json│──────────►│ RollFunction (loot function)    │        │ MotorScreen (Create   │
- │ tags/villager_trade/ │  created  │   writes MotorStats component   │        │  AbstractSimiContainer│
- │   toolsmith/level_N  │           │ MeteredMotorItem (BlockItem)    │  menu  │  Screen): 5 slots,    │
- └─────────────────────┘           │   tooltip from the component    │◄──────►│  meter readout        │
-                                   │ MeteredMotorBlock               │        │ Goggles overlay       │
-                                   │   (DirectionalKineticBlock, IBE)│        │ MotorVisual (Flywheel │
-                                   │ MeteredMotorBlockEntity         │  sync  │  SingleAxisRotating)  │
-                                   │   (GeneratingKineticBlockEntity,│───────►│                       │
-                                   │    WorldlyContainer): stats,    │        └───────────────────────┘
-                                   │    inventory, meter, running    │
-                                   │   tick: load → meter → emeralds │
-                                   │   → speed and capacity          │
+ │ villager_trade/*.json│──────────►│ MeteredMotorItem (BlockItem)    │        │ MotorScreen (Create   │
+ │  gives: fixed tier   │  created  │   tooltip from the component    │  menu  │  AbstractSimiContainer│
+ │ tags/villager_trade/ │           │ MeteredMotorBlock               │◄──────►│  Screen): 5 slots,    │
+ │   toolsmith/level_N  │           │   (DirectionalKineticBlock, IBE)│        │  meter readout        │
+ └─────────────────────┘           │ MeteredMotorBlockEntity         │        │ Goggles overlay       │
+                                   │   (GeneratingKineticBlockEntity,│  sync  │ MotorVisual (Flywheel │
+                                   │    WorldlyContainer): stats,    │───────►│  SingleAxisRotating)  │
+                                   │    inventory, meter, running    │        │                       │
+                                   │   tick: load → meter → emeralds │        └───────────────────────┘
+                                   │   → 64 rpm and the tier's       │
+                                   │     capacity per rpm             │
                                    └─────────────────────────────────┘
 ```
 
 **The block entity is the truth while placed; the item component is the truth in between.** The
-`metered_motor:stats` component holds tier, rpm, stress capacity and efficiency. The roll function
-writes it onto the offered item; placement copies it into the block entity; breaking copies it
-back. The inventory and the meter live in the block entity only and drop as items when broken.
+`metered_motor:stats` component holds only the tier (`contracts/data-contract.md` version 2). No
+loot function writes it: the trade's `gives` item template carries the tier fixed at authoring
+time (`decisions/DEC-009-fixed-tiers.md`, `TRADE-REQ-002` withdrawn); placement copies the
+component into the block entity; breaking copies it back. rpm (64, fixed) and stress capacity
+(the tier's, expressed per rpm for Create) are derived from the tier in code, never stored. The
+inventory and the meter live in the block entity only and drop as items when broken.
 
 ## `ARCH-DEC-001` — a Fabric mod on Create Fly, one jar, Java 25
 
@@ -44,10 +46,13 @@ build, and `fabric-api`. **Cost if wrong:** ports track Create Fly's release cad
 ## `ARCH-DEC-002` — a Create kinetic source, not a mixin into Create
 
 The block extends `DirectionalKineticBlock` and implements `IBE`; the block entity extends
-`GeneratingKineticBlockEntity` and overrides `getGeneratedSpeed()` (the rolled rpm while running,
-else 0) and `calculateAddedStressCapacity()` (the rolled capacity while running, else 0). Create's
-network, stress gauge, goggles and shaft rendering then work unchanged, as they do for the creative
-motor. Load is read from the network the way the stress gauge reads it.
+`GeneratingKineticBlockEntity` and overrides `getGeneratedSpeed()` (64 while running, else 0) and
+`calculateAddedStressCapacity()` (the tier's fixed capacity divided by 64 while running, else 0 —
+Create wants stress capacity *per rpm*, confirmed by full bytecode disassembly of
+`PoweredShaftBlockEntity` and `KineticNetwork` in `vault/technical/minecraft/create-fly-steam-engines-26-2.md`
+§B; `domains/motor.md` `MOTOR-REQ-004`). Create's network, stress gauge, goggles and shaft
+rendering then work unchanged, as they do for the creative motor. Load is read from the network
+the way the stress gauge reads it.
 
 **Alternatives:** a plain block that mixins into Create's network (rejected: fragile, and the base
 classes exist for this) · a Create "motor" reskin through Create's own registrate (rejected: Create
@@ -65,12 +70,16 @@ storage of the mod's own: Create Fly reaches containers, and a second path would
 with the first. **Cost if wrong:** a mod that only speaks the Transfer API cannot feed it; Fabric
 API's own container bridge covers vanilla containers, to be confirmed at the ticket.
 
-## `ARCH-DEC-004` — trades are data, the roll is code
+## `ARCH-DEC-004` — trades are data, the tier's stats are code
 
-The trade files and the tag entries are datapack files the mod ships; the only code in the trade
-path is one loot function type, `metered_motor:roll`, whose parameters (tier, rpm band, capacity
-band, efficiency band) are in the trade file. A pack author retunes numbers without Java; the
-burn formula stays in the block entity.
+The trade files and the tag entries are datapack files the mod ships; a pack author retunes price,
+level and tag membership without Java (`TRADE-REQ-004`). **Amended (Kevin, 2026-09-20, `DEC-009`):**
+originally the only code in the trade path was one loot function type, `metered_motor:roll`,
+whose parameters (tier, rpm band, capacity band, efficiency band) lived in the trade file; that
+function is withdrawn (`TRADE-REQ-002`). A trade's `gives` item template now carries the tier
+directly as a fixed component, so there is no code at all in the trade path any more — the tier's
+rpm, capacity and burn rate are looked up from the tier in the block entity and the burn formula,
+both code, not data. A rebalance of the ladder itself is still a release, not a datapack.
 
 ## `ARCH-DEC-005` — the component is versioned from the first commit
 

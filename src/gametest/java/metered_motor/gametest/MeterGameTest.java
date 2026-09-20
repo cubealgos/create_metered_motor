@@ -18,10 +18,10 @@ import net.minecraft.world.item.Items;
  * Create's stress gauge reads it, and not at all with nothing on the network to draw it
  * (MOTOR-REQ-006, MOTOR-DEC-001, MOTOR-FAIL-002).
  *
- * <p>{@code Stats.ratePerMinute()} puts a whole emerald minutes to hours away even at the
- * smallest legal roll (`MOTOR-DEC-003`: sustainable burn is the point), so rather than waiting for
- * a take, this asserts the meter's fractional advance directly, the fallback the ticket itself
- * documents.
+ * <p>{@code Stats.ratePerMinute()} puts a whole emerald minutes to hours away even at tier I's
+ * fixed rate (`MOTOR-REQ-005`, `decisions/DEC-009-fixed-tiers.md`: sustainable burn is the
+ * point), so rather than waiting for a take, this asserts the meter's fractional advance directly,
+ * the fallback the ticket itself documents.
  */
 public final class MeterGameTest {
     private static final BlockPos MOTOR_POS = new BlockPos(1, 1, 1);
@@ -55,7 +55,15 @@ public final class MeterGameTest {
             helper.assertTrue(motor.state() == MotorState.RUNNING, "set up: the motor runs: " + motor.state());
             helper.assertTrue(motor.meter().fraction() != 0.0, "waiting for the first burn cycle");
 
-            double expectedLoad = Math.min(1.0, impact / motor.stats().capacity());
+            // The millstone's own stress impact is a raw per-rpm figure (Create's own
+            // calculateStressApplied(), unscaled), consumed into the network's actual stress the
+            // same way KineticNetwork.getActualStressOf multiplies a generator's added capacity:
+            // by the network's shared generated speed (64 rpm, our motor's). The motor's own
+            // network capacity is the tier's fixed capacity, unscaled (MOTOR-REQ-004, `DEC-009`),
+            // so the ×64 does not cancel here the way it would have under the pre-DEC-009 bug
+            // (where capacity was itself still ×rpm-inflated, so the ratio happened to come out
+            // right for the wrong reason).
+            double expectedLoad = Math.min(1.0, impact * motor.stats().rpm() / motor.stats().capacity());
             helper.assertTrue(expectedLoad > 0.0, "set up: the millstone draws a nonzero load: " + impact);
             assertApproximately(helper, motor.load(), expectedLoad, "the load is min(1, network stress / network capacity)");
 

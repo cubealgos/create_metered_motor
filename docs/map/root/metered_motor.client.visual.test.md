@@ -8,6 +8,7 @@ signature is the contract; read the source only when the summary is not enough.
 ### `class MotorTooltipBehaviourTest` — `src/test/java/metered_motor/client/visual/MotorTooltipBehaviourTest.java`
 MotorTooltipBehaviour#rows builds the goggle readout as plain data, without touching LangBuilder or Minecraft.getInstance().font (only a running client provides either), so it is checkable headless (docs/spec/operations/testing.md, MM-19's acceptance criteria): the header first, every row still at its indent, and the row keys in order, for a running and a stopped motor.
 - `void aRunningMotorsHeaderComesFirstThenEveryRowIndentedInOrder()`
+- `void theCapacityRowIsOmittedWhenCreateAlreadyShowedIt()`
 - `void aStoppedMotorStillShowsTheHeaderFirstAndReportsNoLoad()`
 - `void aRunningMotorDrawingDownItsInventoryReportsTheTimeRemainingInsteadOfNoLoad()`
 
