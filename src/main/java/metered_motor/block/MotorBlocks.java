@@ -28,14 +28,21 @@ public final class MotorBlocks {
     public static final ResourceKey<Block> BLOCK_KEY = ResourceKey.create(Registries.BLOCK, MeteredMotor.id("metered_motor"));
     public static final ResourceKey<Item> ITEM_KEY = ResourceKey.create(Registries.ITEM, MeteredMotor.id("metered_motor"));
 
-    /** The metered motor block: a directional kinetic source (MOTOR-REQ-001, MOTOR-REQ-002, ARCH-DEC-002). */
+    /**
+     * The metered motor block: a directional kinetic source (MOTOR-REQ-001, MOTOR-REQ-002,
+     * ARCH-DEC-002). {@code forceSolidOn()} mirrors {@code CreativeMotorBlock}'s own properties
+     * chain (MM-16): the casing's shape ({@link MeteredMotorBlock#getShape}) isn't a full cube,
+     * so without it the block would count as non-solid for redstone/comparator/spawn checks the
+     * way Create's own creative motor deliberately does not.
+     */
     public static final MeteredMotorBlock BLOCK = Registry.register(BuiltInRegistries.BLOCK, BLOCK_KEY,
         new MeteredMotorBlock(BlockBehaviour.Properties.of()
             .setId(BLOCK_KEY)
             .mapColor(MapColor.COLOR_ORANGE)
             .strength(5.0f, 6.0f)
             .sound(SoundType.COPPER)
-            .requiresCorrectToolForDrops()));
+            .requiresCorrectToolForDrops()
+            .forceSolidOn()));
 
     /** The block's item, stackable to one so its rolled stats never merge (MOTOR-REQ-001). */
     public static final MeteredMotorItem ITEM = Registry.register(BuiltInRegistries.ITEM, ITEM_KEY,

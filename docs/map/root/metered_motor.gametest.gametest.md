@@ -44,6 +44,11 @@ MM-4: the meter advances once a second in proportion to the network's actual loa
 MM-5: a villager that already offers a metered motor refuses a second, through metered_motor:no_motor_offered reading the villager's live offers off LootContextParams.THIS_ENTITY (TRADE-REQ-006, TRADE-DEC-004).
 - `void aVillagerAlreadyOfferingAMotorRefusesASecond(GameTestHelper helper)`
 
+### `class OcclusionGameTest` — `src/gametest/java/metered_motor/gametest/OcclusionGameTest.java`
+MM-16: neighbours of a placed motor were wrongly culling their touching face — the block had no getShape override, so it fell back to Block's full-cube default, and Minecraft precomputes a block's per-facing *occlusion* shape from that same shape absent a dynamic one.
+- `void theCasingShapeAndOcclusionMatchTheCreativeMotorHorizontally(GameTestHelper helper)`
+- `void theCasingShapeAndOcclusionMatchTheCreativeMotorVertically(GameTestHelper helper)`
+
 ### `class PlacementGameTest` — `src/gametest/java/metered_motor/gametest/PlacementGameTest.java`
 MM-3: placing from an item copies its stats into the block entity, and an unrolled item places rolled at tier I's middle (MOTOR-REQ-003, MOTOR-FAIL-003).
 - `void placingFromAnItemCopiesItsStats(GameTestHelper helper)`

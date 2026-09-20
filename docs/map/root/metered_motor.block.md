@@ -14,6 +14,7 @@ The metered motor block: a Create directional kinetic source, placed and shafted
 - `void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)`
 - `BlockState getStateForPlacement(BlockPlaceContext context)` — Delegates to DirectionalKineticBlock's placement (the creative motor's own, unchanged) unless the held item's stats are a version newer than this build, in which case placement is refused by returning null: BlockItem.place then fails and keeps the item and its component untouched (MOTOR-REQ-014, DATA-REQ-001).
 - `boolean hasShaftTowards(LevelReader level, BlockPos pos, BlockState state, Direction face)`
+- `VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)` — The casing's actual (non-full-cube) silhouette, exactly CreativeMotorBlock's own AllShapes.MOTOR_BLOCK.get(facing) (MM-16).
 - `Direction.Axis getRotationAxis(BlockState state)`
 - `Class<MeteredMotorBlockEntity> getBlockEntityClass()`
 - `BlockEntityType<? extends MeteredMotorBlockEntity> getBlockEntityType()`
