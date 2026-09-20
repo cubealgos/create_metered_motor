@@ -1,5 +1,6 @@
 package metered_motor.block;
 
+import com.zurrtum.create.AllShapes;
 import com.zurrtum.create.content.kinetics.base.DirectionalKineticBlock;
 import com.zurrtum.create.foundation.block.IBE;
 import metered_motor.MeteredMotor;
@@ -12,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -21,6 +23,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * The metered motor block: a Create directional kinetic source, placed and shafted like the
@@ -66,6 +70,20 @@ public final class MeteredMotorBlock extends DirectionalKineticBlock implements 
     @Override
     public boolean hasShaftTowards(LevelReader level, BlockPos pos, BlockState state, Direction face) {
         return state.getValue(FACING) == face;
+    }
+
+    /**
+     * The casing's actual (non-full-cube) silhouette, exactly {@code CreativeMotorBlock}'s own
+     * {@code AllShapes.MOTOR_BLOCK.get(facing)} (MM-16). Without this override the block falls
+     * back to {@link Block}'s default full-cube shape, which Minecraft also uses (absent a
+     * dynamic shape) to precompute the block's per-facing *occlusion* shape — so neighbouring
+     * blocks wrongly believed the motor fully covered their touching face and culled it, even
+     * though the rendered casing (block.json, copied from Create's own) never filled that face,
+     * leaving the neighbour's face missing (see through to whatever is beyond it).
+     */
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return AllShapes.MOTOR_BLOCK.get(state.getValue(FACING));
     }
 
     @Override
