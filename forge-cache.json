@@ -1,7 +1,17 @@
 {
   "pulls": {
-    "at": 1789873892.010365,
+    "at": 1789875059.080202,
     "payload": [
+      {
+        "author": "scheeren",
+        "base": "development",
+        "ci": "success",
+        "head": "bugfix/mm-19-goggles-structure",
+        "index": "18",
+        "state": "merged",
+        "title": "fix(metered_motor): the goggles readout in Create's own shape: indented header, label and value rows (MM-19)",
+        "updated": "2026-09-20T03:11:44Z"
+      },
       {
         "author": "scheeren",
         "base": "development",
