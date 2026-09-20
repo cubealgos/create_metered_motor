@@ -32,6 +32,8 @@ public final class MeteredMotorMenu extends MenuBase<MeteredMotorBlockEntity> {
     /** The standard vanilla player-inventory width, centred under {@link #WIDTH}. */
     public static final int PLAYER_INVENTORY_WIDTH = Layout.PLAYER_INVENTORY_WIDTH;
     public static final int PLAYER_INV_X = Layout.PLAYER_INV_X;
+    /** The first player slot's origin: the frame's own corner plus its built-in (8, 18) inset (`Layout`'s class doc, MM-18 Part 1) — not {@link #PLAYER_INV_X} itself, which is the frame's corner. */
+    public static final int MAIN_INV_X = Layout.MAIN_INV_X;
     public static final int MAIN_INV_Y = Layout.MAIN_INV_Y;
 
     public MeteredMotorMenu(int syncId, Inventory inventory, MeteredMotorBlockEntity motor) {
@@ -47,7 +49,7 @@ public final class MeteredMotorMenu extends MenuBase<MeteredMotorBlockEntity> {
         for (int i = 0; i < SLOTS; i++) {
             addSlot(new MotorSlot(contentHolder, i, SLOT_X + i * SLOT_SIZE, SLOT_Y));
         }
-        addPlayerSlots(PLAYER_INV_X, MAIN_INV_Y);
+        addPlayerSlots(MAIN_INV_X, MAIN_INV_Y);
     }
 
     @Override

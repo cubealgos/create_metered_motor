@@ -6,10 +6,13 @@ Every type with its summary and every non-private constructor, method and consta
 signature is the contract; read the source only when the summary is not enough.
 
 ### `class LayoutTest` — `src/test/java/metered_motor/menu/LayoutTest.java`
-The motor screen's layout arithmetic, checked without loading any Minecraft, Fabric or Create class: Layout is pure on purpose (its own class doc), because MeteredMotorMenu extends Create's MenuBase and cannot be class-loaded in a plain JVM unit test (docs/spec/domains/ui.md `UI-REQ-001`, `UI-REQ-003`, `UI-REQ-004`, MM-17's acceptance criteria).
-- `void theWholeWindowFitsA1080pClientAtGuiScale4()`
+The motor screen's layout arithmetic, checked without loading any Minecraft, Fabric or Create class: Layout is pure on purpose (its own class doc), because MeteredMotorMenu extends Create's MenuBase and cannot be class-loaded in a plain JVM unit test (docs/spec/domains/ui.md `UI-REQ-001`, `UI-REQ-003`, `UI-REQ-004`, MM-17's and MM-18's acceptance criteria).
+- `void theWholeWindowFitsTheTwoHundredPixelBudget()`
 - `void theTitleTextSitsFullyInsideTheTitleStrip()`
 - `void theTiledBodyHoldsExactlyTheReadoutAndTheSlotRow()`
-- `void theSlotRowIsCentredAndDirectlyUnderTheReadout()`
+- `void theTableIsFourRowsDirectlyUnderTheHeaderLine()`
+- `void theTablesTwoColumnsFitThePanelWithoutOverlapping()`
+- `void theSlotRowIsCentredAndDirectlyUnderTheTable()`
 - `void thePlayerInventoryIsCentredUnderTheWindow()`
+- `void everyPlayerSlotOriginLiesInsideItsDrawnCell()` — MM-18's Part 1 acceptance criterion: every player-inventory slot position the menu will use falls inside the corresponding cell of the frame the screen draws — both read off the one shared origin (Layout#PLAYER_INV_X, Layout#FRAME_Y), offset by the same (8, 18) inset the texture itself uses (see the class-level constants' own doc).
 

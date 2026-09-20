@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
-"""Composes a headless mock of the motor screen (MM-17) from Create Fly's own `stock_keeper.png`
-and `player_inventory.png` atlases, so the layout and the seam fix can be judged from a PNG
-without booting a client.
+"""Composes a headless mock of the motor screen (MM-17, MM-18) from Create Fly's own
+`stock_keeper.png` and `player_inventory.png` atlases, so the layout and the alignment fix can be
+judged from a PNG without booting a client.
 
 Reads the two atlases straight out of a Create Fly jar (found by globbing the local Gradle
 cache, like `tools/icon.py` and `tools/recolour.py` do, or given explicitly with --jar) and
 pastes the exact regions `MeteredMotorScreen`/`Layout` blit: the title strip, the tiled body
-strips, the bottom band, the five slot backgrounds and the player inventory frame, at the same
-atlas coordinates and window geometry those two classes use. The readout lines are drawn with a
-plain PIL font at the same x/y the screen uses — not Minecraft's own bitmap font, so the glyphs
-will not match pixel for pixel, but the line positions, the panel's fit around them and any
-seam between tiled strips will.
+strips (a full-height run, then MM-18's final partial strip), the bottom band, the five slot
+backgrounds and the player inventory frame, at the same atlas coordinates and window geometry
+those two classes use.
+
+MM-18: this mock now also draws the "Inventory" label `AbstractSimiContainerScreen.
+renderPlayerInventory` draws (at the frame's own corner + (8, 6)), and outlines every real slot
+position `Layout` computes — the five motor slots and all 36 player slots (27 main + 9 hotbar) —
+as thin rectangles, so a misalignment between the slots `MeteredMotorMenu.addSlots()` would place
+and the frame this screen draws is visible headless, the way MM-18 found it. The table's header
+and its eight label/value cells are drawn with a monospace placeholder font (not Minecraft's own
+bitmap font, so the glyphs will not match pixel for pixel) at the same x/y `MeteredMotorScreen`
+uses, so the panel's fit around them and each column's own text edge will.
 
 The geometry constants below are a Python copy of `src/main/java/metered_motor/menu/Layout.java`
 (that class has no Minecraft imports for the same reason: so a plain JUnit test and this script
@@ -19,7 +26,7 @@ can both load pure numbers). Keep the two in sync by hand if the layout changes 
 Not part of `just check` (no Minecraft classes needed, no build dependency): a manual visual aid,
 run by hand. Requires Pillow.
 
-Usage: python3 tools/screen_mock.py --out /path/to/mm17-mock.png [--jar PATH_TO_CREATE_FLY_JAR]
+Usage: python3 tools/screen_mock.py --out /path/to/mm18-mock.png [--jar PATH_TO_CREATE_FLY_JAR]
 """
 from __future__ import annotations
 
@@ -42,40 +49,57 @@ ATLAS_U = 24
 TITLE_V = 0
 TITLE_H = 18
 TITLE_TEXT_Y = 4
-LINE_COUNT = 9
 FONT_LINE_HEIGHT = 9
-LINE_GAP = 1
+LINE_GAP = 0
 LINE_STRIDE = FONT_LINE_HEIGHT + LINE_GAP
-LINE_TOP_PADDING = 4
-LINE_START_Y = TITLE_H + LINE_TOP_PADDING
-SLOT_GAP = 4
-SLOT_Y = LINE_START_Y + LINE_COUNT * LINE_STRIDE + SLOT_GAP
+LINE_TOP_PADDING = 1
+HEADER_Y = TITLE_H + LINE_TOP_PADDING
+TABLE_ROWS = 4
+TABLE_START_Y = HEADER_Y + LINE_STRIDE
+TABLE_END_Y = TABLE_START_Y + TABLE_ROWS * LINE_STRIDE
+TEXT_LEFT = 8
+COLUMN_GAP = 8
+COLUMN_WIDTH = (WIDTH - 2 * TEXT_LEFT - COLUMN_GAP) // 2
+LEFT_LABEL_X = TEXT_LEFT
+LEFT_VALUE_RIGHT_X = TEXT_LEFT + COLUMN_WIDTH
+RIGHT_LABEL_X = LEFT_VALUE_RIGHT_X + COLUMN_GAP
+RIGHT_VALUE_RIGHT_X = WIDTH - TEXT_LEFT
+SLOT_GAP = 2
+SLOT_Y = TABLE_END_Y + SLOT_GAP
 SLOT_X = (WIDTH - SLOTS * SLOT_SIZE) // 2
 SLOT_BG_U = 32
 SLOT_BG_V = 200
-BOTTOM_PADDING = 4
+BOTTOM_PADDING = 1
 PANEL_V = 48
 PANEL_H = 20
-BODY_HEIGHT = LINE_TOP_PADDING + LINE_COUNT * LINE_STRIDE + SLOT_GAP + SLOT_SIZE + BOTTOM_PADDING
-PANELS = BODY_HEIGHT // PANEL_H
-BOTTOM_V = 148
-BOTTOM_H = 12
-TOP_HEIGHT = TITLE_H + PANELS * PANEL_H + BOTTOM_H
-GAP = 4
+BODY_HEIGHT = LINE_TOP_PADDING + LINE_STRIDE + TABLE_ROWS * LINE_STRIDE + SLOT_GAP + SLOT_SIZE + BOTTOM_PADDING
+FULL_PANELS = BODY_HEIGHT // PANEL_H
+LAST_PANEL_H = BODY_HEIGHT - FULL_PANELS * PANEL_H
+BOTTOM_V = 154
+BOTTOM_H = 6
+TOP_HEIGHT = TITLE_H + BODY_HEIGHT + BOTTOM_H
+GAP = 0
 PLAYER_INVENTORY_WIDTH = 176
 PLAYER_INVENTORY_HEIGHT = 108
 PLAYER_INV_X = (WIDTH - PLAYER_INVENTORY_WIDTH) // 2
+FRAME_Y = TOP_HEIGHT + GAP
+MAIN_INV_X = PLAYER_INV_X + 8
+MAIN_INV_Y = FRAME_Y + 18
 WINDOW_HEIGHT = TOP_HEIGHT + GAP + PLAYER_INVENTORY_HEIGHT
-TEXT_LEFT = 8
 COLOUR_TITLE = (0x4A, 0x2D, 0x31)
-COLOUR_TEXT = (0xCD, 0xBC, 0xA8)
+COLOUR_VALUE = (0xCD, 0xBC, 0xA8)
+COLOUR_LABEL = (0x7F, 0x74, 0x68)
 
 SCALE = 4
+OUTLINE_MOTOR_SLOT = (255, 60, 60)
+OUTLINE_PLAYER_SLOT = (60, 200, 255)
 
-SAMPLE_TITLE = "The Metered Motor"
-SAMPLE_LINES = [
-    "Tier I", "41 rpm", "825 SU capacity", "0.97x efficiency", "0.10 emeralds/min at full load",
-    "Load: 0%", "1152 emeralds inside", "Remaining: no load", "Running",
+SAMPLE_HEADER = "Tier III · Stopped"
+SAMPLE_ROWS = [
+    ("Speed", "145 rpm", "Capacity", "11071 SU"),
+    ("Efficiency", "0.81x", "Rate", "1.66 em/min"),
+    ("Load", "0%", "Inside", "0 emeralds"),
+    ("Remaining", "4m 12s", None, None),
 ]
 
 
@@ -103,10 +127,14 @@ def compose(stock_keeper: Image.Image, player_inventory: Image.Image) -> Image.I
     y = 0
     canvas.paste(region(ATLAS_U, TITLE_V, WIDTH, TITLE_H), (0, y), region(ATLAS_U, TITLE_V, WIDTH, TITLE_H))
     y += TITLE_H
-    for _ in range(PANELS):
+    for _ in range(FULL_PANELS):
         strip = region(ATLAS_U, PANEL_V, WIDTH, PANEL_H)
         canvas.paste(strip, (0, y), strip)
         y += PANEL_H
+    if LAST_PANEL_H > 0:
+        strip = region(ATLAS_U, PANEL_V, WIDTH, LAST_PANEL_H)
+        canvas.paste(strip, (0, y), strip)
+        y += LAST_PANEL_H
     bottom = region(ATLAS_U, BOTTOM_V, WIDTH, BOTTOM_H)
     canvas.paste(bottom, (0, y), bottom)
 
@@ -114,17 +142,67 @@ def compose(stock_keeper: Image.Image, player_inventory: Image.Image) -> Image.I
         slot = region(SLOT_BG_U, SLOT_BG_V, SLOT_SIZE, SLOT_SIZE)
         canvas.paste(slot, (SLOT_X + i * SLOT_SIZE, SLOT_Y), slot)
 
-    player_inventory = player_inventory.crop((0, 0, PLAYER_INVENTORY_WIDTH, PLAYER_INVENTORY_HEIGHT))
-    canvas.paste(player_inventory, (PLAYER_INV_X, TOP_HEIGHT + GAP), player_inventory)
+    player_inv_crop = player_inventory.crop((0, 0, PLAYER_INVENTORY_WIDTH, PLAYER_INVENTORY_HEIGHT))
+    canvas.paste(player_inv_crop, (PLAYER_INV_X, FRAME_Y), player_inv_crop)
 
     draw = ImageDraw.Draw(canvas)
-    font = ImageFont.load_default()
-    title_w = draw.textlength(SAMPLE_TITLE, font=font)
-    draw.text((WIDTH / 2 - title_w / 2, TITLE_TEXT_Y), SAMPLE_TITLE, fill=COLOUR_TITLE, font=font)
-    line_y = LINE_START_Y
-    for line in SAMPLE_LINES:
-        draw.text((TEXT_LEFT, line_y), line, fill=COLOUR_TEXT, font=font)
-        line_y += LINE_STRIDE
+    try:
+        font = ImageFont.truetype("/System/Library/Fonts/Menlo.ttc", 7)
+    except OSError:
+        font = ImageFont.load_default()
+
+    def truncate(text: str, max_width: float) -> str:
+        # UI-REQ-004, mirroring `MeteredMotorScreen.truncate`: an ellipsis, not a wrap — this
+        # table has no spare line to wrap into.
+        if draw.textlength(text, font=font) <= max_width:
+            return text
+        ellipsis_w = draw.textlength("...", font=font)
+        kept = ""
+        for ch in text:
+            if draw.textlength(kept + ch, font=font) + ellipsis_w > max_width:
+                break
+            kept += ch
+        return kept + "..."
+
+    def draw_pair(label: str, value: str, label_x: int, value_right_x: int, y: int) -> None:
+        draw.text((label_x, y), label, fill=COLOUR_LABEL, font=font)
+        label_w = draw.textlength(label, font=font)
+        available = max(0.0, value_right_x - (label_x + label_w + 3))
+        text = truncate(value, available)
+        vw = draw.textlength(text, font=font)
+        draw.text((value_right_x - vw, y), text, fill=COLOUR_VALUE, font=font)
+
+    header_w = draw.textlength(SAMPLE_HEADER, font=font)
+    title_w = draw.textlength("The Metered Motor", font=font)
+    draw.text((WIDTH / 2 - title_w / 2, TITLE_TEXT_Y), "The Metered Motor", fill=COLOUR_TITLE, font=font)
+    draw.text((LEFT_LABEL_X, HEADER_Y), SAMPLE_HEADER, fill=COLOUR_VALUE, font=font)
+
+    for row, (left_label, left_value, right_label, right_value) in enumerate(SAMPLE_ROWS):
+        line_y = TABLE_START_Y + row * LINE_STRIDE
+        draw_pair(left_label, left_value, LEFT_LABEL_X, LEFT_VALUE_RIGHT_X, line_y)
+        if right_label is not None:
+            draw_pair(right_label, right_value, RIGHT_LABEL_X, RIGHT_VALUE_RIGHT_X, line_y)
+
+    draw.text((PLAYER_INV_X + 8, FRAME_Y + 6), "Inventory", fill=(65, 65, 65), font=font)
+
+    # MM-18: outline every real slot position `Layout` computes, so a misalignment between the
+    # slots the menu would place and the frame drawn above is visible without booting a client.
+    for i in range(SLOTS):
+        x = SLOT_X + i * SLOT_SIZE
+        draw.rectangle((x, SLOT_Y, x + SLOT_SIZE - 1, SLOT_Y + SLOT_SIZE - 1), outline=OUTLINE_MOTOR_SLOT, width=1)
+
+    def outline_player_slot(slot_x: int, slot_y: int) -> None:
+        # The cell (border to border) sits one pixel above/left of the slot's own (icon) origin —
+        # `Layout`'s class doc and `player_inventory.png` itself (MM-18's texture sampling).
+        draw.rectangle(
+            (slot_x - 1, slot_y - 1, slot_x - 1 + SLOT_SIZE - 1, slot_y - 1 + SLOT_SIZE - 1), outline=OUTLINE_PLAYER_SLOT, width=1)
+
+    for row in range(3):
+        for col in range(9):
+            outline_player_slot(MAIN_INV_X + col * SLOT_SIZE, MAIN_INV_Y + row * SLOT_SIZE)
+    for col in range(9):
+        outline_player_slot(MAIN_INV_X + col * SLOT_SIZE, MAIN_INV_Y + 58)
+
     return canvas
 
 
