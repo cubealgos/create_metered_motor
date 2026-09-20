@@ -80,6 +80,26 @@ final class LayoutTest {
         assertEquals(Layout.WIDTH - Layout.TEXT_LEFT, Layout.RIGHT_VALUE_RIGHT_X, "the right column's value edge is the panel's own right text edge");
     }
 
+    /**
+     * A reviewer's own acceptance check on the mock (Kevin, 2026-09-20, after `just client`):
+     * both columns' right-aligned value edges must sit at the panel's own inner text margin — the
+     * same 8px inset {@link Layout#LEFT_LABEL_X} uses from the left edge — never past it, so a
+     * truncated-or-not value can never run past the panel's own right frame edge.
+     */
+    @Test
+    void bothColumnsRightEdgesSitAtOrInsideThePanelsOwnMargin() {
+        int panelInnerRightEdge = Layout.WIDTH - Layout.TEXT_LEFT;
+        assertTrue(
+            Layout.LEFT_VALUE_RIGHT_X <= panelInnerRightEdge,
+            "the left column's value edge must not run past the panel's own margin: " + Layout.LEFT_VALUE_RIGHT_X);
+        assertTrue(
+            Layout.RIGHT_VALUE_RIGHT_X <= panelInnerRightEdge,
+            "the right column's value edge must not run past the panel's own margin: " + Layout.RIGHT_VALUE_RIGHT_X);
+        assertEquals(
+            panelInnerRightEdge, Layout.RIGHT_VALUE_RIGHT_X,
+            "the right column's value edge is exactly the panel's own inner margin, the same inset the left column uses");
+    }
+
     @Test
     void theSlotRowIsCentredAndDirectlyUnderTheTable() {
         int slotsWidth = Layout.SLOTS * Layout.SLOT_SIZE;

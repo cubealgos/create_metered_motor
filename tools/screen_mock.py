@@ -88,7 +88,10 @@ MAIN_INV_Y = FRAME_Y + 18
 WINDOW_HEIGHT = TOP_HEIGHT + GAP + PLAYER_INVENTORY_HEIGHT
 COLOUR_TITLE = (0x4A, 0x2D, 0x31)
 COLOUR_VALUE = (0xCD, 0xBC, 0xA8)
-COLOUR_LABEL = (0x7F, 0x74, 0x68)
+# COLOUR_VALUE blended 55% toward the panel's own brown (measured ~0x895B4C): neither compass
+# screen's own secondary colour is actually legible against this darker brown — MeteredMotorScreen's
+# own COLOUR_LABEL doc has the measurements.
+COLOUR_LABEL = (0xAE, 0x90, 0x7F)
 
 SCALE = 4
 OUTLINE_MOTOR_SLOT = (255, 60, 60)

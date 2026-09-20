@@ -43,12 +43,26 @@ public final class MeteredMotorScreen extends AbstractSimiContainerScreen<Metere
     private static final Identifier ATLAS = AllGuiTextures.STOCK_KEEPER_REQUEST_HEADER.getLocation();
     private static final AllGuiTextures PLAYER_INVENTORY = AllGuiTextures.PLAYER_INVENTORY;
     private static final int COLOUR_TITLE = 0xFF4A2D31;
-    /** The header line and every value column: bright, matching MM-17's compass-derived panel text colour. */
+    /** The header line and every value column: the accent colour, matching MM-17's compass-derived panel text colour. */
     private static final int COLOUR_VALUE = 0xFFCDBCA8;
-    /** Every label column: dim, so the bright value it precedes reads as the answer (MM-18, Part 2). Neither
-     *  compass screen defines a dim/bright pair for a table like this one, so this is {@link #COLOUR_VALUE} at
-     *  roughly 62% brightness — dim enough to read as secondary against the panel's own brown, still legible. */
-    private static final int COLOUR_LABEL = 0xFF7F7468;
+    /**
+     * Every label column: dim but legible against the panel's own brown. Neither compass screen
+     * actually has a colour that works reused as-is: `EditScreen`'s only candidate secondary
+     * colour, `COLOUR_NAME` (0xFF714A40), is a muted brown in the same hue and luminance family
+     * as this same panel background (`create_brass_compass` reuses the identical `PANEL_V` atlas
+     * band), so text in it all but disappears — measured by luma (`0.299r+0.587g+0.114b`), the
+     * panel's own brown averages ~103 and `COLOUR_NAME` is ~85, a 18-point gap that reads as
+     * "nearly invisible" exactly as reported. `SwitchScreen.COLOUR_ROW` (0xFF656565, the brighter
+     * of its two row colours) was tried next, since the ticket asked for it by name, but it is
+     * *worse*: its luma is ~101, a 2-point gap from this same panel's ~103 — SwitchScreen's own
+     * row text sits on its lighter tan `STOCK_KEEPER_CATEGORY_ENTRY` texture, not this darker
+     * brown, so the colour was tuned for a background this screen doesn't have. Neither compass
+     * colour was actually built for this panel, so this is {@link #COLOUR_VALUE} itself blended
+     * 55% of the way toward the panel's own brown (0xFF895B4C, this class's own measurement) —
+     * the same warm hue family as the bright value column, at ~48 luma points above the panel
+     * (`COLOUR_VALUE` itself is ~88 above it), confirmed legible in the Pillow mock.
+     */
+    private static final int COLOUR_LABEL = 0xFFAE907F;
 
     public MeteredMotorScreen(MeteredMotorMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title, MeteredMotorMenu.WIDTH, MeteredMotorMenu.TOP_HEIGHT + MeteredMotorMenu.GAP + PLAYER_INVENTORY.getHeight());

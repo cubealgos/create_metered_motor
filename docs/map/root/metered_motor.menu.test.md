@@ -12,6 +12,7 @@ The motor screen's layout arithmetic, checked without loading any Minecraft, Fab
 - `void theTiledBodyHoldsExactlyTheReadoutAndTheSlotRow()`
 - `void theTableIsFourRowsDirectlyUnderTheHeaderLine()`
 - `void theTablesTwoColumnsFitThePanelWithoutOverlapping()`
+- `void bothColumnsRightEdgesSitAtOrInsideThePanelsOwnMargin()` — A reviewer's own acceptance check on the mock (Kevin, 2026-09-20, after `just client`): both columns' right-aligned value edges must sit at the panel's own inner text margin — the same 8px inset Layout#LEFT_LABEL_X uses from the left edge — never past it, so a truncated-or-not value can never run past the panel's own right frame edge.
 - `void theSlotRowIsCentredAndDirectlyUnderTheTable()`
 - `void thePlayerInventoryIsCentredUnderTheWindow()`
 - `void everyPlayerSlotOriginLiesInsideItsDrawnCell()` — MM-18's Part 1 acceptance criterion: every player-inventory slot position the menu will use falls inside the corresponding cell of the frame the screen draws — both read off the one shared origin (Layout#PLAYER_INV_X, Layout#FRAME_Y), offset by the same (8, 18) inset the texture itself uses (see the class-level constants' own doc).
