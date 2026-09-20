@@ -33,11 +33,13 @@ import net.minecraft.world.entity.player.Inventory;
  * 208px span ({@link Layout}'s class doc) and moved the five slots onto the same atlas's own
  * {@link Layout#SLOT_BG_U request-slot art}, a warm brown-and-tan 18x18 background that reads as
  * Create's, replacing the flat grey {@link AllGuiTextures#JEI_SLOT} this screen drew before. The
- * player's inventory still sits on Create's own {@link AllGuiTextures#PLAYER_INVENTORY} frame,
- * exactly as every other {@code AbstractSimiContainerScreen} draws it — MM-18 fixed this screen's
- * own copy of that frame's origin to actually agree with where {@code MeteredMotorMenu} put the
- * player slots ({@link Layout}'s class doc, Part 1) and rebuilt the readout as a compact table
- * ({@link Layout}'s class doc, Part 2).
+ * player's inventory still sits on Create's own {@link AllGuiTextures#PLAYER_INVENTORY} texture —
+ * MM-18 fixed this screen's own copy of that frame's origin to actually agree with where
+ * {@code MeteredMotorMenu} put the player slots ({@link Layout}'s class doc, Part 1) and rebuilt
+ * the readout as a compact table ({@link Layout}'s class doc, Part 2); MM-20 stopped drawing it
+ * through {@code AbstractSimiContainerScreen.renderPlayerInventory} (which always blits the whole
+ * texture, pointer triangle included) in favour of {@link #playerInventoryFrame}, this screen's
+ * own cropped blit ({@link Layout}'s class doc, MM-20).
  */
 public final class MeteredMotorScreen extends AbstractSimiContainerScreen<MeteredMotorMenu> {
     private static final Identifier ATLAS = AllGuiTextures.STOCK_KEEPER_REQUEST_HEADER.getLocation();
@@ -63,9 +65,14 @@ public final class MeteredMotorScreen extends AbstractSimiContainerScreen<Metere
      * (`COLOUR_VALUE` itself is ~88 above it), confirmed legible in the Pillow mock.
      */
     private static final int COLOUR_LABEL = 0xFFAE907F;
+    /** `AbstractSimiContainerScreen.renderPlayerInventory`'s own label colour (`javap`'d as the
+     *  constant int {@code -12566464} = {@code 0xFF404040}), reused so the "Inventory" label this
+     *  screen now draws itself (MM-20, {@link Layout}'s class doc) is pixel-for-pixel what Create
+     *  draws. */
+    private static final int COLOUR_PLAYER_INVENTORY_LABEL = 0xFF404040;
 
     public MeteredMotorScreen(MeteredMotorMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title, MeteredMotorMenu.WIDTH, MeteredMotorMenu.TOP_HEIGHT + MeteredMotorMenu.GAP + PLAYER_INVENTORY.getHeight());
+        super(menu, inventory, title, MeteredMotorMenu.WIDTH, MeteredMotorMenu.WINDOW_HEIGHT);
     }
 
     /** The client factory: reads the motor's position off the buffer, as `MotorMenuProvider` wrote it (UI-UC-001). */
@@ -121,11 +128,29 @@ public final class MeteredMotorScreen extends AbstractSimiContainerScreen<Metere
             slotBackground(graphics, leftPos + MeteredMotorMenu.SLOT_X + i * MeteredMotorMenu.SLOT_SIZE, topPos + MeteredMotorMenu.SLOT_Y);
         }
 
-        renderPlayerInventory(graphics, getLeftOfCentered(PLAYER_INVENTORY.getWidth()), topPos + Layout.FRAME_Y);
+        playerInventoryFrame(graphics, getLeftOfCentered(PLAYER_INVENTORY.getWidth()), topPos + Layout.FRAME_Y);
     }
 
     private void region(GuiGraphicsExtractor graphics, int y, int v, int h) {
         graphics.blit(RenderPipelines.GUI_TEXTURED, ATLAS, leftPos, y, Layout.ATLAS_U, v, MeteredMotorMenu.WIDTH, h, 256, 256);
+    }
+
+    /**
+     * The player inventory frame, cropped to stop above its own pointer triangle (MM-20,
+     * {@link Layout}'s class doc), rather than {@code AbstractSimiContainerScreen
+     * .renderPlayerInventory}, which always blits the source texture's full, uncropped height.
+     * Blits the same atlas region that method's own {@code AllGuiTextures.render} would (u=0, v=0,
+     * a 256x256 texture) at {@link Layout#PLAYER_INVENTORY_HEIGHT} instead of the texture's full
+     * {@link Layout#PLAYER_INVENTORY_TEXTURE_HEIGHT}, then draws the inherited {@code
+     * playerInventoryTitle} label exactly where and how that method draws it, so "Inventory" reads
+     * pixel-for-pixel as Create's own.
+     */
+    private void playerInventoryFrame(GuiGraphicsExtractor graphics, int x, int y) {
+        graphics.blit(
+            RenderPipelines.GUI_TEXTURED, PLAYER_INVENTORY.getLocation(), x, y, 0, 0, Layout.PLAYER_INVENTORY_WIDTH, Layout.PLAYER_INVENTORY_HEIGHT,
+            256, 256
+        );
+        graphics.text(font, playerInventoryTitle, x + 8, y + 6, COLOUR_PLAYER_INVENTORY_LABEL, false);
     }
 
     private void slotBackground(GuiGraphicsExtractor graphics, int x, int y) {

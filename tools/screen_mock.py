@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Composes a headless mock of the motor screen (MM-17, MM-18) from Create Fly's own
+"""Composes a headless mock of the motor screen (MM-17, MM-18, MM-20) from Create Fly's own
 `stock_keeper.png` and `player_inventory.png` atlases, so the layout and the alignment fix can be
 judged from a PNG without booting a client.
 
@@ -19,6 +19,14 @@ and its eight label/value cells are drawn with a monospace placeholder font (not
 bitmap font, so the glyphs will not match pixel for pixel) at the same x/y `MeteredMotorScreen`
 uses, so the panel's fit around them and each column's own text edge will.
 
+MM-20: the four padding insets (`TEXT_LEFT`, `LINE_TOP_PADDING`, `SLOT_GAP`, `BOTTOM_PADDING`)
+widened, and the player inventory frame is now pasted cropped to `PLAYER_INVENTORY_HEIGHT` (98 of
+its own 108px, the same crop `MeteredMotorScreen.playerInventoryFrame` blits) instead of the whole
+texture, so the pointer triangle Kevin's third client check found no longer appears in the mock
+either. The "Inventory" label is drawn in Create's own measured label colour (`0xFF404040`,
+`javap`'d off `AbstractSimiContainerScreen.renderPlayerInventory`), replacing the earlier guessed
+grey.
+
 The geometry constants below are a Python copy of `src/main/java/metered_motor/menu/Layout.java`
 (that class has no Minecraft imports for the same reason: so a plain JUnit test and this script
 can both load pure numbers). Keep the two in sync by hand if the layout changes again.
@@ -26,7 +34,7 @@ can both load pure numbers). Keep the two in sync by hand if the layout changes 
 Not part of `just check` (no Minecraft classes needed, no build dependency): a manual visual aid,
 run by hand. Requires Pillow.
 
-Usage: python3 tools/screen_mock.py --out /path/to/mm18-mock.png [--jar PATH_TO_CREATE_FLY_JAR]
+Usage: python3 tools/screen_mock.py --out /path/to/mm20-mock.png [--jar PATH_TO_CREATE_FLY_JAR]
 """
 from __future__ import annotations
 
@@ -52,24 +60,24 @@ TITLE_TEXT_Y = 4
 FONT_LINE_HEIGHT = 9
 LINE_GAP = 0
 LINE_STRIDE = FONT_LINE_HEIGHT + LINE_GAP
-LINE_TOP_PADDING = 1
+LINE_TOP_PADDING = 3  # MM-20: 1 -> 3, a visible gap below the title strip
 HEADER_Y = TITLE_H + LINE_TOP_PADDING
 TABLE_ROWS = 4
 TABLE_START_Y = HEADER_Y + LINE_STRIDE
 TABLE_END_Y = TABLE_START_Y + TABLE_ROWS * LINE_STRIDE
-TEXT_LEFT = 8
+TEXT_LEFT = 12  # MM-20: 8 -> 12
 COLUMN_GAP = 8
 COLUMN_WIDTH = (WIDTH - 2 * TEXT_LEFT - COLUMN_GAP) // 2
 LEFT_LABEL_X = TEXT_LEFT
 LEFT_VALUE_RIGHT_X = TEXT_LEFT + COLUMN_WIDTH
 RIGHT_LABEL_X = LEFT_VALUE_RIGHT_X + COLUMN_GAP
 RIGHT_VALUE_RIGHT_X = WIDTH - TEXT_LEFT
-SLOT_GAP = 2
+SLOT_GAP = LINE_STRIDE  # MM-20: 2 -> 9 (a full line's gap), exactly Layout.LINE_STRIDE
 SLOT_Y = TABLE_END_Y + SLOT_GAP
 SLOT_X = (WIDTH - SLOTS * SLOT_SIZE) // 2
 SLOT_BG_U = 32
 SLOT_BG_V = 200
-BOTTOM_PADDING = 1
+BOTTOM_PADDING = 3  # MM-20: 1 -> 3
 PANEL_V = 48
 PANEL_H = 20
 BODY_HEIGHT = LINE_TOP_PADDING + LINE_STRIDE + TABLE_ROWS * LINE_STRIDE + SLOT_GAP + SLOT_SIZE + BOTTOM_PADDING
@@ -80,7 +88,12 @@ BOTTOM_H = 6
 TOP_HEIGHT = TITLE_H + BODY_HEIGHT + BOTTOM_H
 GAP = 0
 PLAYER_INVENTORY_WIDTH = 176
-PLAYER_INVENTORY_HEIGHT = 108
+# MM-20: the source file's own full height (108, AllGuiTextures.PLAYER_INVENTORY) versus the
+# height actually pasted below (97) — cropped to stop above the pointer triangle (rows 100-107)
+# and its own build-up rows (97-99, each already showing the triangle's "collar" or its border
+# broken outright); see Layout's class doc.
+PLAYER_INVENTORY_TEXTURE_HEIGHT = 108
+PLAYER_INVENTORY_HEIGHT = 97
 PLAYER_INV_X = (WIDTH - PLAYER_INVENTORY_WIDTH) // 2
 FRAME_Y = TOP_HEIGHT + GAP
 MAIN_INV_X = PLAYER_INV_X + 8
@@ -92,6 +105,9 @@ COLOUR_VALUE = (0xCD, 0xBC, 0xA8)
 # screen's own secondary colour is actually legible against this darker brown — MeteredMotorScreen's
 # own COLOUR_LABEL doc has the measurements.
 COLOUR_LABEL = (0xAE, 0x90, 0x7F)
+# AbstractSimiContainerScreen.renderPlayerInventory's own label colour (javap'd as the constant
+# int -12566464 = 0xFF404040); MeteredMotorScreen.playerInventoryFrame reuses it verbatim (MM-20).
+COLOUR_PLAYER_INVENTORY_LABEL = (0x40, 0x40, 0x40)
 
 SCALE = 4
 OUTLINE_MOTOR_SLOT = (255, 60, 60)
@@ -145,6 +161,9 @@ def compose(stock_keeper: Image.Image, player_inventory: Image.Image) -> Image.I
         slot = region(SLOT_BG_U, SLOT_BG_V, SLOT_SIZE, SLOT_SIZE)
         canvas.paste(slot, (SLOT_X + i * SLOT_SIZE, SLOT_Y), slot)
 
+    # MM-20: cropped to PLAYER_INVENTORY_HEIGHT (97 of the source's own 108px), the same crop
+    # MeteredMotorScreen.playerInventoryFrame blits, so the pointer triangle and its own build-up
+    # rows never appear in the mock either.
     player_inv_crop = player_inventory.crop((0, 0, PLAYER_INVENTORY_WIDTH, PLAYER_INVENTORY_HEIGHT))
     canvas.paste(player_inv_crop, (PLAYER_INV_X, FRAME_Y), player_inv_crop)
 
@@ -186,7 +205,7 @@ def compose(stock_keeper: Image.Image, player_inventory: Image.Image) -> Image.I
         if right_label is not None:
             draw_pair(right_label, right_value, RIGHT_LABEL_X, RIGHT_VALUE_RIGHT_X, line_y)
 
-    draw.text((PLAYER_INV_X + 8, FRAME_Y + 6), "Inventory", fill=(65, 65, 65), font=font)
+    draw.text((PLAYER_INV_X + 8, FRAME_Y + 6), "Inventory", fill=COLOUR_PLAYER_INVENTORY_LABEL, font=font)
 
     # MM-18: outline every real slot position `Layout` computes, so a misalignment between the
     # slots the menu would place and the frame drawn above is visible without booting a client.

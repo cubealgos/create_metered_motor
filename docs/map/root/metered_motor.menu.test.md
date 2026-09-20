@@ -8,12 +8,15 @@ signature is the contract; read the source only when the summary is not enough.
 ### `class LayoutTest` — `src/test/java/metered_motor/menu/LayoutTest.java`
 The motor screen's layout arithmetic, checked without loading any Minecraft, Fabric or Create class: Layout is pure on purpose (its own class doc), because MeteredMotorMenu extends Create's MenuBase and cannot be class-loaded in a plain JVM unit test (docs/spec/domains/ui.md `UI-REQ-001`, `UI-REQ-003`, `UI-REQ-004`, MM-17's and MM-18's acceptance criteria).
 - `void theWholeWindowFitsTheTwoHundredPixelBudget()`
+- `void thePlayerInventoryFrameIsCroppedAboveItsOwnPointerTriangle()` — MM-20's Part 2 acceptance criterion: the player inventory frame is actually cropped, not merely documented as such, and the crop still leaves room for every real slot cell (the hotbar row, the lowest one) — #everyPlayerSlotOriginLiesInsideItsDrawnCell already checks the slots themselves against Layout#PLAYER_INVENTORY_HEIGHT; this test checks the crop against the source texture's own full height instead, so a regression that quietly widened the crop back toward 108 (redrawing the triangle) would be caught even if it somehow still left the slots inside the (now taller) frame.
 - `void theTitleTextSitsFullyInsideTheTitleStrip()`
 - `void theTiledBodyHoldsExactlyTheReadoutAndTheSlotRow()`
 - `void theTableIsFourRowsDirectlyUnderTheHeaderLine()`
 - `void theTablesTwoColumnsFitThePanelWithoutOverlapping()`
 - `void bothColumnsRightEdgesSitAtOrInsideThePanelsOwnMargin()` — A reviewer's own acceptance check on the mock (Kevin, 2026-09-20, after `just client`): both columns' right-aligned value edges must sit at the panel's own inner text margin — the same 8px inset Layout#LEFT_LABEL_X uses from the left edge — never past it, so a truncated-or-not value can never run past the panel's own right frame edge.
 - `void theSlotRowIsCentredAndDirectlyUnderTheTable()`
+- `void theFourMM20PaddingInsetsAreAsWide()` — MM-20's own acceptance criterion: an explicit assertion on the four padding insets Kevin's third client check asked for, each checked against the ticket's own wording rather than just re-deriving Layout's formulas (which would pass trivially even if every constant regressed back toward MM-18's cramped numbers).
+- `void noContentXLiesWithinTheNewSideMargins()` — MM-20's own acceptance criterion: no content element's x lies inside the new left/right padding — every column's text and the slot row itself must sit at or inside the panel's own Layout#TEXT_LEFT margin on both sides.
 - `void thePlayerInventoryIsCentredUnderTheWindow()`
 - `void everyPlayerSlotOriginLiesInsideItsDrawnCell()` — MM-18's Part 1 acceptance criterion: every player-inventory slot position the menu will use falls inside the corresponding cell of the frame the screen draws — both read off the one shared origin (Layout#PLAYER_INV_X, Layout#FRAME_Y), offset by the same (8, 18) inset the texture itself uses (see the class-level constants' own doc).
 
